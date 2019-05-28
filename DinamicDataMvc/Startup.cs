@@ -1,4 +1,6 @@
-﻿using DinamicDataMvc.Models;
+﻿using DinamicDataMvc.Interfaces;
+using DinamicDataMvc.Models;
+using DinamicDataMvc.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
 
 namespace DinamicDataMvc
 {
@@ -21,6 +24,12 @@ namespace DinamicDataMvc
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string ConnectionString = Configuration.GetConnectionString("ConnectionString");
+            string DatabaseName = "MetadataProcessesDb";
+
+            string nameFilteringResult = String.Empty;
+            int versionFilteringResult = 0;
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -29,6 +38,9 @@ namespace DinamicDataMvc
             });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSingleton<IConnectionManagement, ConnectionManagementService>(s => new ConnectionManagementService(ConnectionString, DatabaseName));
+            services.AddSingleton<IGetProcessesMetadata, GetProcessesMetadataService>(s => new GetProcessesMetadataService(nameFilteringResult, versionFilteringResult));
             services.AddSingleton<IMetadata, MetadataService>();
 
             services.AddSwaggerGen(c =>
