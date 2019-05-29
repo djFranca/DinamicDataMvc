@@ -45,29 +45,33 @@ namespace DinamicDataMvc.Services
         public void ReadFromDatababe()
         {
             #region ReadFromDatabase
-            var collection = _Database.GetCollection<MetadataModel>("Metadata");
-            Model = collection.Find(s => true).ToList();
-            #endregion
 
-
-            #region Filtering Data
-            if(_NameFilteringResult != null && _VerionFilteringResult != 0)
+            if(_Database != null)
             {
-                var filteredData = collection.Find(s => s.Name == _NameFilteringResult && s.Version == _VerionFilteringResult).ToList();
-                Model = filteredData;
+                var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                Model = collection.Find(s => true).ToList();
+
+                #region Filtering Data
+                if (_NameFilteringResult != null && _VerionFilteringResult != 0)
+                {
+                    var filteredData = collection.Find(s => s.Name == _NameFilteringResult && s.Version == _VerionFilteringResult).ToList();
+                    Model = filteredData;
+                }
+
+                else if (_NameFilteringResult == null && _VerionFilteringResult != 0)
+                {
+                    var filteredData = collection.Find(s => s.Version == _VerionFilteringResult).ToList();
+                    Model = filteredData;
+                }
+
+                else if (_NameFilteringResult != null && _VerionFilteringResult == 0)
+                {
+                    var filteredData = collection.Find(s => s.Name == _NameFilteringResult).ToList();
+                    Model = filteredData;
+                }
+                #endregion
             }
 
-            else if(_NameFilteringResult == null && _VerionFilteringResult != 0)
-            {
-                var filteredData = collection.Find(s => s.Version == _VerionFilteringResult).ToList();
-                Model = filteredData;
-            }
-
-            else if (_NameFilteringResult != null && _VerionFilteringResult == 0)
-            {
-                var filteredData = collection.Find(s => s.Name == _NameFilteringResult).ToList();
-                Model = filteredData;
-            }
             #endregion
         }
 
