@@ -35,7 +35,7 @@ namespace DinamicDataMvc.Services
                     }
                     else
                     {
-                        Console.WriteLine("Error occurred " + ErrorMessages.DatabaseNameNotFound + " or " + ErrorMessages.ErrorOnClient);
+                        Console.WriteLine("Error occurred " + ErrorMessages.DatabaseNameNotFound + " or " + ErrorMessages.ClientErrorException);
                     }
                 }
                 else

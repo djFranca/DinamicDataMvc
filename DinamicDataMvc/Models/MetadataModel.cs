@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -24,5 +25,21 @@ namespace DinamicDataMvc.Models
         [BsonElement("Version")]
         [Display(Name = "Version")]
         public int Version { get; set; }
+
+        [BsonElement("CreatedDate")]
+        [Display(Name = "Date")]
+        public DateTime CreatedDate { get; set; }
+
+        [BsonElement("State")]
+        [Display(Name = "State")]
+        public string State { get; set; }
+
+        [BsonElement("Data")]
+        [Display(Name = "Data")]
+        public List<string> Data { get; set; }
+
+        [BsonElement("Branch")]
+        [Display(Name = "Branch")]
+        public List<string> Branch { get; set; }
     }
 }

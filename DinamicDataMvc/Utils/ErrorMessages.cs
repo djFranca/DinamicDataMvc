@@ -4,6 +4,7 @@
     {
         ConnectionStringNotFound,
         DatabaseNameNotFound,
-        ErrorOnClient
+        ClientErrorException,
+        NullIdentifierException
     }
 }

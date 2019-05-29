@@ -37,11 +37,13 @@ namespace DinamicDataMvc
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.AddSingleton<IConnectionManagement, ConnectionManagementService>(s => new ConnectionManagementService(ConnectionString, DatabaseName));
             services.AddSingleton<IGetProcessesMetadata, GetProcessesMetadataService>(s => new GetProcessesMetadataService(nameFilteringResult, versionFilteringResult));
+            services.AddSingleton<IGetBranchById, GetBranchByIdService>(s => new GetBranchByIdService());
+            services.AddSingleton<IConnectionManagement, ConnectionManagementService>(s => new ConnectionManagementService(ConnectionString, DatabaseName));
+
             services.AddSingleton<IMetadata, MetadataService>();
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSwaggerGen(c =>
             {

@@ -8,11 +8,17 @@ namespace DinamicDataMvc.Services
 {
     public class GetProcessesMetadataService : IGetProcessesMetadata
     {
+        #region Properties
+
         private string _NameFilteringResult;
         private int _VerionFilteringResult;
         private IMongoDatabase _Database;
 
         private List<MetadataModel> Model { get; set; }
+
+        #endregion
+
+        #region Constructor
 
         public GetProcessesMetadataService(string nameFilteringResult, int versionFilteringResult)
         {
@@ -20,6 +26,10 @@ namespace DinamicDataMvc.Services
             _VerionFilteringResult = versionFilteringResult;
             Model = new List<MetadataModel>();
         }
+
+        #endregion
+
+        #region Methods
 
         public void SetFilterParameters(string nameFilteringResult, int versionFilteringResult)
         {
@@ -35,7 +45,7 @@ namespace DinamicDataMvc.Services
         public void ReadFromDatababe()
         {
             #region ReadFromDatabase
-            IMongoCollection<MetadataModel> collection = _Database.GetCollection<MetadataModel>("Metadata");
+            var collection = _Database.GetCollection<MetadataModel>("Metadata");
             Model = collection.Find(s => true).ToList();
             #endregion
 
@@ -65,5 +75,7 @@ namespace DinamicDataMvc.Services
         {
             _Database = database;
         }
+
+        #endregion
     }
 }
