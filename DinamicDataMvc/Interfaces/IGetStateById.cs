@@ -1,14 +1,13 @@
 ﻿using MongoDB.Driver;
-using System.Collections.Generic;
 
 namespace DinamicDataMvc.Interfaces
 {
-    public interface IGetBranchById
+    public interface IGetStateById
     {
         void SetDatabase(IMongoDatabase database);
 
         void ReadFromDatabase(string id);
 
-        List<string> GetBranches();
+        string GetStateDescription();
     }
 }

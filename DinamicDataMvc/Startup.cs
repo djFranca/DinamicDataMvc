@@ -41,7 +41,9 @@ namespace DinamicDataMvc
             services.AddSingleton<IGetBranchById, GetBranchByIdService>(s => new GetBranchByIdService());
             services.AddSingleton<IConnectionManagement, ConnectionManagementService>(s => new ConnectionManagementService(ConnectionString, DatabaseName));
 
+            services.AddSingleton<IGetStateById, GetStateByIdService>(s => new GetStateByIdService());
             services.AddSingleton<IMetadata, MetadataService>();
+            
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

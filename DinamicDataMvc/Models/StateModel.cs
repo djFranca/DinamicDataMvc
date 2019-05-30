@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace DinamicDataMvc.Models
@@ -8,6 +9,7 @@ namespace DinamicDataMvc.Models
         [BsonRequired]
         [BsonElement("Id")]
         [Display(Name = "Id")]
+        [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
         [BsonElement("Value")]

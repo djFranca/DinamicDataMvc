@@ -15,12 +15,14 @@ namespace DinamicDataMvc.Tests
         private readonly IConnectionManagement _Connection;
         private readonly IGetProcessesMetadata _GetMetadata;
         private readonly IGetBranchById _GetBranchById;
+        private readonly IGetStateById _GetStateById;
 
-        public FakeController(IConnectionManagement Connection, IGetProcessesMetadata Metadata, IGetBranchById Branch)
+        public FakeController(IConnectionManagement Connection, IGetProcessesMetadata Metadata, IGetBranchById Branch, IGetStateById State)
         {
             _Connection = Connection;
             _GetMetadata = Metadata;
             _GetBranchById = Branch;
+            _GetStateById = State;
         }
 
         [Route("/Fake/TestDatabaseConnection/")]
@@ -50,6 +52,17 @@ namespace DinamicDataMvc.Tests
             _GetBranchById.SetDatabase(_Connection.GetDatabase());
             _GetBranchById.ReadFromDatabase("5ce95b7970eb31116c6ca8d7");
             return _GetBranchById.GetBranches();
+        }
+
+        [Route("/Fake/TestState")]
+        public string TestState()
+        {
+            _Connection.DatabaseConnection();
+            _GetStateById.SetDatabase(_Connection.GetDatabase());
+            _GetStateById.ReadFromDatabase("5ceac39b5cef382144c73570");
+
+
+            return _GetStateById.GetStateDescription();
         }
     }
 }
