@@ -1,0 +1,81 @@
+﻿@model IEnumerable<DinamicDataMvc.Models.MetadataListModel>
+@{
+    ViewData["Title"] = "TestMetadataList";
+}
+
+<section>
+    <div>
+        @using (Html.BeginForm("", "", FormMethod.Get))
+        {
+            @*<span>
+                @Html.LabelFor(model => model.Metadatas[0].Name)
+                @Html.TextBoxFor(model => model.Metadatas[0].Name, new { @size = "10px" })
+                @Html.LabelFor(model => model.Metadatas[0].Version)
+                @Html.TextBoxFor(model => model.Metadatas[0].Version, new { @size = "10px" })
+                @Html.LabelFor(model => model.Metadatas[0].Branches)
+                @Html.ListBoxFor(model => model.Branches, Model.Branches, new { size = 1 })
+            </span>*@
+            <input type="submit" value="" style="background:url('/images/search_logo.png') no-repeat center; width:60px; height:40px" />
+        }
+    </div>
+</section>
+<br />
+<section>
+    <div class="text-body">
+        <h4>Metadata</h4>
+    </div>
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Version)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Branch)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.State)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @Html.DisplayTextFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayTextFor(modelItem => item.Version)
+                    </td>
+                    <td>
+                        @Html.DisplayTextFor(modelItem => item.Date)
+                    </td>
+                    @foreach (string branch in item.Branch)
+                    {
+                        <td>
+                            @Html.DisplayTextFor(s => branch)
+                        </td>
+                    }
+                    <td>
+                        @Html.DisplayTextFor(modelItem => item.State)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { /*ID = item.Id*/ }) |
+                        @Html.ActionLink("Edit", "Edit", new { /*ID = item.Id*/ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /*ID = item.Id*/ })
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+

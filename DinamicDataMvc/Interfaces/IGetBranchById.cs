@@ -9,6 +9,6 @@ namespace DinamicDataMvc.Interfaces
 
         void ReadFromDatabase(string id);
 
-        List<string> GetBranches();
+        string GetBranches();
     }
 }

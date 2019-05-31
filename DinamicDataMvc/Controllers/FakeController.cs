@@ -2,6 +2,7 @@
 using DinamicDataMvc.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 
 namespace DinamicDataMvc.Tests
@@ -36,17 +37,58 @@ namespace DinamicDataMvc.Tests
 
 
         [Route("/Fake/TestMetadataList")]
-        public List<MetadataModel> TestMetadataList()
+        public IActionResult TestMetadataList()
         {
+            List<MetadataListModel> ListModel = new List<MetadataListModel>();
+
             _Connection.DatabaseConnection();
             _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
             _GetMetadata.SetFilterParameters("P1", 1); //Definem-se parâmetros de filtragem de informação
             _GetMetadata.ReadFromDatababe(); //Procede-se à leitura da base de dados;
-            return _GetMetadata.GetProcessesMetadataList();
+            List<MetadataModel> Model = _GetMetadata.GetProcessesMetadataList();
+
+            foreach(var item in Model)
+            {
+                string Name = String.Empty;
+                string Version = String.Empty;
+                string Date = String.Empty;
+                List<string> Branch = new List<string>();
+                string State = String.Empty;
+
+                Name = item.Name;
+                Version = "V" + item.Version.ToString();
+                Date = item.CreatedDate.ToShortDateString();
+
+                _GetBranchById.SetDatabase(_Connection.GetDatabase());
+
+                foreach (var id in item.Branch)
+                {
+                    _GetBranchById.ReadFromDatabase(id);
+                    var branch = _GetBranchById.GetBranches();
+                    Branch.Add(branch);
+                }
+
+                _GetStateById.SetDatabase(_Connection.GetDatabase());
+                _GetStateById.ReadFromDatabase(item.State);
+                State =  _GetStateById.GetStateDescription();
+
+                MetadataListModel _model = new MetadataListModel()
+                {
+                    Name = Name,
+                    Version = Version,
+                    Date = Date,
+                    Branch = Branch,
+                    State = State
+                };
+
+                ListModel.Add(_model);
+            }
+
+            return View(ListModel);
         }
 
         [Route("/Fake/TestBranchList/")]
-        public List<string> TestBranchList()
+        public string TestBranchList()
         {
             _Connection.DatabaseConnection();
             _GetBranchById.SetDatabase(_Connection.GetDatabase());

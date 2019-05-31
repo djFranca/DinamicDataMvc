@@ -13,16 +13,16 @@ namespace DinamicDataMvc.Services
 
         private IMongoDatabase _Database;
 
-        private List<string> BranchList { get; set; }
+        private string Branch { get; set; }
 
         public GetBranchByIdService()
         {
-            BranchList = new List<string>();
+            Branch = String.Empty;
         }
 
-        public List<string> GetBranches()
+        public string GetBranches()
         {
-            return BranchList;
+            return Branch;
         }
 
         public void ReadFromDatabase(string id)
@@ -35,9 +35,9 @@ namespace DinamicDataMvc.Services
                     {
                         var collection = _Database.GetCollection<BranchModel>("Branch");
                         var model = collection.Find(s => s.Id == id).ToList();
-                        foreach (var item in model)
+                        foreach(var item in model)
                         {
-                            BranchList.Add(item.Description);
+                            Branch = item.Description;
                         }
                     }
                 }
