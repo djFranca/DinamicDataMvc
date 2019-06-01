@@ -1,0 +1,9 @@
+﻿<div>
+    <span>
+        @Html.Label("Name")
+        @Html.TextBox("SearchName", ViewBag.NameFilter as string)
+        @Html.Label("Version")
+        @Html.TextBox("SearchVersion", ViewBag.VersionFilter as string)
+        <input type="submit" value="" style="background:url('/images/search_logo.png') no-repeat center; width:60px; height:40px; vertical-align:middle" />
+    </span>
+</div>

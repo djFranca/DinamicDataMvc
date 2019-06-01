@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using PagedList;
 using System.Threading.Tasks;
 
 namespace DinamicDataMvc.Tests
@@ -35,6 +36,7 @@ namespace DinamicDataMvc.Tests
 
             return "Your work database name is: " + database.DatabaseNamespace.DatabaseName;
         }
+
 
 
         [Route("/Fake/TestMetadataList")]
@@ -87,8 +89,11 @@ namespace DinamicDataMvc.Tests
                 ListModel.Add(_model);
             }
 
+
             return View(ListModel);
         }
+
+
 
         [Route("/Fake/TestBranchList/")]
         public string TestBranchList()

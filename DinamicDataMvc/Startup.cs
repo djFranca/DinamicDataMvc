@@ -44,17 +44,17 @@ namespace DinamicDataMvc
             services.AddSingleton<IGetStateById, GetStateByIdService>(s => new GetStateByIdService());
             services.AddSingleton<IMetadata, MetadataService>();
             
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(doc =>
             {
-                c.SwaggerDoc("v1", new Info {
+                doc.SwaggerDoc("v1", new Info
+                {
                     Title = "DinamicDataMvc",
                     Version = "v1",
-                    Description = "Documentation"
+                    Description = "Api Documentation"
                 });
             });
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,7 +76,7 @@ namespace DinamicDataMvc
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=HomePage}/{id?}");
             });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -86,7 +86,7 @@ namespace DinamicDataMvc
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "DinamicDataMvc");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api v1");
             });
         }
     }
