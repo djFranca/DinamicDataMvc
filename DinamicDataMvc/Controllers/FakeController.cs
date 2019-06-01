@@ -28,7 +28,7 @@ namespace DinamicDataMvc.Tests
             _GetStateById = State;
         }
 
-        [Route("/Fake/TestDatabaseConnection/")]
+        [HttpGet("/Fake/TestDatabaseConnection/")]
         public string TestDatabaseConnection()
         {
             _Connection.DatabaseConnection();
@@ -39,30 +39,39 @@ namespace DinamicDataMvc.Tests
 
 
 
-        [Route("/Fake/TestMetadataList")]
+        [HttpGet("/Fake/TestMetadataList")]
         public IActionResult TestMetadataList()
         {
+            string name = null;
+            int version = 0;
+
+            //Verificações dos parâmetros recebidos no URL do pedido (nome e versão) do processo (Metadata)
+            if (!Request.Query["SearchVersion"].Equals(""))
+            {
+                version = Convert.ToInt32(Request.Query["SearchVersion"]);
+            }
+
+            if (!Request.Query["SearchName"].Equals("")){
+                name = Request.Query["SearchName"];
+            }
+
             List<MetadataListModel> ListModel = new List<MetadataListModel>();
 
             _Connection.DatabaseConnection();
             _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
 
-            //_GetMetadata.SetFilterParameters("P1", 1); //Definem-se parâmetros de filtragem de informação
+            _GetMetadata.SetFilterParameters(name, version); //Definem-se parâmetros de filtragem de informação
             _GetMetadata.ReadFromDatababe(); //Procede-se à leitura da base de dados;
 
             List<MetadataModel> Model = _GetMetadata.GetProcessesMetadataList();
 
             foreach (var item in Model)
             {
-                string Name = String.Empty;
-                string Version = String.Empty;
-                string Date = String.Empty;
                 List<string> Branch = new List<string>();
-                string State = String.Empty;
 
-                Name = item.Name;
-                Version = "V" + item.Version.ToString();
-                Date = item.CreatedDate.ToShortDateString();
+                string Name = item.Name;
+                string Version = "V" + item.Version.ToString();
+                string Date = item.CreatedDate.ToShortDateString();
 
                 _GetBranchById.SetDatabase(_Connection.GetDatabase());
 
@@ -75,7 +84,7 @@ namespace DinamicDataMvc.Tests
 
                 _GetStateById.SetDatabase(_Connection.GetDatabase());
                 _GetStateById.ReadFromDatabase(item.State);
-                State = _GetStateById.GetStateDescription();
+                string State = _GetStateById.GetStateDescription();
 
                 MetadataListModel _model = new MetadataListModel()
                 {
@@ -85,17 +94,14 @@ namespace DinamicDataMvc.Tests
                     Branch = Branch,
                     State = State
                 };
-
                 ListModel.Add(_model);
             }
-
-
             return View(ListModel);
         }
 
 
 
-        [Route("/Fake/TestBranchList/")]
+        [HttpGet("/Fake/TestBranchList/")]
         public string TestBranchList()
         {
             _Connection.DatabaseConnection();
@@ -104,7 +110,7 @@ namespace DinamicDataMvc.Tests
             return _GetBranchById.GetBranches();
         }
 
-        [Route("/Fake/TestState")]
+        [HttpGet("/Fake/TestState/")]
         public string TestState()
         {
             _Connection.DatabaseConnection();
@@ -115,10 +121,10 @@ namespace DinamicDataMvc.Tests
             return _GetStateById.GetStateDescription();
         }
 
-        [Route("/Fake/ProcessDetails")]
-        public string ProcessDetails()
+        [HttpGet("/Fake/ProcessDetails/{id}")]
+        public string ProcessDetails(string id)
         {
-            return "Success";
+            return id;
         }
     }
 }

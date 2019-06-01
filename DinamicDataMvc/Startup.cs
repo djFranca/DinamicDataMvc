@@ -76,7 +76,12 @@ namespace DinamicDataMvc
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=HomePage}/{id?}");
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "HomePage" });
+
+                //routes.MapRoute(
+                //    name: "details",
+                //    template: "{controller=Fake}/{action=ProcessDetails}/{name?}");
             });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
