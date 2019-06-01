@@ -1,22 +1,20 @@
 ﻿@model IEnumerable<DinamicDataMvc.Models.MetadataListModel>
 @{
     ViewData["Title"] = "TestMetadataList";
-    string branches = String.Empty;
+    int i = 0; //First index
 }
 
 <section>
     <div>
         @using (Html.BeginForm("", "", FormMethod.Get))
         {
-            @*<span>
-                @Html.LabelFor(model => model.Metadatas[0].Name)
-                @Html.TextBoxFor(model => model.Metadatas[0].Name, new { @size = "10px" })
-                @Html.LabelFor(model => model.Metadatas[0].Version)
-                @Html.TextBoxFor(model => model.Metadatas[0].Version, new { @size = "10px" })
-                @Html.LabelFor(model => model.Metadatas[0].Branches)
-                @Html.ListBoxFor(model => model.Branches, Model.Branches, new { size = 1 })
-            </span>*@
+        <span>
+            @Html.LabelFor(model => Model.ElementAt(i).Name)
+            @Html.TextBoxFor(model => Model.ElementAt(i).Name, new { @size = "10px" })
+            @Html.LabelFor(model => Model.ElementAt(i).Version)
+            @Html.TextBoxFor(model => Model.ElementAt(i).Version, new { @size = "10px" })
             <input type="submit" value="" style="background:url('/images/search_logo.png') no-repeat center; width:60px; height:40px" />
+        </span>
         }
     </div>
 </section>
