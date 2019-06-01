@@ -42,6 +42,8 @@ namespace DinamicDataMvc
             services.AddSingleton<IConnectionManagement, ConnectionManagementService>(s => new ConnectionManagementService(ConnectionString, DatabaseName));
 
             services.AddSingleton<IGetStateById, GetStateByIdService>(s => new GetStateByIdService());
+            services.AddSingleton<IGetProcessDetailsByName, GetProcessDetailsByNameService>(s => new GetProcessDetailsByNameService());
+
             services.AddSingleton<IMetadata, MetadataService>();
             
             services.AddSwaggerGen(doc =>

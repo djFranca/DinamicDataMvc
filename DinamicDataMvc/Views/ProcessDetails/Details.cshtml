@@ -1,0 +1,52 @@
+﻿@model IEnumerable<DinamicDataMvc.Models.ProcessDetailsModel>
+@{
+    ViewData["Title"] = "Process Details";
+}
+<section>
+    <div class="text-body">
+        <h4>Process @Html.ViewBag.Name</h4>
+    </div>
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Version)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreationDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Branches)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Version), "action", "controller", new { ID = item.Version })
+                        </td>
+                        <td>
+                            @Html.DisplayTextFor(modelItem => item.CreationDate)
+                        </td>
+                        <td>
+                            @foreach(var branch in item.Branches)
+                            {
+                            <span>
+                                @Html.DisplayTextFor(s => branch)
+                            </span>
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
+

@@ -122,9 +122,9 @@ namespace DinamicDataMvc.Tests
         }
 
         [HttpGet("/Fake/ProcessDetails/{id}")]
-        public string ProcessDetails(string id)
+        public IActionResult ProcessDetails(string id)
         {
-            return id;
+            return Redirect("~/ProcessDetails/Details/" + id);
         }
     }
 }
