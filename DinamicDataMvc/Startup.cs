@@ -27,7 +27,7 @@ namespace DinamicDataMvc
             string ConnectionString = Configuration.GetConnectionString("ConnectionString");
             string DatabaseName = "MetadataProcessesDb";
 
-            string nameFilteringResult = String.Empty;
+            string nameFilteringResult = null;
             int versionFilteringResult = 0;
 
             services.Configure<CookiePolicyOptions>(options =>

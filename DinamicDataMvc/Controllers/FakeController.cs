@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DinamicDataMvc.Tests
 {
@@ -43,11 +44,13 @@ namespace DinamicDataMvc.Tests
 
             _Connection.DatabaseConnection();
             _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
-            _GetMetadata.SetFilterParameters("P1", 1); //Definem-se parâmetros de filtragem de informação
+
+            //_GetMetadata.SetFilterParameters("P1", 1); //Definem-se parâmetros de filtragem de informação
             _GetMetadata.ReadFromDatababe(); //Procede-se à leitura da base de dados;
+
             List<MetadataModel> Model = _GetMetadata.GetProcessesMetadataList();
 
-            foreach(var item in Model)
+            foreach (var item in Model)
             {
                 string Name = String.Empty;
                 string Version = String.Empty;
@@ -70,7 +73,7 @@ namespace DinamicDataMvc.Tests
 
                 _GetStateById.SetDatabase(_Connection.GetDatabase());
                 _GetStateById.ReadFromDatabase(item.State);
-                State =  _GetStateById.GetStateDescription();
+                State = _GetStateById.GetStateDescription();
 
                 MetadataListModel _model = new MetadataListModel()
                 {
@@ -105,6 +108,12 @@ namespace DinamicDataMvc.Tests
 
 
             return _GetStateById.GetStateDescription();
+        }
+
+        [Route("/Fake/ProcessDetails")]
+        public string ProcessDetails()
+        {
+            return "Success";
         }
     }
 }

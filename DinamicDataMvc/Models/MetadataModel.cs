@@ -28,6 +28,7 @@ namespace DinamicDataMvc.Models
 
         [BsonElement("CreatedDate")]
         [Display(Name = "Date")]
+        [BsonRepresentation(BsonType.DateTime)]
         public DateTime CreatedDate { get; set; }
 
         [BsonElement("State")]

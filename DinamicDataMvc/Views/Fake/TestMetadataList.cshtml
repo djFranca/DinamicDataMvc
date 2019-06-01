@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<DinamicDataMvc.Models.MetadataListModel>
 @{
     ViewData["Title"] = "TestMetadataList";
+    string branches = String.Empty;
 }
 
 <section>
@@ -28,29 +29,29 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>
+                    <th valign="middle" align="center">
                         @Html.DisplayNameFor(model => model.Name)
                     </th>
-                    <th>
+                    <th valign="middle" align="center">
                         @Html.DisplayNameFor(model => model.Version)
                     </th>
-                    <th>
+                    <th valign="middle" align="center">
                         @Html.DisplayNameFor(model => model.Date)
                     </th>
-                    <th>
+                    <th valign="middle" align="center">
                         @Html.DisplayNameFor(model => model.Branch)
                     </th>
-                    <th>
+                    <th valign="middle" align="center">
                         @Html.DisplayNameFor(model => model.State)
                     </th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="ProcessList">
                 @foreach (var item in Model)
                 {
                 <tr>
                     <td>
-                        @Html.DisplayTextFor(modelItem => item.Name)
+                        @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Name), "ProcessDetails", FormMethod.Get)
                     </td>
                     <td>
                         @Html.DisplayTextFor(modelItem => item.Version)
@@ -58,17 +59,21 @@
                     <td>
                         @Html.DisplayTextFor(modelItem => item.Date)
                     </td>
+                    <td>
                     @foreach (string branch in item.Branch)
                     {
-                        <td>
+
+                        <span>
                             @Html.DisplayTextFor(s => branch)
-                        </td>
+                        </span>
+                            
+                        
                     }
+                    </td>
                     <td>
                         @Html.DisplayTextFor(modelItem => item.State)
                     </td>
                     <td>
-                        @Html.ActionLink("Details", "Details", new { /*ID = item.Id*/ }) |
                         @Html.ActionLink("Edit", "Edit", new { /*ID = item.Id*/ }) |
                         @Html.ActionLink("Delete", "Delete", new { /*ID = item.Id*/ })
                     </td>
