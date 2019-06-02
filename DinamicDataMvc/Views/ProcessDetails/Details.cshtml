@@ -27,7 +27,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Version), "action", "controller", new { ID = item.Version })
+                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Version), "ByVersion", "ProcessDetails", new { ID = item.Version, Name = ViewBag.Name })
                         </td>
                         <td>
                             @Html.DisplayTextFor(modelItem => item.CreationDate)

@@ -30,8 +30,8 @@ namespace DinamicDataMvc.Controllers
             _Details.SetDatabase(_Connection.GetDatabase());
             _Details.ReadFromTable(id);
             var ModelsList = _Details.GetModels();
-            
-            foreach(var model in ModelsList)
+
+            foreach (var model in ModelsList)
             {
                 Branches = new List<string>();
 
@@ -52,6 +52,23 @@ namespace DinamicDataMvc.Controllers
             }
 
             return View(ProcessesDetailsList);
+        }
+
+        [HttpGet("/ProcessDetails/ByVersion/{id}")]
+        public IActionResult ByVersion(string id)
+        {
+            ViewBag.Name = Request.Query["Name"];
+
+
+            //TODO: this model is hardcoded to test view and partial view
+            ProcessDetailsModel p = new ProcessDetailsModel()
+            {
+                Version = "V1",
+                CreationDate = "2019/05/21",
+                Branches = new List<string>() {"Development", "Quality" }
+            };
+
+            return View(p);
         }
     }
 }
