@@ -11,21 +11,29 @@ namespace DinamicDataMvc.Controllers
     public class ProcessDetailsController : Controller
     {
         private readonly IConnectionManagement _Connection;
-        private IGetProcessDetailsByName _Details;
-        private IGetBranchById _Branch;
+        private readonly IGetProcessDetailsByName _Details;
+        private readonly IGetBranchById _Branch;
+        private readonly IGetProcessDetailsByName _Process;
+        private readonly IVersionNumber _VersionCode;
 
-        public ProcessDetailsController(IConnectionManagement Connection, IGetProcessDetailsByName Details, IGetBranchById Branch)
+        public ProcessDetailsController(IConnectionManagement Connection, IGetProcessDetailsByName Details, IGetBranchById Branch, IGetProcessDetailsByName Process, IVersionNumber VersionCode)
         {
             _Connection = Connection;
             _Details = Details;
             _Branch = Branch;
+            _Process = Process;
+            _VersionCode = VersionCode;
         }
 
         [HttpGet("/ProcessDetails/Details/{id}")]
         public IActionResult Details(string id)
         {
+            if(id == null)
+            {
+                return BadRequest();
+            }
+
             List<ProcessDetailsModel> ProcessesDetailsList = new List<ProcessDetailsModel>();
-            List<string> Branches = null;
             _Connection.DatabaseConnection();
             _Details.SetDatabase(_Connection.GetDatabase());
             _Details.ReadFromTable(id);
@@ -33,7 +41,7 @@ namespace DinamicDataMvc.Controllers
 
             foreach (var model in ModelsList)
             {
-                Branches = new List<string>();
+                List<string> Branches = new List<string>();
 
                 ViewBag.Name = model.Name; //Stores the process name;
                 foreach (var branchCode in model.Branch)
@@ -57,18 +65,51 @@ namespace DinamicDataMvc.Controllers
         [HttpGet("/ProcessDetails/ByVersion/{id}")]
         public IActionResult ByVersion(string id)
         {
-            ViewBag.Name = Request.Query["Name"];
-
-
-            //TODO: this model is hardcoded to test view and partial view
-            ProcessDetailsModel p = new ProcessDetailsModel()
+            //Se o valor do identificador, for nulo ou vazio, o controlador devolve o status: BadRequest() --> error 400; 
+            if (String.IsNullOrEmpty(id))
             {
-                Version = "V1",
-                CreationDate = "2019/05/21",
-                Branches = new List<string>() {"Development", "Quality" }
+                return BadRequest();
+            }
+
+            string name = Request.Query["Name"];
+            ViewBag.Name = name;
+
+            _VersionCode.SetNumber(id);
+            int versionNumber = _VersionCode.GetVersionNumber();
+
+            List<string> branchList = new List<string>();
+
+            _Connection.DatabaseConnection(); //Estabeleçe-se a conexão com a base de dados;
+            var _database = _Connection.GetDatabase(); //Obtêm-se a base de dados pretendida para trabalhar as coleções de dados;
+            _Process.SetDatabase(_database); //A base de dados em contexto é passada ao serviço;
+            _Process.ReadFromTable(name); //Obtem-se da tabela Metadata 
+            List<MetadataModel> models = _Process.GetModels(); //Armazena os modelos retornados que satisfaçam a condição ter um nome igual ao recebido
+
+            MetadataModel filteredModel = null;
+            foreach(var model in models)
+            {
+                if (model.Version == versionNumber)
+                {
+                    filteredModel = model;
+                }
+            }
+
+            foreach(var branch in filteredModel.Branch)
+            {
+                _Branch.SetDatabase(_database);
+                _Branch.ReadFromDatabase(branch);
+                branchList.Add(_Branch.GetBranches());
+            }
+
+
+            ProcessDetailsModel filteredProcess = new ProcessDetailsModel()
+            {
+                Version = "V" + filteredModel.Version.ToString(),
+                CreationDate = filteredModel.CreatedDate.ToString(),
+                Branches = branchList
             };
 
-            return View(p);
+            return View(filteredProcess);
         }
     }
 }

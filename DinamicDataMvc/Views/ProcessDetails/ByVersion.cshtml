@@ -4,29 +4,45 @@
     ViewData["Title"] = "ByVersion";
 }
 
-@await  Html.PartialAsync("_ByVersionHeader", Model)
+<section id="ProcessName">
+    <div class="text-body">
+        <h4>Process @Html.ViewBag.Name</h4>
+    </div>
+</section>
+<br />
+<section id="ProcessHeaderInfo">
+    <div>
+        @await Html.PartialAsync("_ByVersionHeader", Model)
+    </div>
+</section>
+<br />
+<section id="ProcessDataInfo">
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("Type")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Field")
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.Version)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => modelItem.CreationDate)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Version)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreationDate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.Version)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => modelItem.CreationDate)
-            </td>
-        </tr>
-    </tbody>
-</table>
+

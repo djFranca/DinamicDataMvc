@@ -1,6 +1,6 @@
 ﻿using DinamicDataMvc.Interfaces;
-using DinamicDataMvc.Models;
 using DinamicDataMvc.Services;
+using DinamicDataMvc.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
-using System;
 
 namespace DinamicDataMvc
 {
@@ -44,7 +43,7 @@ namespace DinamicDataMvc
             services.AddSingleton<IGetStateById, GetStateByIdService>(s => new GetStateByIdService());
             services.AddSingleton<IGetProcessDetailsByName, GetProcessDetailsByNameService>(s => new GetProcessDetailsByNameService());
 
-            //services.AddSingleton<IMetadata, MetadataService>();
+            services.AddSingleton<IVersionNumber, VersionNumber>(s => new VersionNumber());
             
             services.AddSwaggerGen(doc =>
             {

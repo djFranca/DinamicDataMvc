@@ -17,16 +17,19 @@
     }
 }
 
-<section>
+<section id="ByVersionHeaderInfo">
     <div>
         <span>
-            @Html.Label("Version ")
+            <strong><b>@Html.Label("Version: ")</b></strong>
             @Html.DisplayTextFor(s => s.Version)
-            @Html.Label("Creation Date ")
+            <strong><b>@Html.Label("Creation Date: ")</b></strong>
             @Html.DisplayTextFor(s => s.CreationDate)
-            @Html.Label("Branches ")
+            <strong><b>@Html.Label("Branches: ")</b></strong>
+            <b><i>@Html.Label("Development ")</i></b>
             @Html.CheckBox("Development", @branchesState[0])
+            <b><i>@Html.Label("Quality ")</i></b>
             @Html.CheckBox("Quality", @branchesState[1])
+            <b><i>@Html.Label("Production ")</i></b>
             @Html.CheckBox("Production", @branchesState[2])
         </span>
         <input type="submit" value="Publish"/>
