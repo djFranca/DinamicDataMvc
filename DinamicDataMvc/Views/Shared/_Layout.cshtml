@@ -32,7 +32,10 @@
                     <ul class="navbar-nav flex-grow-1">
 
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Fake" asp-action="TestMetadataList">Metadata</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="ProcessMetadata" asp-action="GetProcessesMetadata">Metadata</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="ProcessData" asp-action="GetProcesses">Processes</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Fake" asp-action="TestDatabaseConnection">Test Connection</a>
@@ -43,9 +46,6 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-area="" asp-controller="Fake" asp-action="TestState">Test Get State</a>
                         </li>
-                        <!--<li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>-->
                         <li class="nav-item">
                             <a class="nav-link text-light" href="/swagger/index.html">Documentation</a>
                         </li>
