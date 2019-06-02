@@ -125,10 +125,12 @@ namespace DinamicDataMvc.Controllers
         }
 
         [HttpGet("/ProcessDetails/Properties")]
-        public string Properties()
+        public IActionResult Properties()
         {
             string Id = Request.Query["ID"];
-            return "The requested Id is " + Id;
+            _Data.SetDatabase(_Connection.GetDatabase());
+            _Data.ReadFromDatabase(Id);
+            return View(_Data.GetModel());
         }
     }
 }

@@ -34,11 +34,11 @@
                             @Html.DisplayTextFor(modelItem => item.CreationDate)
                         </td>
                         <td>
-                            @foreach(var branch in item.Branches)
+                            @foreach (var branch in item.Branches)
                             {
-                            <span>
-                                @Html.DisplayTextFor(s => branch)
-                            </span>
+                                <span>
+                                    @Html.DisplayTextFor(s => branch)
+                                </span>
                             }
                         </td>
                         <td>
@@ -48,6 +48,9 @@
                 }
             </tbody>
         </table>
+    </div>
+    <div>
+        @Html.ActionLink("Back to list", "TestMetadataList", "Fake")
     </div>
 </section>
 
