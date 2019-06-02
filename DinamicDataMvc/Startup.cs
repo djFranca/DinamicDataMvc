@@ -44,6 +44,7 @@ namespace DinamicDataMvc
             services.AddSingleton<IGetProcessDetailsByName, GetProcessDetailsByNameService>(s => new GetProcessDetailsByNameService());
 
             services.AddSingleton<IVersionNumber, VersionNumber>(s => new VersionNumber());
+            services.AddSingleton<IGetDataById, GetDataByIdService>(s => new GetDataByIdService());
             
             services.AddSwaggerGen(doc =>
             {

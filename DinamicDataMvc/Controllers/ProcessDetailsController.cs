@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -15,14 +14,16 @@ namespace DinamicDataMvc.Controllers
         private readonly IGetBranchById _Branch;
         private readonly IGetProcessDetailsByName _Process;
         private readonly IVersionNumber _VersionCode;
+        private readonly IGetDataById _Data;
 
-        public ProcessDetailsController(IConnectionManagement Connection, IGetProcessDetailsByName Details, IGetBranchById Branch, IGetProcessDetailsByName Process, IVersionNumber VersionCode)
+        public ProcessDetailsController(IConnectionManagement Connection, IGetProcessDetailsByName Details, IGetBranchById Branch, IGetProcessDetailsByName Process, IVersionNumber VersionCode, IGetDataById Data)
         {
             _Connection = Connection;
             _Details = Details;
             _Branch = Branch;
             _Process = Process;
             _VersionCode = VersionCode;
+            _Data = Data;
         }
 
         [HttpGet("/ProcessDetails/Details/{id}")]
@@ -101,6 +102,17 @@ namespace DinamicDataMvc.Controllers
                 branchList.Add(_Branch.GetBranches());
             }
 
+            List<DataProcessModel> DataModelsList = new List<DataProcessModel>();
+           
+            foreach(var itemId in filteredModel.Data)
+            {
+                _Data.SetDatabase(_database);
+                _Data.ReadFromDatabase(itemId);
+                DataProcessModel model = _Data.GetModel();
+                DataModelsList.Add(model);
+            }
+
+            ViewBag.Data = DataModelsList;
 
             ProcessDetailsModel filteredProcess = new ProcessDetailsModel()
             {
@@ -110,6 +122,13 @@ namespace DinamicDataMvc.Controllers
             };
 
             return View(filteredProcess);
+        }
+
+        [HttpGet("/ProcessDetails/Properties")]
+        public string Properties()
+        {
+            string Id = Request.Query["ID"];
+            return "The requested Id is " + Id;
         }
     }
 }
