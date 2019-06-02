@@ -44,7 +44,7 @@ namespace DinamicDataMvc
             services.AddSingleton<IGetStateById, GetStateByIdService>(s => new GetStateByIdService());
             services.AddSingleton<IGetProcessDetailsByName, GetProcessDetailsByNameService>(s => new GetProcessDetailsByNameService());
 
-            services.AddSingleton<IMetadata, MetadataService>();
+            //services.AddSingleton<IMetadata, MetadataService>();
             
             services.AddSwaggerGen(doc =>
             {
