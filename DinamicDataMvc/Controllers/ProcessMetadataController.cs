@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
 using Microsoft.AspNetCore.Mvc;
+using PagedList.Core;
 
 namespace DinamicDataMvc.Controllers
 {
@@ -22,7 +24,7 @@ namespace DinamicDataMvc.Controllers
         }
 
         [HttpGet("/ProcessMetadata/GetProcessesMetadata")]
-        public IActionResult GetProcessesMetadata()
+        public IActionResult GetProcessesMetadata(int page = 1, int pageSize = 1)
         {
             string name = null;
             int version = 0;
@@ -38,48 +40,36 @@ namespace DinamicDataMvc.Controllers
                 name = Request.Query["SearchName"];
             }
 
-            List<MetadataListModel> ListModel = new List<MetadataListModel>();
-
             _Connection.DatabaseConnection();
             _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
 
             _GetMetadata.SetFilterParameters(name, version); //Definem-se parâmetros de filtragem de informação
             _GetMetadata.ReadFromDatababe(); //Procede-se à leitura da base de dados;
 
-            List<MetadataModel> Model = _GetMetadata.GetProcessesMetadataList();
+            _GetBranchById.SetDatabase(_Connection.GetDatabase());
+            _GetStateById.SetDatabase(_Connection.GetDatabase());
 
-            foreach (var item in Model)
+            List<ViewMetadataModel> ListModel = new List<ViewMetadataModel>();
+            List<MetadataModel> ListOfModels = _GetMetadata.GetProcessesMetadataList();
+
+            foreach (var model in ListOfModels)
             {
-                List<string> Branch = new List<string>();
+                _GetBranchById.ReadFromDatabase(model.Branch);
+                _GetStateById.ReadFromDatabase(model.State);
 
-                string Name = item.Name;
-                string Version = "V" + item.Version.ToString();
-                string Date = item.CreatedDate.ToShortDateString();
-
-                _GetBranchById.SetDatabase(_Connection.GetDatabase());
-
-                foreach (var id in item.Branch)
+                ViewMetadataModel _model = new ViewMetadataModel()
                 {
-                    _GetBranchById.ReadFromDatabase(id);
-                    var branch = _GetBranchById.GetBranches();
-                    Branch.Add(branch);
-                }
-
-                _GetStateById.SetDatabase(_Connection.GetDatabase());
-                _GetStateById.ReadFromDatabase(item.State);
-                string State = _GetStateById.GetStateDescription();
-
-                MetadataListModel _model = new MetadataListModel()
-                {
-                    Name = Name,
-                    Version = Version,
-                    Date = Date,
-                    Branch = Branch,
-                    State = State
+                    Name = model.Name,
+                    Version = model.Version.ToString(),
+                    Date = model.CreatedDate.ToShortDateString(),
+                    Branch = _GetBranchById.GetBranches(),
+                    State = _GetStateById.GetStateDescription()
                 };
                 ListModel.Add(_model);
             }
-            return View(ListModel);
+
+            PagedList<ViewMetadataModel> newModel = new PagedList<ViewMetadataModel>(ListModel.AsQueryable(), page, pageSize);
+            return View(newModel);
         }
 
         [HttpGet("/ProcessMetadata/ProcessDetails/{id}")]

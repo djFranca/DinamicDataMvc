@@ -17,7 +17,7 @@ namespace DinamicDataMvc.Services
 
         public GetBranchByIdService()
         {
-            Branch = String.Empty;
+            Branch = " ";
         }
 
         public string GetBranches()
@@ -25,19 +25,25 @@ namespace DinamicDataMvc.Services
             return Branch;
         }
 
-        public void ReadFromDatabase(string id)
+        public void ReadFromDatabase(List<string> idList)
         {
             try
             {
-                if(id != null)
+                Branch = " ";
+
+                if(idList.Count > 0)
                 {
                     if(_Database != null)
                     {
                         var collection = _Database.GetCollection<BranchModel>("Branch");
-                        var model = collection.Find(s => s.Id == id).ToList();
-                        foreach(var item in model)
+
+                        foreach(var id in idList)
                         {
-                            Branch = item.Description;
+                            var model = collection.Find(s => s.Id == id).ToList();
+                            foreach (var item in model)
+                            {
+                                Branch += item.Description + " ";
+                            }
                         }
                     }
                 }

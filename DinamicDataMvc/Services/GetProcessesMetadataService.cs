@@ -13,6 +13,7 @@ namespace DinamicDataMvc.Services
         private string _NameFilteringResult;
         private int _VerionFilteringResult;
         private IMongoDatabase _Database;
+        private IMongoCollection<MetadataModel> _Collection;
 
         private List<MetadataModel> Model { get; set; }
 
@@ -50,6 +51,7 @@ namespace DinamicDataMvc.Services
             {
                 var collection = _Database.GetCollection<MetadataModel>("Metadata");
                 Model = collection.Find(s => true).ToList();
+                _Collection = collection;
 
                 #region Filtering Data
                 if (_NameFilteringResult != null && _VerionFilteringResult != 0)
@@ -78,6 +80,11 @@ namespace DinamicDataMvc.Services
         public void SetDatabase(IMongoDatabase database)
         {
             _Database = database;
+        }
+
+        public IMongoCollection<MetadataModel> GetMetadata()
+        {
+            return _Collection;
         }
 
         #endregion

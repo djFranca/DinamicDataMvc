@@ -26,8 +26,8 @@ namespace DinamicDataMvc.Controllers
             _Data = Data;
         }
 
-        [HttpGet("/ProcessDetails/Details/{id}")]
-        public IActionResult Details(string id)
+        [HttpGet("/ProcessDetails/ByName/{id}")]
+        public IActionResult ByName(string id)
         {
             if(id == null)
             {
@@ -42,22 +42,22 @@ namespace DinamicDataMvc.Controllers
 
             foreach (var model in ModelsList)
             {
-                List<string> Branches = new List<string>();
+                
 
                 ViewBag.Name = model.Name; //Stores the process name;
-                foreach (var branchCode in model.Branch)
-                {
-                    _Branch.SetDatabase(_Connection.GetDatabase());
-                    _Branch.ReadFromDatabase(branchCode);
-                    Branches.Add(_Branch.GetBranches());
-                }
+
+                _Branch.SetDatabase(_Connection.GetDatabase());
+                _Branch.ReadFromDatabase(model.Branch);
+
+
                 ProcessDetailsModel processDetailsModel = new ProcessDetailsModel()
                 {
                     Version = "V" + model.Version.ToString(),
                     CreationDate = model.CreatedDate.Date.ToString(),
-                    Branches = Branches
+                    Branches = _Branch.GetBranches()
                 };
                 ProcessesDetailsList.Add(processDetailsModel);
+                
             }
 
             return View(ProcessesDetailsList);
@@ -78,7 +78,6 @@ namespace DinamicDataMvc.Controllers
             _VersionCode.SetNumber(id);
             int versionNumber = _VersionCode.GetVersionNumber();
 
-            List<string> branchList = new List<string>();
 
             _Connection.DatabaseConnection(); //Estabeleçe-se a conexão com a base de dados;
             var _database = _Connection.GetDatabase(); //Obtêm-se a base de dados pretendida para trabalhar as coleções de dados;
@@ -95,12 +94,9 @@ namespace DinamicDataMvc.Controllers
                 }
             }
 
-            foreach(var branch in filteredModel.Branch)
-            {
-                _Branch.SetDatabase(_database);
-                _Branch.ReadFromDatabase(branch);
-                branchList.Add(_Branch.GetBranches());
-            }
+            _Branch.SetDatabase(_database);
+            _Branch.ReadFromDatabase(filteredModel.Branch);
+
 
             List<DataProcessModel> DataModelsList = new List<DataProcessModel>();
            
@@ -118,7 +114,7 @@ namespace DinamicDataMvc.Controllers
             {
                 Version = "V" + filteredModel.Version.ToString(),
                 CreationDate = filteredModel.CreatedDate.ToString(),
-                Branches = branchList
+                Branches = _Branch.GetBranches()
             };
 
             return View(filteredProcess);

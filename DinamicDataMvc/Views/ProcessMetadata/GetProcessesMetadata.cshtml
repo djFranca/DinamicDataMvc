@@ -1,4 +1,6 @@
-﻿@model IEnumerable<DinamicDataMvc.Models.MetadataListModel>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PagedList.Core.Mvc
+@model PagedList.Core.PagedList<DinamicDataMvc.Models.ViewMetadataModel>
 @{
     ViewData["Title"] = "TestMetadataList";
 }
@@ -21,19 +23,19 @@
             <thead>
                 <tr>
                     <th valign="middle" align="center">
-                        @Html.DisplayNameFor(model => model.Name)
+                        @Html.DisplayNameFor(model => model[0].Name)
                     </th>
                     <th valign="middle" align="center">
-                        @Html.DisplayNameFor(model => model.Version)
+                        @Html.DisplayNameFor(model => model[0].Version)
                     </th>
                     <th valign="middle" align="center">
-                        @Html.DisplayNameFor(model => model.Date)
+                        @Html.DisplayNameFor(model => model[0].Date)
                     </th>
                     <th valign="middle" align="center">
-                        @Html.DisplayNameFor(model => model.Branch)
+                        @Html.DisplayNameFor(model => model[0].Branch)
                     </th>
                     <th valign="middle" align="center">
-                        @Html.DisplayNameFor(model => model.State)
+                        @Html.DisplayNameFor(model => model[0].State)
                     </th>
                 </tr>
             </thead>
@@ -42,7 +44,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Name), "ProcessDetails", "ProcessMetadata", new { ID = item.Name })
+                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Name), "ByName", "ProcessDetails", new { ID = item.Name })
                         </td>
                         <td>
                             @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Version), "ByVersion", "ProcessDetails", new { ID = item.Version, Name = item.Name })
@@ -51,12 +53,7 @@
                             @Html.DisplayTextFor(modelItem => item.Date)
                         </td>
                         <td>
-                            @foreach (string branch in item.Branch)
-                            {
-                                <span>
-                                    @Html.DisplayTextFor(s => branch)
-                                </span>
-                            }
+                            @Html.DisplayTextFor(modelItem => item.Branch)
                         </td>
                         <td>
                             @Html.DisplayTextFor(modelItem => item.State)
@@ -67,6 +64,11 @@
                     </tr>
                 }
             </tbody>
+            <tr>
+                <td colspan="3" align="left">
+                    <pager list="@Model" asp-action="GetProcessesMetadata" asp-controller="ProcessMetadata"></pager>
+                </td>
+            </tr>
         </table>
     </div>
 </section>

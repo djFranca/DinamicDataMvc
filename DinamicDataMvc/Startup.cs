@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
@@ -45,6 +46,8 @@ namespace DinamicDataMvc
 
             services.AddSingleton<IVersionNumber, VersionNumber>(s => new VersionNumber());
             services.AddSingleton<IGetDataById, GetDataByIdService>(s => new GetDataByIdService());
+
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             
             services.AddSwaggerGen(doc =>
             {

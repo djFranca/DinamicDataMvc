@@ -7,7 +7,7 @@ namespace DinamicDataMvc.Interfaces
     {
         void SetDatabase(IMongoDatabase database);
 
-        void ReadFromDatabase(string id);
+        void ReadFromDatabase(List<string> branchIdList);
 
         string GetBranches();
     }

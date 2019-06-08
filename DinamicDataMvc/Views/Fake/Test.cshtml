@@ -1,0 +1,49 @@
+﻿@*@model IEnumerable<DinamicDataMvc.Models.MetadataListModel>*@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PagedList.Core.Mvc
+@{
+    Layout = null;
+}
+
+@model  PagedList.Core.PagedList<DinamicDataMvc.Models.ViewMetadataModel>
+
+@*@using (Html.BeginForm("Test", "Fake", FormMethod.Get))
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" />
+    </p>
+}*@
+
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Listagem de Metadados</title>
+</head>
+<body>
+    <table border="1" style="border-style:solid">
+        <tr>
+            <th>Name</th>
+            <th>Version</th>
+            <th>Date</th>
+            <th>Branch</th>
+            <th>State</th>
+        </tr>
+        @foreach(var metadata in Model)
+        {
+            <tr>
+                <td>@metadata.Name</td>
+                <td>@metadata.Version</td>
+                <td>@metadata.Date</td>
+                <td>@metadata.Branch</td>
+                <td>@metadata.State</td>
+            </tr>
+        }
+        <tr>
+            <td colspan="3" align="left">
+                <pager list="Model" asp-controller="Fake" asp-action="Test" />
+            </td>
+        </tr>
+    </table>
+</body>
+

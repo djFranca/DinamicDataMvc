@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "cd0eabf4d0f3397f39214e88353502b5ab2d57f6"
+    "signature": "e35d4a4b18097a79c9ba8ff0df7941b4748919b2"
   },
   "compilationOptions": {
     "defines": [
@@ -29,7 +29,7 @@
           "Microsoft.NETCore.App": "2.2.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "2.2.3",
           "MongoDB.Driver": "2.8.1",
-          "PagedList.Mvc": "4.5.0",
+          "PagedList.Core.Mvc": "1.2.0",
           "Swashbuckle.AspNetCore": "4.0.1",
           "Swashbuckle.AspNetCore.Swagger": "4.0.1"
         },
@@ -289,29 +289,31 @@
           "lib/netstandard1.6/NuGet.Frameworks.dll": {}
         }
       },
-      "PagedList/1.17.0": {
+      "PagedList.Core/1.17.4": {
         "runtime": {
-          "lib/net40/PagedList.dll": {
-            "assemblyVersion": "1.17.0.0",
-            "fileVersion": "1.17.0.0"
+          "lib/netcoreapp1.0/PagedList.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         },
         "compile": {
-          "lib/net40/PagedList.dll": {}
+          "lib/netcoreapp1.0/PagedList.Core.dll": {}
         }
       },
-      "PagedList.Mvc/4.5.0": {
+      "PagedList.Core.Mvc/1.2.0": {
         "dependencies": {
-          "PagedList": "1.17.0"
+          "Microsoft.AspNetCore.Mvc.ViewFeatures": "2.2.0",
+          "Microsoft.AspNetCore.Razor.Runtime": "2.2.0",
+          "PagedList.Core": "1.17.4"
         },
         "runtime": {
-          "lib/net40/PagedList.Mvc.dll": {
-            "assemblyVersion": "4.5.0.0",
-            "fileVersion": "4.5.0.0"
+          "lib/netstandard2.0/PagedList.Core.Mvc.dll": {
+            "assemblyVersion": "1.2.0.0",
+            "fileVersion": "1.2.0.0"
           }
         },
         "compile": {
-          "lib/net40/PagedList.Mvc.dll": {}
+          "lib/netstandard2.0/PagedList.Core.Mvc.dll": {}
         }
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
@@ -4095,19 +4097,19 @@
       "path": "nuget.frameworks/4.7.0",
       "hashPath": "nuget.frameworks.4.7.0.nupkg.sha512"
     },
-    "PagedList/1.17.0": {
+    "PagedList.Core/1.17.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Ou6F3WKXh49hOo0TxWM+SkIGuKllYPuPPvnSYOlQ1sTrtuEyuDUhYbSJd5Sdb06i/sWUJZTjiUecEs3Ht/Hx3g==",
-      "path": "pagedlist/1.17.0",
-      "hashPath": "pagedlist.1.17.0.nupkg.sha512"
+      "sha512": "sha512-Me111vdmlPp4GGeHqvNlnv4Raq1f1F77fDsJebuKsHCZXG4v4kMDzd5h1YVDv/Q7q9DuVgueR9mxp7eO7Yj4LA==",
+      "path": "pagedlist.core/1.17.4",
+      "hashPath": "pagedlist.core.1.17.4.nupkg.sha512"
     },
-    "PagedList.Mvc/4.5.0": {
+    "PagedList.Core.Mvc/1.2.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-D0M4qW2g4a9cwG8ozIKUnJheCrm5GpFTceqUl63AXWaAVnTgk+TysZYUOGMsBRuzid8aF+/E8b0bXM6+90jiEw==",
-      "path": "pagedlist.mvc/4.5.0",
-      "hashPath": "pagedlist.mvc.4.5.0.nupkg.sha512"
+      "sha512": "sha512-yJTzoSesSCmZnJVQ4COBGDBNcE5Caca0BkJ6tUPmgFOiqcbdLjzT1nOcfFyAG4oiK/s7gPPRVe1jbirFRyTevA==",
+      "path": "pagedlist.core.mvc/1.2.0",
+      "hashPath": "pagedlist.core.mvc.1.2.0.nupkg.sha512"
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
       "type": "package",

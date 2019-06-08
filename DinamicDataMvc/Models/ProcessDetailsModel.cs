@@ -12,6 +12,6 @@ namespace DinamicDataMvc.Models
         public string CreationDate { get; set; }
 
         [Display(Name = "Branches")]
-        public List<string> Branches { get; set; }
+        public string Branches { get; set; }
     }
 }

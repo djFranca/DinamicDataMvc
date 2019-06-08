@@ -13,5 +13,7 @@ namespace DinamicDataMvc.Interfaces
         void ReadFromDatababe();
 
         List<MetadataModel> GetProcessesMetadataList();
+
+        IMongoCollection<MetadataModel> GetMetadata();
     }
 }
