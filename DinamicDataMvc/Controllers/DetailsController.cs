@@ -47,7 +47,7 @@ namespace DinamicDataMvc.Controllers
                     Id = model.Id,
                     Name = model.Name,
                     Version = model.Version.ToString(),
-                    Date = model.CreatedDate.ToShortDateString(),
+                    Date = model.Date,
                     Branch = _Branch.GetBranches(),
                     State = null,
                 };
@@ -69,7 +69,6 @@ namespace DinamicDataMvc.Controllers
             string name = Request.Query["Name"];
             ViewBag.Name = name;
 
-            //_VersionCode.SetNumber(id);
             int versionNumber = Convert.ToInt32(id);
 
 
@@ -109,7 +108,7 @@ namespace DinamicDataMvc.Controllers
                 Id = filteredModel.Id,
                 Name = filteredModel.Name,
                 Version = filteredModel.Version.ToString(),
-                Date = filteredModel.CreatedDate.ToString(),
+                Date = filteredModel.Date,
                 Branch = _Branch.GetBranches(),
                 State = null
             };

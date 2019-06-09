@@ -36,8 +36,9 @@ namespace DinamicDataMvc.Models
         [Display(Name = "Required")]
         public bool Required { get; set; }
 
-        [BsonElement("CreationDate")]
-        [Display(Name = "Creation Date")]
-        public DateTime CreationDate { get; set; }
+        [BsonElement("Date")]
+        [Display(Name = "Date")]
+        [BsonRepresentation(BsonType.String)]
+        public string Date { get; set; }
     }
 }

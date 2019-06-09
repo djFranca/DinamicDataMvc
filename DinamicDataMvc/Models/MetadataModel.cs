@@ -26,15 +26,16 @@ namespace DinamicDataMvc.Models
         [Display(Name = "Version")]
         public int Version { get; set; }
 
-        [BsonElement("CreatedDate")]
+        [BsonElement("Date")]
         [Display(Name = "Date")]
-        [BsonRepresentation(BsonType.DateTime)]
-        public DateTime CreatedDate { get; set; }
+        [BsonRepresentation(BsonType.String)]
+        public string Date { get; set; }
 
         [BsonElement("State")]
         [Display(Name = "State")]
         public string State { get; set; }
 
+        [Required]
         [BsonElement("Data")]
         [Display(Name = "Data")]
         public List<string> Data { get; set; }

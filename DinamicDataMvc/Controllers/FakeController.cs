@@ -85,7 +85,7 @@ namespace DinamicDataMvc.Tests
                 {
                     Name = metadata.Name,
                     Version = metadata.Version.ToString(),
-                    Date = metadata.CreatedDate.ToShortDateString(),
+                    Date = metadata.Date,
                     Branch = _GetBranchById.GetBranches(),
                     State = _GetStateById.GetStateDescription()
                 };
