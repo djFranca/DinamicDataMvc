@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DinamicDataMvc.Models
 {
-    public class DataProcessModel
+    public class FieldModel
     {
         [BsonId]
         [Display(Name = "ID")]

@@ -44,10 +44,10 @@
                 {
                     <tr>
                         <td>
-                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Name), "ByName", "ProcessDetails", new { ID = item.Name })
+                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Name), "ByName", "Details", new { ID = item.Name })
                         </td>
                         <td>
-                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Version), "ByVersion", "ProcessDetails", new { ID = item.Version, Name = item.Name })
+                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Version), "ByVersion", "Details", new { ID = item.Version, Name = item.Name })
                         </td>
                         <td>
                             @Html.DisplayTextFor(modelItem => item.Date)
@@ -59,7 +59,7 @@
                             @Html.DisplayTextFor(modelItem => item.State)
                         </td>
                         <td>
-                            @Html.ActionLink("Delete", "Delete", new { ID = item.Id})
+                            @Html.ActionLink("Delete", "Metadata", new { ID = item.Id})
                         </td>
                     </tr>
                 }

@@ -26,13 +26,13 @@ C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataM
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.csproj.CopyComplete
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Fake\_Filter.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Home\HomePage.g.cshtml.cs
-C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\ProcessDetails\_ByVersionHeader.g.cshtml.cs
-C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\ProcessDetails\ByVersion.g.cshtml.cs
-C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\ProcessDetails\Properties.g.cshtml.cs
-C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\ProcessDetails\ByName.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Fake\Test.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.csprojAssemblyReference.cache
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Metadata\_Filter.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Metadata\GetMetadata.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Metadata\Delete.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\GetFields.g.cshtml.cs
+C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Details\ByName.g.cshtml.cs
+C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Details\ByVersion.g.cshtml.cs
+C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Details\Properties.g.cshtml.cs
+C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Details\_ByVersionHeader.g.cshtml.cs

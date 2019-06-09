@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace DinamicDataMvc.Services
 {
-    public class GetDataByIdService : IGetDataById
+    public class FieldService : IFieldService
     {
         private IMongoDatabase Database { get; set; }
 
-        DataProcessModel Data{ get; set; }
+        FieldModel Data{ get; set; }
 
-        public DataProcessModel GetModel()
+        public FieldModel GetModel()
         {
             return Data;
         }
@@ -23,7 +23,7 @@ namespace DinamicDataMvc.Services
             {
                 if (!String.IsNullOrEmpty(id))
                 {
-                    var collection = Database.GetCollection<DataProcessModel>("Data");
+                    var collection = Database.GetCollection<FieldModel>("Data");
                     Data = collection.Find(s => s.Id == id).First();
                 }
             }

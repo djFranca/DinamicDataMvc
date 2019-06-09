@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DinamicDataMvc.Interfaces
 {
-    public interface IGetProcessDetailsByName
+    public interface IDetailsService
     {
         void SetDatabase(IMongoDatabase Database);
 

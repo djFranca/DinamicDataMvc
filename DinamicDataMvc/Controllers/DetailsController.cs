@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DinamicDataMvc.Controllers
 {
-    public class ProcessDetailsController : Controller
+    public class DetailsController : Controller
     {
-        private readonly IConnectionManagement _Connection;
-        private readonly IGetProcessDetailsByName _Details;
-        private readonly IGetBranchById _Branch;
-        private readonly IGetDataById _Data;
+        private readonly IConnectionManagementService _Connection;
+        private readonly IDetailsService _Details;
+        private readonly IBranchService _Branch;
+        private readonly IFieldService _Data;
 
-        public ProcessDetailsController(IConnectionManagement Connection, IGetProcessDetailsByName Details, IGetBranchById Branch, IGetDataById Data)
+        public DetailsController(IConnectionManagementService Connection, IDetailsService Details, IBranchService Branch, IFieldService Data)
         {
             _Connection = Connection;
             _Details = Details;
@@ -22,7 +22,7 @@ namespace DinamicDataMvc.Controllers
             _Data = Data;
         }
 
-        [HttpGet("/ProcessDetails/ByName/{id}")]
+        [HttpGet("/Details/ByName/{id}")]
         public IActionResult ByName(string id)
         {
             if(id == null)
@@ -57,7 +57,7 @@ namespace DinamicDataMvc.Controllers
             return View("ByName", viewModelList);
         }
 
-        [HttpGet("/ProcessDetails/ByVersion/{id}")]
+        [HttpGet("/Details/ByVersion/{id}")]
         public IActionResult ByVersion(string id)
         {
             //Se o valor do identificador, for nulo ou vazio, o controlador devolve o status: BadRequest() --> error 400; 
@@ -92,17 +92,17 @@ namespace DinamicDataMvc.Controllers
             _Branch.ReadFromDatabase(filteredModel.Branch);
 
 
-            List<DataProcessModel> DataModelsList = new List<DataProcessModel>();
+            List<FieldModel> FieldsList = new List<FieldModel>();
            
             foreach(var itemId in filteredModel.Data)
             {
                 _Data.SetDatabase(_database);
                 _Data.ReadFromDatabase(itemId);
-                DataProcessModel model = _Data.GetModel();
-                DataModelsList.Add(model);
+                FieldModel model = _Data.GetModel();
+                FieldsList.Add(model);
             }
 
-            ViewBag.Data = DataModelsList;
+            ViewBag.Data = FieldsList;
 
             ViewMetadataModel filteredProcess = new ViewMetadataModel()
             {
@@ -114,10 +114,10 @@ namespace DinamicDataMvc.Controllers
                 State = null
             };
 
-            return View(filteredProcess);
+            return View("ByVersion", filteredProcess);
         }
 
-        [HttpGet("/ProcessDetails/Properties")]
+        [HttpGet("/Details/Properties")]
         public IActionResult Properties()
         {
             string Id = Request.Query["ID"];

@@ -7,12 +7,12 @@ using System;
 
 namespace DinamicDataMvc.Services
 {
-    public class GetStateByIdService : IGetStateById
+    public class StateService : IStateService
     {
         private IMongoDatabase _Database;
         private string _State;
 
-        public GetStateByIdService()
+        public StateService()
         {
             _State = String.Empty;
         }

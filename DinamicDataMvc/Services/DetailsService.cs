@@ -7,12 +7,12 @@ using System.Linq;
 
 namespace DinamicDataMvc.Services
 {
-    public class GetProcessDetailsByNameService : IGetProcessDetailsByName
+    public class DetailsService : IDetailsService
     {
         private List<MetadataModel> ModelsList { get; set; }
         private IMongoDatabase _Database;
 
-        public GetProcessDetailsByNameService()
+        public DetailsService()
         {
             ModelsList = new List<MetadataModel>();
         }

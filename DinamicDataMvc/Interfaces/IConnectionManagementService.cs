@@ -2,7 +2,7 @@
 
 namespace DinamicDataMvc.Interfaces
 {
-    public interface IConnectionManagement
+    public interface IConnectionManagementService
     {
         void DatabaseConnection();
 

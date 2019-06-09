@@ -8,14 +8,14 @@ using System.Linq;
 
 namespace DinamicDataMvc.Services
 {
-    public class GetBranchByIdService : IGetBranchById
+    public class BranchService : IBranchService
     {
 
         private IMongoDatabase _Database;
 
         private string Branch { get; set; }
 
-        public GetBranchByIdService()
+        public BranchService()
         {
             Branch = " ";
         }

@@ -38,13 +38,13 @@ namespace DinamicDataMvc
             });
 
             services.AddSingleton<IMetadataService, MetadataService>(s => new MetadataService(nameFilteringResult, versionFilteringResult));
-            services.AddSingleton<IGetBranchById, GetBranchByIdService>(s => new GetBranchByIdService());
-            services.AddSingleton<IConnectionManagement, ConnectionManagementService>(s => new ConnectionManagementService(ConnectionString, DatabaseName));
+            services.AddSingleton<IBranchService, BranchService>(s => new BranchService());
+            services.AddSingleton<IConnectionManagementService, ConnectionManagementService>(s => new ConnectionManagementService(ConnectionString, DatabaseName));
 
-            services.AddSingleton<IGetStateById, GetStateByIdService>(s => new GetStateByIdService());
-            services.AddSingleton<IGetProcessDetailsByName, GetProcessDetailsByNameService>(s => new GetProcessDetailsByNameService());
+            services.AddSingleton<IStateService, StateService>(s => new StateService());
+            services.AddSingleton<IDetailsService, DetailsService>(s => new DetailsService());
 
-            services.AddSingleton<IGetDataById, GetDataByIdService>(s => new GetDataByIdService());
+            services.AddSingleton<IFieldService, FieldService>(s => new FieldService());
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DinamicDataMvc.Interfaces
 {
-    public interface IGetBranchById
+    public interface IBranchService
     {
         void SetDatabase(IMongoDatabase database);
 

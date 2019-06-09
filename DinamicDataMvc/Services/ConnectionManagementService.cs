@@ -5,7 +5,7 @@ using System;
 
 namespace DinamicDataMvc.Services
 {
-    public class ConnectionManagementService : IConnectionManagement
+    public class ConnectionManagementService : IConnectionManagementService
     {
         private IMongoDatabase _Database;
         private readonly string _ConnectionString;

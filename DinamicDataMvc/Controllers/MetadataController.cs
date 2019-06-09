@@ -10,12 +10,12 @@ namespace DinamicDataMvc.Controllers
 {
     public class MetadataController : Controller
     {
-        private readonly IConnectionManagement _Connection;
+        private readonly IConnectionManagementService _Connection;
         private readonly IMetadataService _GetMetadata;
-        private readonly IGetBranchById _GetBranchById;
-        private readonly IGetStateById _GetStateById;
+        private readonly IBranchService _GetBranchById;
+        private readonly IStateService _GetStateById;
 
-        public MetadataController(IConnectionManagement Connection, IMetadataService GetMetadata, IGetBranchById GetBranchById, IGetStateById GetStateById)
+        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById)
         {
             _Connection = Connection;
             _GetMetadata = GetMetadata;
@@ -75,13 +75,11 @@ namespace DinamicDataMvc.Controllers
             return View("GetMetadata", newModel);
         }
 
-
         [HttpGet("/Metadata/GetDetails/{id}")]
         public IActionResult GetDetails(string id)
         {
             return Redirect("~/ProcessDetails/Details/" + id);
         }
-
 
         [HttpGet("/Metadata/Delete/{id}")]
         public IActionResult Delete(string id)

@@ -1,14 +1,13 @@
-﻿using DinamicDataMvc.Models;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 
 namespace DinamicDataMvc.Interfaces
 {
-    public interface IGetDataById
+    public interface IStateService
     {
         void SetDatabase(IMongoDatabase database);
 
         void ReadFromDatabase(string id);
 
-        DataProcessModel GetModel();
+        string GetStateDescription();
     }
 }

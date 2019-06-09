@@ -1,13 +1,14 @@
-﻿using MongoDB.Driver;
+﻿using DinamicDataMvc.Models;
+using MongoDB.Driver;
 
 namespace DinamicDataMvc.Interfaces
 {
-    public interface IGetStateById
+    public interface IFieldService
     {
         void SetDatabase(IMongoDatabase database);
 
         void ReadFromDatabase(string id);
 
-        string GetStateDescription();
+        FieldModel GetModel();
     }
 }

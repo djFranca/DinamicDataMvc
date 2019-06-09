@@ -9,10 +9,10 @@ namespace DinamicDataMvc.Controllers
 {
     public class FieldController : Controller
     {
-        private readonly IConnectionManagement _Connection;
+        private readonly IConnectionManagementService _Connection;
         private readonly IMetadataService _Processes;
 
-        public FieldController(IConnectionManagement Connection, IMetadataService Processes)
+        public FieldController(IConnectionManagementService Connection, IMetadataService Processes)
         {
             _Connection = Connection;
             _Processes = Processes;

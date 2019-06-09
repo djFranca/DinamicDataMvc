@@ -1,7 +1,7 @@
 ﻿@model DinamicDataMvc.Models.ViewMetadataModel
 @{
     ViewData["Title"] = "ByVersion";
-    var ProcessVersionData = ViewBag.Data as IEnumerable<DataProcessModel>;
+    var ProcessVersionData = ViewBag.Data as IEnumerable<FieldModel>;
 }
 <section id="ProcessName">
     <div class="text-body">
@@ -34,7 +34,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.ActionLink(@Html.DisplayTextFor(model => item.Type), "Properties", "ProcessDetails", new {ID = item.Id })
+                            @Html.ActionLink(@Html.DisplayTextFor(model => item.Type), "Properties", "Details", new {ID = item.Id })
                         </td>
                         <td>
                             @Html.DisplayTextFor(model => item.Field)
