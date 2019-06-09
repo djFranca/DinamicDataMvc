@@ -65,7 +65,7 @@ namespace DinamicDataMvc.Controllers
                     Id = model.Id,
                     Name = model.Name,
                     Version = model.Version.ToString(),
-                    Date = model.Date,
+                    Date = model.Date.Day.ToString() + "/" + model.Date.Month.ToString() + "/" +model.Date.Year.ToString(),
                     Branch = _GetBranchById.GetBranches(),
                     State = _GetStateById.GetStateDescription()
                 };

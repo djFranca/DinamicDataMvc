@@ -47,7 +47,7 @@ namespace DinamicDataMvc.Controllers
                     Id = model.Id,
                     Name = model.Name,
                     Version = model.Version.ToString(),
-                    Date = model.Date,
+                    Date = model.Date.Day.ToString() + "/" + model.Date.Month.ToString() + "/" + model.Date.Year.ToString(),
                     Branch = _Branch.GetBranches(),
                     State = null,
                 };
@@ -108,7 +108,7 @@ namespace DinamicDataMvc.Controllers
                 Id = filteredModel.Id,
                 Name = filteredModel.Name,
                 Version = filteredModel.Version.ToString(),
-                Date = filteredModel.Date,
+                Date = filteredModel.Date.Day.ToString() + "/" + filteredModel.Date.Month.ToString() + "/" + filteredModel.Date.Year.ToString(),
                 Branch = _Branch.GetBranches(),
                 State = null
             };

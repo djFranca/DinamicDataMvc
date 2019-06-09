@@ -38,7 +38,7 @@ namespace DinamicDataMvc.Models
 
         [BsonElement("Date")]
         [Display(Name = "Date")]
-        [BsonRepresentation(BsonType.String)]
-        public string Date { get; set; }
+        [BsonRepresentation(BsonType.DateTime)]
+        public DateTime Date { get; set; }
     }
 }
