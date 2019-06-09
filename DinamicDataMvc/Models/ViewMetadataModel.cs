@@ -6,6 +6,9 @@ namespace DinamicDataMvc.Models
 {
     public class ViewMetadataModel
     {
+        [DisplayName("Id")]
+        public string Id { get; set; }
+
         [DisplayName("Name")]
         public string Name { get; set; }
 

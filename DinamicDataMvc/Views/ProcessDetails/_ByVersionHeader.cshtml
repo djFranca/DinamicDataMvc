@@ -1,7 +1,10 @@
-﻿@model  DinamicDataMvc.Models.ProcessDetailsModel
+﻿@model  DinamicDataMvc.Models.ViewMetadataModel
 @{ 
     bool[] branchesState = new bool[3] { false, false, false};
-    foreach(var description in Model.Branches)
+
+    string[] branchList = Model.Branch.Split(" ");
+
+    foreach(var description in branchList)
     {
         if (description.Equals("Development")) {
             branchesState[0] = true;
@@ -23,7 +26,7 @@
             <strong><b>@Html.Label("Version: ")</b></strong>
             @Html.DisplayTextFor(s => s.Version)
             <strong><b>@Html.Label("Creation Date: ")</b></strong>
-            @Html.DisplayTextFor(s => s.CreationDate)
+            @Html.DisplayTextFor(s => s.Date)
             <strong><b>@Html.Label("Branches: ")</b></strong>
             <b><i>@Html.Label("Development ")</i></b>
             @Html.CheckBox("Development", @branchesState[0])

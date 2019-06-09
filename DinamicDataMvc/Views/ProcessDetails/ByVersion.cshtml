@@ -1,10 +1,8 @@
-﻿@model DinamicDataMvc.Models.ProcessDetailsModel
-
+﻿@model DinamicDataMvc.Models.ViewMetadataModel
 @{
     ViewData["Title"] = "ByVersion";
     var ProcessVersionData = ViewBag.Data as IEnumerable<DataProcessModel>;
 }
-
 <section id="ProcessName">
     <div class="text-body">
         <h4>Process @Html.ViewBag.Name</h4>
@@ -47,7 +45,7 @@
         </table>
     </div>
     <div>
-        @Html.ActionLink("Back to list", "TestMetadataList", "Fake")
+        @Html.ActionLink("Back to list", "GetMetadata", "Metadata")
     </div>
 </section>
 

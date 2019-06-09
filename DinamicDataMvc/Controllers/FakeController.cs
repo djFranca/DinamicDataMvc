@@ -16,11 +16,11 @@ namespace DinamicDataMvc.Tests
     public class FakeController : Controller
     {
         private readonly IConnectionManagement _Connection;
-        private readonly IGetProcessesMetadata _GetMetadata;
+        private readonly IMetadataService _GetMetadata;
         private readonly IGetBranchById _GetBranchById;
         private readonly IGetStateById _GetStateById;
 
-        public FakeController(IConnectionManagement Connection, IGetProcessesMetadata Metadata, IGetBranchById Branch, IGetStateById State)
+        public FakeController(IConnectionManagement Connection, IMetadataService Metadata, IGetBranchById Branch, IGetStateById State)
         {
             _Connection = Connection;
             _GetMetadata = Metadata;

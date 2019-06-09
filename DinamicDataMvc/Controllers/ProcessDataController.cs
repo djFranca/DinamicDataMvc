@@ -10,9 +10,9 @@ namespace DinamicDataMvc.Controllers
     public class ProcessDataController : Controller
     {
         private readonly IConnectionManagement _Connection;
-        private readonly IGetProcessesMetadata _Processes;
+        private readonly IMetadataService _Processes;
 
-        public ProcessDataController(IConnectionManagement Connection, IGetProcessesMetadata Processes)
+        public ProcessDataController(IConnectionManagement Connection, IMetadataService Processes)
         {
             _Connection = Connection;
             _Processes = Processes;

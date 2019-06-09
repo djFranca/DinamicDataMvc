@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DinamicDataMvc.Interfaces
 {
-    public interface IGetProcessesMetadata
+    public interface IMetadataService
     {
         void SetDatabase(IMongoDatabase database);
 
@@ -15,5 +15,7 @@ namespace DinamicDataMvc.Interfaces
         List<MetadataModel> GetProcessesMetadataList();
 
         IMongoCollection<MetadataModel> GetMetadata();
+
+        MetadataModel GetModel(string id);
     }
 }

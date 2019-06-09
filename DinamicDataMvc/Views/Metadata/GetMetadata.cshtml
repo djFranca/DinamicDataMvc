@@ -8,7 +8,7 @@
     <div class="text-body">
         <h4>Filters</h4>
     </div>
-    @using (Html.BeginForm("Fake", "TestMetadataList", FormMethod.Get))
+    @using (Html.BeginForm("GetMetadata", "Metadata", FormMethod.Get))
     {
         @await Html.PartialAsync("_Filter")
     }
@@ -59,17 +59,18 @@
                             @Html.DisplayTextFor(modelItem => item.State)
                         </td>
                         <td>
-                            @Html.ActionLink("Delete", "Delete", new { /*ID = item.Id*/ })
+                            @Html.ActionLink("Delete", "Delete", new { ID = item.Id})
                         </td>
                     </tr>
                 }
             </tbody>
-            <tr>
-                <td colspan="3" align="left">
-                    <pager list="@Model" asp-action="GetProcessesMetadata" asp-controller="ProcessMetadata"></pager>
-                </td>
-            </tr>
         </table>
+    </div>
+</section>
+<br />
+<section>
+    <div class="pagination">
+        <pager list="@Model" asp-action="GetMetadata" asp-controller="Metadata"/>
     </div>
 </section>
 

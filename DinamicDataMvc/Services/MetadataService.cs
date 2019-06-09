@@ -1,12 +1,13 @@
 ﻿using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
 using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace DinamicDataMvc.Services
 {
-    public class GetProcessesMetadataService : IGetProcessesMetadata
+    public class MetadataService : IMetadataService
     {
         #region Properties
 
@@ -21,7 +22,7 @@ namespace DinamicDataMvc.Services
 
         #region Constructor
 
-        public GetProcessesMetadataService(string nameFilteringResult, int versionFilteringResult)
+        public MetadataService(string nameFilteringResult, int versionFilteringResult)
         {
             _NameFilteringResult = nameFilteringResult;
             _VerionFilteringResult = versionFilteringResult;
@@ -87,6 +88,22 @@ namespace DinamicDataMvc.Services
             return _Collection;
         }
 
+        public MetadataModel GetModel(string id)
+        {
+            MetadataModel model = null;
+            try
+            {
+                if(id != null)
+                {
+                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                    model = collection.Find(s => s.Id == id).FirstOrDefault();
+                }
+            }catch(Exception exception)
+            {
+                throw exception;
+            }
+            return model;
+        }
         #endregion
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DinamicDataMvc.Models.ProcessDetailsModel>
+﻿@model IEnumerable<DinamicDataMvc.Models.ViewMetadataModel>
 @{
     ViewData["Title"] = "Process Details";
 }
@@ -15,10 +15,10 @@
                         @Html.DisplayNameFor(model => model.Version)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.CreationDate)
+                        @Html.DisplayNameFor(model => model.Date)
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Branches)
+                        @Html.DisplayNameFor(model => model.Branch)
                     </th>
                     <th></th>
                 </tr>
@@ -31,15 +31,11 @@
                             @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Version), "ByVersion", "ProcessDetails", new { ID = item.Version, Name = ViewBag.Name })
                         </td>
                         <td>
-                            @Html.DisplayTextFor(modelItem => item.CreationDate)
+                            @Html.DisplayTextFor(modelItem => item.Date)
                         </td>
                         <td>
-                            @foreach (var branch in item.Branches)
-                            {
-                                <span>
-                                    @Html.DisplayTextFor(s => branch)
-                                </span>
-                            }
+                            @Html.DisplayTextFor(modelItem => item.Branch)
+
                         </td>
                         <td>
                             @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ })
@@ -50,7 +46,7 @@
         </table>
     </div>
     <div>
-        @Html.ActionLink("Back to list", "TestMetadataList", "Fake")
+        @Html.ActionLink("Back to list", "GetMetadata", "Metadata")
     </div>
 </section>
 

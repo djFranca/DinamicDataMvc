@@ -12,17 +12,13 @@ namespace DinamicDataMvc.Controllers
         private readonly IConnectionManagement _Connection;
         private readonly IGetProcessDetailsByName _Details;
         private readonly IGetBranchById _Branch;
-        private readonly IGetProcessDetailsByName _Process;
-        private readonly IVersionNumber _VersionCode;
         private readonly IGetDataById _Data;
 
-        public ProcessDetailsController(IConnectionManagement Connection, IGetProcessDetailsByName Details, IGetBranchById Branch, IGetProcessDetailsByName Process, IVersionNumber VersionCode, IGetDataById Data)
+        public ProcessDetailsController(IConnectionManagement Connection, IGetProcessDetailsByName Details, IGetBranchById Branch, IGetDataById Data)
         {
             _Connection = Connection;
             _Details = Details;
             _Branch = Branch;
-            _Process = Process;
-            _VersionCode = VersionCode;
             _Data = Data;
         }
 
@@ -33,34 +29,32 @@ namespace DinamicDataMvc.Controllers
             {
                 return BadRequest();
             }
-
-            List<ProcessDetailsModel> ProcessesDetailsList = new List<ProcessDetailsModel>();
             _Connection.DatabaseConnection();
             _Details.SetDatabase(_Connection.GetDatabase());
+            _Branch.SetDatabase(_Connection.GetDatabase());
+
             _Details.ReadFromTable(id);
-            var ModelsList = _Details.GetModels();
+            List<MetadataModel> modelList = _Details.GetModels();
+            List<ViewMetadataModel> viewModelList = new List<ViewMetadataModel>();
 
-            foreach (var model in ModelsList)
+            ViewBag.Name = modelList[0].Name; //Stores the process name;
+
+            foreach (var model in modelList)
             {
-                
-
-                ViewBag.Name = model.Name; //Stores the process name;
-
-                _Branch.SetDatabase(_Connection.GetDatabase());
                 _Branch.ReadFromDatabase(model.Branch);
-
-
-                ProcessDetailsModel processDetailsModel = new ProcessDetailsModel()
+                ViewMetadataModel _details = new ViewMetadataModel()
                 {
-                    Version = "V" + model.Version.ToString(),
-                    CreationDate = model.CreatedDate.Date.ToString(),
-                    Branches = _Branch.GetBranches()
+                    Id = model.Id,
+                    Name = model.Name,
+                    Version = model.Version.ToString(),
+                    Date = model.CreatedDate.ToShortDateString(),
+                    Branch = _Branch.GetBranches(),
+                    State = null,
                 };
-                ProcessesDetailsList.Add(processDetailsModel);
-                
+                viewModelList.Add(_details);
             }
 
-            return View(ProcessesDetailsList);
+            return View("ByName", viewModelList);
         }
 
         [HttpGet("/ProcessDetails/ByVersion/{id}")]
@@ -75,15 +69,15 @@ namespace DinamicDataMvc.Controllers
             string name = Request.Query["Name"];
             ViewBag.Name = name;
 
-            _VersionCode.SetNumber(id);
-            int versionNumber = _VersionCode.GetVersionNumber();
+            //_VersionCode.SetNumber(id);
+            int versionNumber = Convert.ToInt32(id);
 
 
             _Connection.DatabaseConnection(); //Estabeleçe-se a conexão com a base de dados;
             var _database = _Connection.GetDatabase(); //Obtêm-se a base de dados pretendida para trabalhar as coleções de dados;
-            _Process.SetDatabase(_database); //A base de dados em contexto é passada ao serviço;
-            _Process.ReadFromTable(name); //Obtem-se da tabela Metadata 
-            List<MetadataModel> models = _Process.GetModels(); //Armazena os modelos retornados que satisfaçam a condição ter um nome igual ao recebido
+            _Details.SetDatabase(_database); //A base de dados em contexto é passada ao serviço;
+            _Details.ReadFromTable(name); //Obtem-se da tabela Metadata 
+            List<MetadataModel> models = _Details.GetModels(); //Armazena os modelos retornados que satisfaçam a condição ter um nome igual ao recebido
 
             MetadataModel filteredModel = null;
             foreach(var model in models)
@@ -110,11 +104,14 @@ namespace DinamicDataMvc.Controllers
 
             ViewBag.Data = DataModelsList;
 
-            ProcessDetailsModel filteredProcess = new ProcessDetailsModel()
+            ViewMetadataModel filteredProcess = new ViewMetadataModel()
             {
-                Version = "V" + filteredModel.Version.ToString(),
-                CreationDate = filteredModel.CreatedDate.ToString(),
-                Branches = _Branch.GetBranches()
+                Id = filteredModel.Id,
+                Name = filteredModel.Name,
+                Version = filteredModel.Version.ToString(),
+                Date = filteredModel.CreatedDate.ToString(),
+                Branch = _Branch.GetBranches(),
+                State = null
             };
 
             return View(filteredProcess);

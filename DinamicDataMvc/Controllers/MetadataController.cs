@@ -8,14 +8,14 @@ using PagedList.Core;
 
 namespace DinamicDataMvc.Controllers
 {
-    public class ProcessMetadataController : Controller
+    public class MetadataController : Controller
     {
         private readonly IConnectionManagement _Connection;
-        private readonly IGetProcessesMetadata _GetMetadata;
+        private readonly IMetadataService _GetMetadata;
         private readonly IGetBranchById _GetBranchById;
         private readonly IGetStateById _GetStateById;
 
-        public ProcessMetadataController(IConnectionManagement Connection, IGetProcessesMetadata GetMetadata, IGetBranchById GetBranchById, IGetStateById GetStateById)
+        public MetadataController(IConnectionManagement Connection, IMetadataService GetMetadata, IGetBranchById GetBranchById, IGetStateById GetStateById)
         {
             _Connection = Connection;
             _GetMetadata = GetMetadata;
@@ -23,11 +23,14 @@ namespace DinamicDataMvc.Controllers
             _GetStateById = GetStateById;
         }
 
-        [HttpGet("/ProcessMetadata/GetProcessesMetadata")]
-        public IActionResult GetProcessesMetadata(int page = 1, int pageSize = 1)
+        [HttpGet("/Metadata/GetMetadata")]
+        public IActionResult GetMetadata(int? page)
         {
             string name = null;
             int version = 0;
+            int pageSize = 1;
+
+            int? pageNumber = page == null || page <= 0 ? 1 : page;
 
             //Verificações dos parâmetros recebidos no URL do pedido (nome e versão) do processo (Metadata)
             if (!Request.Query["SearchVersion"].Equals(""))
@@ -59,6 +62,7 @@ namespace DinamicDataMvc.Controllers
 
                 ViewMetadataModel _model = new ViewMetadataModel()
                 {
+                    Id = model.Id,
                     Name = model.Name,
                     Version = model.Version.ToString(),
                     Date = model.CreatedDate.ToShortDateString(),
@@ -67,15 +71,30 @@ namespace DinamicDataMvc.Controllers
                 };
                 ListModel.Add(_model);
             }
-
-            PagedList<ViewMetadataModel> newModel = new PagedList<ViewMetadataModel>(ListModel.AsQueryable(), page, pageSize);
-            return View(newModel);
+            PagedList<ViewMetadataModel> newModel = new PagedList<ViewMetadataModel>(ListModel.AsQueryable(), Convert.ToInt32(pageNumber), pageSize);
+            return View("GetMetadata", newModel);
         }
 
-        [HttpGet("/ProcessMetadata/ProcessDetails/{id}")]
-        public IActionResult ProcessDetails(string id)
+        [HttpGet("/Metadata/GetDetails/{id}")]
+        public IActionResult GetDetails(string id)
         {
             return Redirect("~/ProcessDetails/Details/" + id);
+        }
+
+        [HttpGet("/Metadata/Delete/{id}")]
+        public IActionResult Delete(string id)
+        {
+            var _model = _GetMetadata.GetModel(id);
+
+            if(_model == null)
+            {
+                return NotFound();
+            }
+            _GetStateById.SetDatabase(_Connection.GetDatabase());
+            _GetStateById.ReadFromDatabase(_model.State);
+            ViewBag.State = _GetStateById.GetStateDescription();
+
+            return View("Delete", _model);
         }
     }
 }
