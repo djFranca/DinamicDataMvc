@@ -35,8 +35,27 @@ namespace DinamicDataMvc.Services
 
         public void SetFilterParameters(string nameFilteringResult, int versionFilteringResult)
         {
-            _NameFilteringResult = nameFilteringResult;
-            _VerionFilteringResult = versionFilteringResult;
+            if(!String.IsNullOrEmpty(nameFilteringResult) && versionFilteringResult >= 1)
+            {
+                _NameFilteringResult = nameFilteringResult;
+                _VerionFilteringResult = versionFilteringResult;
+            }
+
+            else if(!String.IsNullOrEmpty(nameFilteringResult) && versionFilteringResult == 0)
+            {
+                _NameFilteringResult = nameFilteringResult;
+            }
+
+            else if (String.IsNullOrEmpty(nameFilteringResult) && versionFilteringResult >= 1)
+            {
+                _VerionFilteringResult = versionFilteringResult;
+            }
+
+            else
+            {
+                _NameFilteringResult = null;
+                _VerionFilteringResult = 0;
+            }
         }
 
         public List<MetadataModel> GetProcessesMetadataList()
@@ -98,11 +117,27 @@ namespace DinamicDataMvc.Services
                     var collection = _Database.GetCollection<MetadataModel>("Metadata");
                     model = collection.Find(s => s.Id == id).FirstOrDefault();
                 }
-            }catch(Exception exception)
+            }catch
             {
-                throw exception;
+                throw new KeyNotFoundException();
             }
             return model;
+        }
+
+        public void DeleteMetadata(string id)
+        {
+            try
+            {
+                if (id != null)
+                {
+                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                    collection.DeleteOne(s => s.Id == id);
+                }
+            }
+            catch
+            {
+                throw new KeyNotFoundException();
+            }
         }
         #endregion
     }

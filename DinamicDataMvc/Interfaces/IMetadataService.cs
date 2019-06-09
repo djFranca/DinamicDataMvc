@@ -17,5 +17,7 @@ namespace DinamicDataMvc.Interfaces
         IMongoCollection<MetadataModel> GetMetadata();
 
         MetadataModel GetModel(string id);
+
+        void DeleteMetadata(string id);
     }
 }

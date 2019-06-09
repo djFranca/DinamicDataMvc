@@ -7,19 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DinamicDataMvc.Controllers
 {
-    public class ProcessDataController : Controller
+    public class FieldController : Controller
     {
         private readonly IConnectionManagement _Connection;
         private readonly IMetadataService _Processes;
 
-        public ProcessDataController(IConnectionManagement Connection, IMetadataService Processes)
+        public FieldController(IConnectionManagement Connection, IMetadataService Processes)
         {
             _Connection = Connection;
             _Processes = Processes;
         }
 
-        [HttpGet("/ProcessData/GetProcess")]
-        public IActionResult GetProcesses()
+        [HttpGet("/Field/GetFields")]
+        public IActionResult GetFields()
         {
             _Connection.DatabaseConnection();
             _Processes.SetDatabase(_Connection.GetDatabase());

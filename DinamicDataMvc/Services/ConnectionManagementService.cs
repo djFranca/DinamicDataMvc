@@ -28,24 +28,23 @@ namespace DinamicDataMvc.Services
                 {
                     _Client = new MongoClient(_ConnectionString);
 
-                    //Verifica se existe um endereço : porto associado a esta conexão e se o nome da base de dados está especificado;
-                    if (_Client != null && ! String.IsNullOrEmpty(_DatabaseName))
+                    try
                     {
-                        _Database = _Client.GetDatabase(_DatabaseName);
+                        //Verifica se existe um endereço : porto associado a esta conexão e se o nome da base de dados está especificado;
+                        if (_Client != null && !String.IsNullOrEmpty(_DatabaseName))
+                        {
+                            _Database = _Client.GetDatabase(_DatabaseName);
+                        }
                     }
-                    else
+                    catch(Exception exception)
                     {
-                        Console.WriteLine("Error occurred " + ErrorMessages.DatabaseNameNotFound + " or " + ErrorMessages.ClientErrorException);
+                        throw new MongoClientException(exception.Message);
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Error occurred " + ErrorMessages.ConnectionStringNotFound);
                 }
             }
-            catch(Exception exception)
+            catch
             {
-                throw exception;
+                throw new ArgumentNullException();
             }
         }
 

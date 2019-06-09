@@ -28,17 +28,17 @@ namespace DinamicDataMvc.Controllers
         {
             string name = null;
             int version = 0;
-            int pageSize = 1;
+            int pageSize = 2;
 
             int? pageNumber = page == null || page <= 0 ? 1 : page;
 
             //Verificações dos parâmetros recebidos no URL do pedido (nome e versão) do processo (Metadata)
-            if (!Request.Query["SearchVersion"].Equals(""))
+            if (!String.IsNullOrEmpty(Request.Query["SearchVersion"]))
             {
                 version = Convert.ToInt32(Request.Query["SearchVersion"]);
             }
 
-            if (!Request.Query["SearchName"].Equals(""))
+            if (!String.IsNullOrEmpty(Request.Query["SearchName"]))
             {
                 name = Request.Query["SearchName"];
             }
@@ -75,26 +75,55 @@ namespace DinamicDataMvc.Controllers
             return View("GetMetadata", newModel);
         }
 
+
         [HttpGet("/Metadata/GetDetails/{id}")]
         public IActionResult GetDetails(string id)
         {
             return Redirect("~/ProcessDetails/Details/" + id);
         }
 
+
         [HttpGet("/Metadata/Delete/{id}")]
         public IActionResult Delete(string id)
         {
-            var _model = _GetMetadata.GetModel(id);
-
-            if(_model == null)
+            try
             {
-                return NotFound();
-            }
-            _GetStateById.SetDatabase(_Connection.GetDatabase());
-            _GetStateById.ReadFromDatabase(_model.State);
-            ViewBag.State = _GetStateById.GetStateDescription();
+                var _model = _GetMetadata.GetModel(id);
 
-            return View("Delete", _model);
+                if (_model == null)
+                {
+                    return NotFound();
+                }
+                _GetStateById.SetDatabase(_Connection.GetDatabase());
+                _GetStateById.ReadFromDatabase(_model.State);
+                ViewBag.State = _GetStateById.GetStateDescription();
+
+                return View("Delete", _model);
+            }
+            catch
+            {
+                throw new KeyNotFoundException();
+            }
+        }
+
+        [HttpPost("/Metadata/ConfirmDelete")]
+        public IActionResult ConfirmDelete(string id)
+        {
+            try
+            {
+                if (id != null)
+                {
+                    _Connection.DatabaseConnection();
+                    _GetMetadata.SetDatabase(_Connection.GetDatabase());
+                    _GetMetadata.DeleteMetadata(id);
+                }
+            }
+            catch(Exception exception)
+            {
+                throw new KeyNotFoundException(exception.Message);
+            }
+
+            return Redirect("~/Metadata/GetMetadata");
         }
     }
 }
