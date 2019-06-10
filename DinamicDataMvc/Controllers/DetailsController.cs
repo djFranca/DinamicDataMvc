@@ -91,13 +91,13 @@ namespace DinamicDataMvc.Controllers
             _Branch.ReadFromDatabase(filteredModel.Branch);
 
 
-            List<FieldModel> FieldsList = new List<FieldModel>();
+            List<ObjectModel> FieldsList = new List<ObjectModel>();
            
             foreach(var itemId in filteredModel.Data)
             {
                 _Data.SetDatabase(_database);
                 _Data.ReadFromDatabase(itemId);
-                FieldModel model = _Data.GetModel();
+                ObjectModel model = _Data.GetModel();
                 FieldsList.Add(model);
             }
 

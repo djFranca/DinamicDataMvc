@@ -32,19 +32,22 @@
                     <ul class="navbar-nav flex-grow-1">
 
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Metadata" asp-action="GetMetadata">Metadata</a>
+                            <a class="nav-link text-light" asp-controller="Metadata" asp-action="GetMetadata">Metadata</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Field" asp-action="GetFields">Fields</a>
+                            <a class="nav-link text-light" asp-controller="Field" asp-action="GetFields">Fields</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Fake" asp-action="TestDatabaseConnection">Test Connection</a>
+                            <a class="nav-link text-light" asp-controller="" asp-action="">Add New Metadata</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Fake" asp-action="TestState">Test Get State</a>
+                            <a class="nav-link text-light" asp-controller="Field" asp-action="Index">Add New Field</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-area="" asp-controller="Fake" asp-action="Test">Paging Test</a>
+                            <a class="nav-link text-light" asp-controller="Fake" asp-action="TestDatabaseConnection">Test Connection</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-controller="Fake" asp-action="Test">Paging Test</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" href="/swagger/index.html">Documentation</a>

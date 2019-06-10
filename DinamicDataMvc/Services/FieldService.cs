@@ -10,9 +10,21 @@ namespace DinamicDataMvc.Services
     {
         private IMongoDatabase Database { get; set; }
 
-        FieldModel Data{ get; set; }
+        ObjectModel Data{ get; set; }
 
-        public FieldModel GetModel()
+        public void CreateInputField(InputModel inputObject)
+        {
+            var collection = Database.GetCollection<FieldModel>("Field");
+
+            FieldModel model = new FieldModel()
+            {
+                Element = inputObject
+            };
+
+            collection.InsertOne(model);
+        }
+
+        public ObjectModel GetModel()
         {
             return Data;
         }
@@ -23,7 +35,7 @@ namespace DinamicDataMvc.Services
             {
                 if (!String.IsNullOrEmpty(id))
                 {
-                    var collection = Database.GetCollection<FieldModel>("Data");
+                    var collection = Database.GetCollection<ObjectModel>("Data");
                     Data = collection.Find(s => s.Id == id).First();
                 }
             }
