@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using PagedList.Core;
 using System.Linq;
+using DinamicDataMvc.Utils;
+using System.Threading.Tasks;
 
 namespace DinamicDataMvc.Tests
 {
@@ -65,7 +67,7 @@ namespace DinamicDataMvc.Tests
 
             //_GetMetadata.SetFilterParameters(name, version); //Definem-se parâmetros de filtragem de informação
 
-            _GetMetadata.ReadFromDatababe(); //Procede-se à leitura da base de dados;
+            _GetMetadata.ReadFromDatabase(); //Procede-se à leitura da base de dados;
            
             //List<MetadataModel> Model = _GetMetadata.GetProcessesMetadataList();
 
@@ -163,6 +165,82 @@ namespace DinamicDataMvc.Tests
         public string Delete()
         {
             return "Delete sucess";
+        }
+
+
+
+
+
+        [HttpGet("/Fake/ProcessList")]
+        public ActionResult ProcessList()
+        {
+            //Stores data in cache;
+            TempData["Name"] = Request.Query["Name"];
+            string searchName = TempData["Name"].ToString();
+            ViewBag.Name = searchName;
+
+            TempData["Version"] = Request.Query["Version"];
+            string searchVersion = TempData["Version"].ToString();
+            ViewBag.Version = searchVersion;
+
+            TempData["PageNumber"] = Request.Query["PageNumber"];
+            string pageNumber = TempData["PageNumber"].ToString();
+
+            if (string.IsNullOrEmpty(pageNumber))
+            {
+                pageNumber = "1";
+            }
+
+            int pageIndex = Convert.ToInt32(pageNumber);
+
+            if (string.IsNullOrEmpty(searchName))
+            {
+                searchName = null;
+            }
+            //No caso de a string que representa a informação do filtro de pesquisa por versão, ser nula ou vazia,
+            //define-se como valor default a versão 1;
+            if (string.IsNullOrEmpty(searchVersion))
+            {
+                searchVersion = "0";
+            }
+
+            ViewBag.PageNumber = pageIndex.ToString();
+
+            _Connection.DatabaseConnection();
+            _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
+            _GetBranchById.SetDatabase(_Connection.GetDatabase());
+            _GetStateById.SetDatabase(_Connection.GetDatabase());
+
+            _GetMetadata.SetFilterParameters(searchName, Convert.ToInt32(searchVersion));
+            _GetMetadata.ReadFromDatabase();
+            
+
+            List<MetadataModel> metadataList = _GetMetadata.GetProcessesMetadataList();
+            List<ViewMetadataModel> viewModels = new List<ViewMetadataModel>();
+
+            foreach (var metadata in metadataList)
+            {
+                _GetBranchById.ReadFromDatabase(metadata.Branch);
+                _GetStateById.ReadFromDatabase(metadata.State);
+
+                ViewMetadataModel viewModel = new ViewMetadataModel()
+                {
+                    Name = metadata.Name,
+                    Version = metadata.Version.ToString(),
+                    Date = metadata.Date.ToString(),
+                    Branch = _GetBranchById.GetBranches(),
+                    State = _GetStateById.GetStateDescription()
+                };
+
+                viewModels.Add(viewModel);
+            }
+            int pageSize = 3;
+
+            PaginatedList ModelsToDisplay = new PaginatedList(viewModels, pageIndex, pageSize);
+
+            ViewBag.TotalPages = ModelsToDisplay.TotalPages;
+
+            return View(ModelsToDisplay.GetModelsList(pageIndex));
         }
     }
 }

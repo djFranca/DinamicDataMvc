@@ -63,7 +63,7 @@ namespace DinamicDataMvc.Services
             return Model;
         }
 
-        public void ReadFromDatababe()
+        public void ReadFromDatabase()
         {
             #region ReadFromDatabase
 
@@ -102,12 +102,12 @@ namespace DinamicDataMvc.Services
             _Database = database;
         }
 
-        public IMongoCollection<MetadataModel> GetMetadata()
+        public IMongoCollection<MetadataModel> GetMetadataCollection()
         {
             return _Collection;
         }
 
-        public MetadataModel GetModel(string id)
+        public MetadataModel GetMetadata(string id)
         {
             MetadataModel model = null;
             try
@@ -139,6 +139,13 @@ namespace DinamicDataMvc.Services
                 throw new KeyNotFoundException();
             }
         }
+
+        public void CreateMetadata(MetadataModel model)
+        {
+            var collection = _Database.GetCollection<MetadataModel>("Metadata");
+            collection.InsertOne(model);
+        }
+
         #endregion
     }
 }

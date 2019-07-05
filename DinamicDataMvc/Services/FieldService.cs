@@ -10,7 +10,8 @@ namespace DinamicDataMvc.Services
     {
         private IMongoDatabase Database { get; set; }
 
-        ObjectModel Data{ get; set; }
+        private InputModel Field { get; set; }
+
 
         public void CreateInputField(InputModel inputObject)
         {
@@ -24,9 +25,9 @@ namespace DinamicDataMvc.Services
             collection.InsertOne(model);
         }
 
-        public ObjectModel GetModel()
+        public InputModel GetFieldCollection()
         {
-            return Data;
+            return Field;
         }
 
         public void ReadFromDatabase(string id)
@@ -35,8 +36,8 @@ namespace DinamicDataMvc.Services
             {
                 if (!String.IsNullOrEmpty(id))
                 {
-                    var collection = Database.GetCollection<ObjectModel>("Data");
-                    Data = collection.Find(s => s.Id == id).First();
+                    var collection = Database.GetCollection<FieldModel>("Field");
+                    Field = collection.Find(s => s.Id == id).FirstOrDefault().Element;
                 }
             }
             catch (Exception exception)

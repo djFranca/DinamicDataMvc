@@ -10,7 +10,7 @@ namespace DinamicDataMvc.Interfaces
 
         void ReadFromDatabase(string id);
 
-        ObjectModel GetModel();
+        InputModel GetFieldCollection();
 
         void CreateInputField(InputModel model);
     }

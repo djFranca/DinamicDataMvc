@@ -1,7 +1,7 @@
 ﻿@model DinamicDataMvc.Models.ViewMetadataModel
 @{
     ViewData["Title"] = "ByVersion";
-    var ProcessVersionData = ViewBag.Data as IEnumerable<ObjectModel>;
+    var fields = ViewBag.Data as IEnumerable<InputModel>;
 }
 <section id="ProcessName">
     <div class="text-body">
@@ -30,17 +30,45 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in ProcessVersionData)
+                @foreach (var field in fields)
                 {
                     <tr>
                         <td>
-                            @Html.ActionLink(@Html.DisplayTextFor(model => item.Type), "Properties", "Details", new {ID = item.Id })
+                            <form asp-controller="Details" asp-action="GetProperties" method="post" asp-for="@fields">
+                                <input type="hidden" value="@fields" />
+                                <input type="submit" value="@Html.DisplayTextFor(model => field.Type)" />
+                            </form>
+
+                            @*@Html.ActionLink(@Html.DisplayTextFor(model => field.Type), "Properties", "Details", new {Model = fields})*@
                         </td>
                         <td>
-                            @Html.DisplayTextFor(model => item.Field)
+                            @Html.DisplayTextFor(model => field.Field)
                         </td>
                     </tr>
                 }
+                <tr>
+                    <td>
+                        @Html.Display(fields.ElementAt(0).Field)
+                    </td>
+                    <td>
+                        @Html.Display(fields.ElementAt(0).Type)
+                    </td>
+                    <td>
+                        @Html.Display(fields.ElementAt(0).Name)
+                    </td>
+                    <td>
+                        @Html.Display(fields.ElementAt(0).Value)
+                    </td>
+                    <td>
+                        @Html.Display(fields.ElementAt(0).Size.ToString())
+                    </td>
+                    <td>
+                        @Html.Display(fields.ElementAt(0).MaxLength.ToString())
+                    </td>
+                    <td>
+                        @Html.Display(fields.ElementAt(0).Required.ToString())
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

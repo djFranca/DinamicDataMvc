@@ -26,7 +26,7 @@ namespace DinamicDataMvc.Controllers
         {
             _Connection.DatabaseConnection();
             _Processes.SetDatabase(_Connection.GetDatabase());
-            _Processes.ReadFromDatababe();
+            _Processes.ReadFromDatabase();
             var models = _Processes.GetProcessesMetadataList();
 
             return View(models);
@@ -48,9 +48,14 @@ namespace DinamicDataMvc.Controllers
             {
                 model = new InputModel()
                 {
-                    Type = "Password"
+                    Field = "Input",
+                    Type = _type,
+                    Name = String.Empty,
+                    Value = String.Empty,
+                    Required = false,
+                    MaxLength = 6,
+                    Size = 20
                 };
-                
             }
             return View("Create", model);
         }

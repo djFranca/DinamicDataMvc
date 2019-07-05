@@ -81,7 +81,7 @@ namespace DinamicDataMvc.Controllers
             MetadataModel filteredModel = null;
             foreach(var model in models)
             {
-                if (model.Version == versionNumber)
+                if (model.Version == versionNumber) //seleciona o processo correspondente à versão pedida
                 {
                     filteredModel = model;
                 }
@@ -91,17 +91,29 @@ namespace DinamicDataMvc.Controllers
             _Branch.ReadFromDatabase(filteredModel.Branch);
 
 
-            List<ObjectModel> FieldsList = new List<ObjectModel>();
+            
+            List<InputModel> FieldsList = new List<InputModel>();
            
-            foreach(var itemId in filteredModel.Data)
+            foreach(var itemId in filteredModel.Field)
             {
                 _Data.SetDatabase(_database);
                 _Data.ReadFromDatabase(itemId);
-                ObjectModel model = _Data.GetModel();
+                var result = _Data.GetFieldCollection();
+
+                InputModel model = new InputModel()
+                {
+                    Field = result.Field, 
+                    Type = result.Type,
+                    Name = result.Name,
+                    Value = result.Value,
+                    Required = result.Required,
+                    MaxLength = result.MaxLength,
+                    Size = result.Size
+                };
                 FieldsList.Add(model);
             }
 
-            ViewBag.Data = FieldsList;
+            ViewBag.Data = FieldsList.AsEnumerable();
 
             ViewMetadataModel filteredProcess = new ViewMetadataModel()
             {
@@ -116,13 +128,10 @@ namespace DinamicDataMvc.Controllers
             return View("ByVersion", filteredProcess);
         }
 
-        [HttpGet("/Details/Properties")]
-        public IActionResult Properties()
+        [HttpPost("/Details/GetProperties")]
+        public IActionResult GetProperties(InputModel model)
         {
-            string Id = Request.Query["ID"];
-            _Data.SetDatabase(_Connection.GetDatabase());
-            _Data.ReadFromDatabase(Id);
-            return View(_Data.GetModel());
+            return View("Properties", model);
         }
     }
 }

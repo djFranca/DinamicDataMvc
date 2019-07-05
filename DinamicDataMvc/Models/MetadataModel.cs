@@ -36,9 +36,9 @@ namespace DinamicDataMvc.Models
         public string State { get; set; }
 
         [Required]
-        [BsonElement("Data")]
-        [Display(Name = "Data")]
-        public List<string> Data { get; set; }
+        [BsonElement("Field")]
+        [Display(Name = "Field")]
+        public List<string> Field { get; set; }
 
         [BsonElement("Branch")]
         [Display(Name = "Branch")]

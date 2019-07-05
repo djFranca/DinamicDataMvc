@@ -47,7 +47,7 @@ namespace DinamicDataMvc.Controllers
             _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
 
             _GetMetadata.SetFilterParameters(name, version); //Definem-se parâmetros de filtragem de informação
-            _GetMetadata.ReadFromDatababe(); //Procede-se à leitura da base de dados;
+            _GetMetadata.ReadFromDatabase(); //Procede-se à leitura da base de dados;
 
             _GetBranchById.SetDatabase(_Connection.GetDatabase());
             _GetStateById.SetDatabase(_Connection.GetDatabase());
@@ -86,7 +86,7 @@ namespace DinamicDataMvc.Controllers
         {
             try
             {
-                var _model = _GetMetadata.GetModel(id);
+                var _model = _GetMetadata.GetMetadata(id);
 
                 if (_model == null)
                 {
@@ -122,6 +122,12 @@ namespace DinamicDataMvc.Controllers
             }
 
             return Redirect("~/Metadata/GetMetadata");
+        }
+
+        [HttpGet("/Metadata/Create")]
+        public IActionResult CreateMetadata()
+        {
+            return View();
         }
     }
 }

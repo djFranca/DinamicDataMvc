@@ -10,14 +10,16 @@ namespace DinamicDataMvc.Interfaces
 
         void SetFilterParameters(string nameFilteringResult, int versionFilteringResult);
 
-        void ReadFromDatababe();
+        void ReadFromDatabase();
 
         List<MetadataModel> GetProcessesMetadataList();
 
-        IMongoCollection<MetadataModel> GetMetadata();
+        IMongoCollection<MetadataModel> GetMetadataCollection();
 
-        MetadataModel GetModel(string id);
+        MetadataModel GetMetadata(string id);
 
         void DeleteMetadata(string id);
+
+        void CreateMetadata(MetadataModel model);
     }
 }

@@ -16,6 +16,6 @@ namespace DinamicDataMvc.Models
 
         [BsonRequired]
         [BsonElement("Element")]
-        public object Element { get; set; }
+        public InputModel Element { get; set; }
     }
 }
