@@ -161,18 +161,19 @@ namespace DinamicDataMvc.Tests
             return Redirect("~/ProcessDetails/Details/" + id);
         }
 
-        [HttpDelete("/Fake/Delete/")]
-        public string Delete()
+        [HttpPost("/Fake/Delete")]
+        public async Task<ActionResult> Delete()
         {
-            return "Delete sucess";
+            TempData["ID"] = Request.Query["ID"];
+            string id = TempData["ID"].ToString();
+
+            return await Task.Run(() => View("Delete"));
         }
 
 
 
-
-
         [HttpGet("/Fake/ProcessList")]
-        public ActionResult ProcessList()
+        public async Task<ActionResult> ProcessList()
         {
             //Stores data in cache;
             TempData["Name"] = Request.Query["Name"];
@@ -240,7 +241,7 @@ namespace DinamicDataMvc.Tests
 
             ViewBag.TotalPages = ModelsToDisplay.TotalPages;
 
-            return View(ModelsToDisplay.GetModelsList(pageIndex));
+            return await Task.Run(() => View("ProcessList", ModelsToDisplay.GetModelsList(pageIndex)));
         }
     }
 }

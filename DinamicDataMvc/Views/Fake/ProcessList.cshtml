@@ -90,7 +90,10 @@
                             @Html.DisplayTextFor(model => data.State)
                         </td>
                         <td align="center">
-                            <button type="button"><i class="fa fa-trash"></i></button>
+                            @using (Html.BeginForm("Delete", "Fake", new { ID = data.Id }, FormMethod.Post))
+                            {
+                                <button type="submit"><i class="fa fa-trash"></i></button>
+                            }
                         </td>
                     </tr>
                     } 

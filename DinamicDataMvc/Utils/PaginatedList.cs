@@ -1,9 +1,7 @@
 ﻿using DinamicDataMvc.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DinamicDataMvc.Utils
 {
@@ -58,8 +56,7 @@ namespace DinamicDataMvc.Utils
             }
         }
 
-
-        //Returns
+        //Returns the list with the requested processes sliced by index
         public List<ViewMetadataModel> GetModelsList(int pageIndex)
         {
             int index = pageIndex - 1;
