@@ -155,19 +155,37 @@ namespace DinamicDataMvc.Tests
             return _GetStateById.GetStateDescription();
         }
 
-        [HttpGet("/Fake/ProcessDetails/{id}")]
-        public IActionResult ProcessDetails(string id)
-        {
-            return Redirect("~/ProcessDetails/Details/" + id);
-        }
+        //[HttpGet("/Fake/ProcessDetails/{id}")]
+        //public IActionResult ProcessDetails(string id)
+        //{
+        //    return Redirect("~/ProcessDetails/Details/" + id);
+        //}
 
-        [HttpPost("/Fake/Delete")]
-        public async Task<ActionResult> Delete()
+        [HttpPost("/Fale/Delete/{id}")]
+        public async Task<ActionResult> Delete(string id)
         {
-            TempData["ID"] = Request.Query["ID"];
-            string id = TempData["ID"].ToString();
 
-            return await Task.Run(() => View("Delete"));
+            _Connection.DatabaseConnection();
+            _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
+            _GetBranchById.SetDatabase(_Connection.GetDatabase());
+            _GetStateById.SetDatabase(_Connection.GetDatabase());
+            _GetMetadata.ReadFromDatabase();
+            MetadataModel model = _GetMetadata.GetMetadata(id);
+
+            _GetBranchById.ReadFromDatabase(model.Branch);
+            _GetStateById.ReadFromDatabase(model.State);
+
+            ViewMetadataModel ModelToDelete = new ViewMetadataModel()
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Version = model.Version.ToString(),
+                Date = model.Date.ToString(),
+                Branch = _GetBranchById.GetBranches(),
+                State = _GetStateById.GetStateDescription()
+            };
+
+            return await Task.Run(() => View("Delete", ModelToDelete));
         }
 
 
@@ -226,6 +244,7 @@ namespace DinamicDataMvc.Tests
 
                 ViewMetadataModel viewModel = new ViewMetadataModel()
                 {
+                    Id = metadata.Id,
                     Name = metadata.Name,
                     Version = metadata.Version.ToString(),
                     Date = metadata.Date.ToString(),

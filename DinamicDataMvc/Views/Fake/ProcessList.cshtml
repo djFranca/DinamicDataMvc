@@ -4,7 +4,7 @@
 @{
     var version = ViewBag.Version;
 
-    if(version == null)
+    if (version == null)
     {
         version = "1";
     }
@@ -39,7 +39,7 @@
                 @Html.TextBox("Name", name as string)
                 <label>Version</label>
                 @Html.TextBox("Version", version as string)
-                @Html.TextBox("PageNumber", pageNumber as string, new { type="hidden" })
+                @Html.TextBox("PageNumber", pageNumber as string, new { type = "hidden" })
                 <button type="submit"><i class="fa fa-search"></i></button>
             </div>
         </form>
@@ -71,33 +71,34 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     @foreach (var data in Model)
                     {
-                    <tr>
-                        <td>
-                            @Html.DisplayTextFor(model => data.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayTextFor(model => data.Version)
-                        </td>
-                        <td>
-                            @Html.DisplayTextFor(model => data.Date)
-                        </td>
-                        <td>
-                            @Html.DisplayTextFor(model => data.Branch)
-                        </td>
-                        <td>
-                            @Html.DisplayTextFor(model => data.State)
-                        </td>
-                        <td align="center">
-                            @using (Html.BeginForm("Delete", "Fake", new { ID = data.Id }, FormMethod.Post))
-                            {
-                                <button type="submit"><i class="fa fa-trash"></i></button>
-                            }
-                        </td>
-                    </tr>
-                    } 
-                    </tbody>
+                        <tr>
+                            <td>
+                                @Html.DisplayTextFor(model => data.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayTextFor(model => data.Version)
+                            </td>
+                            <td>
+                                @Html.DisplayTextFor(model => data.Date)
+                            </td>
+                            <td>
+                                @Html.DisplayTextFor(model => data.Branch)
+                            </td>
+                            <td>
+                                @Html.DisplayTextFor(model => data.State)
+                            </td>
+                            <td align="center">
+                                @using (Html.BeginForm("Delete", "Fake", new { ID = data.Id }, FormMethod.Post))
+                                {
+                                    <button type="submit"><i class="fa fa-trash"></i></button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
             </table>
         </div>
     </div>
@@ -107,7 +108,7 @@
             <ul class="pagination justify-content-end">
                 <li class="page-item">
                     <form asp-controller="Fake" asp-action="ProcessList" method="get" id="previousForm">
-                        @Html.TextBox("Name", name as string,  new { type = "hidden" })
+                        @Html.TextBox("Name", name as string, new { type = "hidden" })
                         @Html.TextBox("Version", version as string, new { type = "hidden" })
                         @Html.TextBox("PageNumber", pagePrevious as string, new { type = "hidden" })
                         <button type="submit" class="page-link">Previous</button>
