@@ -41,96 +41,23 @@ namespace DinamicDataMvc.Tests
 
 
 
-        [HttpGet("/Fake/Test")]
-        public IActionResult Test(int page = 1, int pageSize = 1)
+        [HttpPost("/Fake/Confirm/{id}")]
+        public async Task<ActionResult> Confirm(string id)
         {
-            //string name = null;
-            //int version = 0;
-
-
-            //Verificações dos parâmetros recebidos no URL do pedido (nome e versão) do processo (Metadata)
-            //if (!Request.Query["SearchVersion"].Equals(""))
-            //{
-            //    version = Convert.ToInt32(Request.Query["SearchVersion"]);
-            //}
-
-            //if (!Request.Query["SearchName"].Equals("")) {
-            //    name = Request.Query["SearchName"];
-            //}
-
-            //List<MetadataListModel> ListModel = new List<MetadataListModel>();
-
-            _Connection.DatabaseConnection();
-            _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
-            _GetBranchById.SetDatabase(_Connection.GetDatabase());
-            _GetStateById.SetDatabase(_Connection.GetDatabase());
-
-            //_GetMetadata.SetFilterParameters(name, version); //Definem-se parâmetros de filtragem de informação
-
-            _GetMetadata.ReadFromDatabase(); //Procede-se à leitura da base de dados;
-           
-            //List<MetadataModel> Model = _GetMetadata.GetProcessesMetadataList();
-
-            //IQueryable<MetadataModel> model = _GetMetadata.GetMetadata().AsQueryable();
-
-            //PagedList<MetadataModel> newModel = new PagedList<MetadataModel>(model, page, pageSize);
-
-            List<MetadataModel> metadataList = _GetMetadata.GetProcessesMetadataList();
-            List<ViewMetadataModel> viewModels = new List<ViewMetadataModel>();
-
-            foreach(var metadata in metadataList)
+            try
             {
-                _GetBranchById.ReadFromDatabase(metadata.Branch);
-                _GetStateById.ReadFromDatabase(metadata.State);
-
-                ViewMetadataModel viewModel = new ViewMetadataModel()
+                if (id != null)
                 {
-                    Name = metadata.Name,
-                    Version = metadata.Version.ToString(),
-                    Date = null,
-                    Branch = _GetBranchById.GetBranches(),
-                    State = _GetStateById.GetStateDescription()
-                };
-
-                viewModels.Add(viewModel);
+                    _Connection.DatabaseConnection();
+                    _GetMetadata.SetDatabase(_Connection.GetDatabase());
+                    _GetMetadata.DeleteMetadata(id);
+                }
             }
-
-            PagedList<ViewMetadataModel> newModel = new PagedList<ViewMetadataModel>(viewModels.AsQueryable(), page, pageSize);
-
-            //foreach (var item in Model)
-            //{
-            //    List<string> Branch = new List<string>();
-
-            //    string Name = item.Name;
-            //    string Version = "V" + item.Version.ToString();
-            //    string Date = item.CreatedDate.ToShortDateString();
-
-            //    _GetBranchById.SetDatabase(_Connection.GetDatabase());
-
-            //    foreach (var id in item.Branch)
-            //    {
-            //        _GetBranchById.ReadFromDatabase(id);
-            //        var branch = _GetBranchById.GetBranches();
-            //        Branch.Add(branch);
-            //    }
-
-            //    _GetStateById.SetDatabase(_Connection.GetDatabase());
-            //    _GetStateById.ReadFromDatabase(item.State);
-            //    string State = _GetStateById.GetStateDescription();
-
-            //    MetadataListModel _model = new MetadataListModel()
-            //    {
-            //        Name = Name,
-            //        Version = Version,
-            //        Date = Date,
-            //        Branch = Branch,
-            //        State = State
-            //    };
-            //    ListModel.Add(_model);
-
-            //}
-
-            return View("Test", newModel);
+            catch (Exception exception)
+            {
+                throw new KeyNotFoundException(exception.Message);
+            }
+            return  await Task.Run(() => RedirectToAction("ProcessList", "Fake"));
         }
 
 
@@ -161,7 +88,7 @@ namespace DinamicDataMvc.Tests
         //    return Redirect("~/ProcessDetails/Details/" + id);
         //}
 
-        [HttpPost("/Fale/Delete/{id}")]
+        [HttpPost("/Fake/Delete/{id}")]
         public async Task<ActionResult> Delete(string id)
         {
 
