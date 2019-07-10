@@ -1,7 +1,9 @@
 ﻿using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
+using DinamicDataMvc.Models.Field;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DinamicDataMvc.Services
@@ -10,39 +12,52 @@ namespace DinamicDataMvc.Services
     {
         private IMongoDatabase Database { get; set; }
 
-        private InputModel Field { get; set; }
+        private FieldModel Field { get; set; }
+
+        private List<FieldModel> Fields { get; set; }
 
 
-        public void CreateInputField(InputModel inputObject)
+        public void CreateInputField()
         {
-            var collection = Database.GetCollection<FieldModel>("Field");
+            //var collection = Database.GetCollection<FieldModel>("Field");
 
-            FieldModel model = new FieldModel()
-            {
-                Element = inputObject
-            };
+            //FieldModel model = new FieldModel()
+            //{
+            //    Element = inputObject
+            //};
 
-            collection.InsertOne(model);
+            //collection.InsertOne(model);
         }
 
-        public InputModel GetFieldCollection()
+
+        public List<FieldModel> GetFields()
         {
-            return Field;
+            return Fields;
         }
 
-        public void ReadFromDatabase(string id)
+        public void ReadFromDatabase()
         {
+            //try
+            //{
+            //    if (!String.IsNullOrEmpty(id))
+            //    {
+            //        var collection = Database.GetCollection<FieldModel>("Field");
+            //        Field = collection.Find(s => s.Id == id).FirstOrDefault().Element;
+            //    }
+            //}
+            //catch (Exception exception)
+            //{
+            //    throw exception;
+            //}
+
             try
             {
-                if (!String.IsNullOrEmpty(id))
-                {
-                    var collection = Database.GetCollection<FieldModel>("Field");
-                    Field = collection.Find(s => s.Id == id).FirstOrDefault().Element;
-                }
+                var collection = Database.GetCollection<FieldModel>("Field");
+                Fields = collection.Find(s => true).ToList();
             }
-            catch (Exception exception)
+            catch
             {
-                throw exception;
+                throw new NullReferenceException();
             }
         }
 

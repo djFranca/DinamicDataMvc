@@ -1,6 +1,8 @@
 ﻿using DinamicDataMvc.Models;
+using DinamicDataMvc.Models.Field;
 using MongoDB.Driver;
 using System;
+using System.Collections.Generic;
 
 namespace DinamicDataMvc.Interfaces
 {
@@ -8,10 +10,10 @@ namespace DinamicDataMvc.Interfaces
     {
         void SetDatabase(IMongoDatabase database);
 
-        void ReadFromDatabase(string id);
+        void ReadFromDatabase();
 
-        InputModel GetFieldCollection();
+        void CreateInputField();
 
-        void CreateInputField(InputModel model);
+        List<FieldModel> GetFields();
     }
 }

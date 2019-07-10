@@ -146,6 +146,52 @@ namespace DinamicDataMvc.Services
             collection.InsertOne(model);
         }
 
+
+        public List<MetadataModel> GetProcessByName(string name)
+        {
+            try
+            {   
+                List<MetadataModel> models = new List<MetadataModel>();
+
+                if (name != null)
+                {
+                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                    var result = collection.Find(s => s.Name == name).ToList();
+                    foreach (var model in result)
+                    {
+                        models.Add(model);
+                    }
+                }
+
+                return models;
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        /*
+         * Method that returns a specific model who have the name and version equals input arguments name and version;
+         */
+        public MetadataModel GetProcessByVersion(string name, int version)
+        {
+            try
+            {
+                if (name != null & version > 0)
+                {
+                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                    MetadataModel model = collection.Find(s => s.Name == name & s.Version == version).FirstOrDefault();
+                    return model;
+                }
+                return null;
+            }
+            catch
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
         #endregion
     }
 }

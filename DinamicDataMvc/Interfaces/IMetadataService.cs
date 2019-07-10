@@ -21,5 +21,9 @@ namespace DinamicDataMvc.Interfaces
         void DeleteMetadata(string id);
 
         void CreateMetadata(MetadataModel model);
+
+        List<MetadataModel> GetProcessByName(string name);
+
+        MetadataModel GetProcessByVersion(string name, int version);
     }
 }

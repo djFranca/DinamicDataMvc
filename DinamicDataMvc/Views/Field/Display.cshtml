@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Display";
+}
+<div class="container">
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <td>
+                        @Html.DisplayName("Password")
+                    </td>
+                    <td>
+                        @Html.DisplayName("Text")
+                    </td>
+                    <td>
+                        @Html.DisplayName("Number")
+                    </td>
+                    <td>
+                        @Html.DisplayName("TextBox")
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @using (Html.BeginForm("Create", "Field", "Password", FormMethod.Post))
+                        {
+                            <button type="submit" id="pwdBtn"><img src="~/images/Password.jpg" /></button>
+                        }
+                    </td>
+                    <td>
+                        @using (Html.BeginForm("Create", "Field", "Text", FormMethod.Post))
+                        {
+                            <button type="submit" id="textBtn"><img src="~/images/Text.png" /></button>
+                        }
+                    </td>
+                    <td>
+                        @using (Html.BeginForm("Create", "Field", "Number", FormMethod.Post))
+                        {
+                            <button type="submit" id="numBtn"><img src="~/images/Number.png" /></button>
+                        }
+                    </td>
+                    <td>
+                        @using (Html.BeginForm("Create", "Field", "Text Box", FormMethod.Post))
+                        {
+                            <button type="submit" id="txtBoxBtn"><img src="~/images/TextBox.png" /></button>
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

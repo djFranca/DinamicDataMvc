@@ -1,9 +1,7 @@
 ﻿@model DinamicDataMvc.Models.ViewMetadataModel
-
 @{
     ViewData["Title"] = "Delete";
 }
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,11 +11,10 @@
     <script src="~/js/site.js"></script>
 </head>
 <body>
-    <h1>Delete</h1>
-
     <h3>Are you sure you want to delete this?</h3>
     <div>
-        <h4>Metadata</h4>
+        <hr />
+        <h4>Metadata Process</h4>
         <hr />
         <dl class="row">
             <dt class="col-sm-2">
@@ -51,6 +48,7 @@
                 @Html.DisplayFor(model => model.State)
             </dd>
         </dl>
+        <hr />
     </div>
     <div class="container">
         <div class="btn-group">

@@ -32,22 +32,22 @@
                     <ul class="navbar-nav flex-grow-1">
 
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Metadata" asp-action="GetMetadata">Metadata</a>
+                            <a class="nav-link text-light" asp-controller="Metadata" asp-action="Read">Metadata</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Field" asp-action="GetFields">Fields</a>
+                            <a class="nav-link text-light" asp-controller="Field" asp-action="Read">Fields</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Metadata" asp-action="CreateMetadata">Create Process</a>
+                            <a class="nav-link text-light" asp-controller="Metadata" asp-action="Create">Create Process</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Field" asp-action="Index">Create Field</a>
+                            <a class="nav-link text-light" asp-controller="Field" asp-action="Display">Create Fields</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-controller="Fake" asp-action="TestDatabaseConnection">Test Connection</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" asp-controller="Fake" asp-action="ProcessList" asp-protocol="http">Listagem</a>
+                            <a class="nav-link text-light" asp-controller="Fake" asp-action="Read" asp-protocol="http">Listagem</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" href="/swagger/index.html">Documentation</a>

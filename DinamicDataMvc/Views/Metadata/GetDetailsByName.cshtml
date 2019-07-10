@@ -1,0 +1,49 @@
+﻿@model IEnumerable<DinamicDataMvc.Models.ViewMetadataModel>
+@{
+    ViewData["Title"] = "Details By Process Name";
+}
+<section>
+    <div class="text-body">
+        <h4>Process @Html.ViewBag.Name</h4>
+    </div>
+    <br />
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Version)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Date)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Branch)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Version), "GetDetailsByVersion", "Metadata", new { Name = ViewBag.Name, Version = item.Version })
+                        </td>
+                        <td>
+                            @Html.DisplayTextFor(modelItem => item.Date)
+                        </td>
+                        <td>
+                            @Html.DisplayTextFor(modelItem => item.Branch)
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div>
+        @Html.ActionLink("Back to list", "Read", "Metadata")
+    </div>
+</section>
+

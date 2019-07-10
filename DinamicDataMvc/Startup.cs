@@ -40,12 +40,8 @@ namespace DinamicDataMvc
             services.AddSingleton<IMetadataService, MetadataService>(s => new MetadataService(nameFilteringResult, versionFilteringResult));
             services.AddSingleton<IBranchService, BranchService>(s => new BranchService());
             services.AddSingleton<IConnectionManagementService, ConnectionManagementService>(s => new ConnectionManagementService(ConnectionString, DatabaseName));
-
             services.AddSingleton<IStateService, StateService>(s => new StateService());
-            services.AddSingleton<IDetailsService, DetailsService>(s => new DetailsService());
-
             services.AddSingleton<IFieldService, FieldService>(s => new FieldService());
-
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             
             services.AddSwaggerGen(doc =>

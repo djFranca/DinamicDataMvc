@@ -1,0 +1,41 @@
+﻿@model DinamicDataMvc.Models.ViewMetadataModel
+@{
+    ViewData["Title"] = "ByVersion";
+}
+<section id="ProcessName">
+    <div class="text-body">
+        <h4>Process @Html.ViewBag.Name</h4>
+    </div>
+</section>
+<br />
+<section id="ProcessHeaderInfo">
+    <div>
+        @await Html.PartialAsync("_ByVersionHeader", Model)
+    </div>
+</section>
+<br />
+<section id="ProcessDataInfo">
+    <div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("Type")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Field")
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+            </tbody>
+        </table>
+    </div>
+    <div>
+        @Html.ActionLink("Back to list", "Read", "Metadata")
+    </div>
+</section>
+

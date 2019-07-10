@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 
 namespace DinamicDataMvc.Models
 {
     public class ViewMetadataModel
     {
-        [DisplayName("Id")]
+        [DisplayName("Identifier")]
         public string Id { get; set; }
 
         [DisplayName("Name")]
@@ -15,13 +13,13 @@ namespace DinamicDataMvc.Models
         [DisplayName("Version")]
         public string Version { get; set; }
 
-        [DisplayName("Date")]
+        [DisplayName("Creation Date")]
         public string Date { get; set; }
 
         [DisplayName("Branch")]
         public string Branch { get; set; }
 
-        [DisplayName("State")]
+        [DisplayName("Current State")]
         public string State { get; set; }
     }
 }
