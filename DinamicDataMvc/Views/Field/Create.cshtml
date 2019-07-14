@@ -45,13 +45,13 @@
                     <span asp-validation-for="Maxlength" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Required" class="control-label">True</label>
-                    <input type="Radio" asp-for="Required" class="form-control" name="Required" value="true" required />
+                    <label asp-for="Required" class="control-label">Required</label>
+                    <input type="Radio" asp-for="Required" class="form-control" name="Required" required value="false"/>
                     <span asp-validation-for="Required" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="CreationDate" class="control-label"></label>
-                    <input type="datetime" asp-for="CreationDate" class="form-control" name="CreationDate" required />
+                    <input type="date" asp-for="CreationDate" class="form-control" name="CreationDate" required/>
                     <span asp-validation-for="CreationDate" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -61,10 +61,13 @@
         </div>
     </div>
     <hr />
-    <div>
+    <div class="container">
         @using (Html.BeginForm("Read", "Field", FormMethod.Get))
         {
-            <button type="submit"><i class="fa fa-list"></i></button>
+            <span>
+                <label class="form-group">Back to List </label>
+                <button><i class="fa fa-list"></i></button>
+            </span>
         }
     </div>
 </body>
