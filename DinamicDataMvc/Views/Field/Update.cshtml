@@ -33,22 +33,22 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Size" class="control-label"></label>
-                    <input asp-for="Size" class="form-control" type="text" min="1" max="25" required id="PropertiesSize" name="Size" />
+                    <input asp-for="Size" class="form-control" type="number" min="1" max="25" required id="PropertiesSize" name="Size" />
                     <span asp-validation-for="Size" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Value" class="control-label"></label>
-                    <input asp-for="Value" class="form-control" required id="PropertiesValue" name="Value" />
+                    <input asp-for="Value" class="form-control" required id="PropertiesValue" name="Value" type="text"/>
                     <span asp-validation-for="Value" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Maxlength" class="control-label"></label>
-                    <input asp-for="Maxlength" class="form-control" type="text" min="1" max="25" required name="MaxLength" />
+                    <input asp-for="Maxlength" class="form-control" type="number" min="1" max="25" required name="MaxLength" />
                     <span asp-validation-for="Maxlength" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Required" class="control-label"></label>
-                    <input asp-for="Required" class="form-control" type="text" required name="Required" />
+                    <input asp-for="Required" class="form-control" type="text" required name="Required" type="checkbox"/>
                     <span asp-validation-for="Required" class="text-danger"></span>
                 </div>
                 <div class="form-group">

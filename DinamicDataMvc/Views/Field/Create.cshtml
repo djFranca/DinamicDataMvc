@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Create";
     var type = ViewBag.Type;
+    var now = DateTime.Now.Date.ToString().Substring(0, 10);
 }
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -25,6 +26,7 @@
                     <input asp-for="Type" class="form-control" name="Type" readonly="readonly" />
                     <span asp-validation-for="Type" class="text-danger"></span>
                 </div>
+                <br />
                 <div class="form-group">
                     <label asp-for="Name" class="control-label"></label>
                     <input asp-for="Name" class="form-control" name="Name" required />
@@ -47,16 +49,16 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Required" class="control-label">Required</label>
-                    <input type="checkbox" asp-for="Required" class="form-control" name="Required" required style="vertical-align:top"/>
+                    <input type="checkbox" asp-for="Required" class="form-control" name="Required" required style="vertical-align:top" />
                     <span asp-validation-for="Required" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="CreationDate" class="control-label"></label>
-                    <input type="date" asp-for="CreationDate" class="form-control" name="CreationDate" required/>
+                    <input type="text" asp-for="CreationDate" class="form-control" name="CreationDate" value="@now" required readonly="readonly" />
                     <span asp-validation-for="CreationDate" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <input type="submit" value="Add" class="btn btn-primary" />
                 </div>
             }
         </div>
