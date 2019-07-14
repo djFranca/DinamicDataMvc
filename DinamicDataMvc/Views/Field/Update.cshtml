@@ -43,12 +43,12 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Maxlength" class="control-label"></label>
-                    <input asp-for="Maxlength" class="form-control" type="number" min="1" max="25" required name="MaxLength" />
+                    <input asp-for="Maxlength" class="form-control" type="number" min="1" max="50" required name="MaxLength" />
                     <span asp-validation-for="Maxlength" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Required" class="control-label"></label>
-                    <input asp-for="Required" class="form-control" type="text" required name="Required" type="checkbox"/>
+                    <input asp-for="Required" class="form-control" name="Required" type="checkbox"/>
                     <span asp-validation-for="Required" class="text-danger"></span>
                 </div>
                 <div class="form-group">
