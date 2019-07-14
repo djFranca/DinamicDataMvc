@@ -2,6 +2,8 @@
 using DinamicDataMvc.Models;
 using DinamicDataMvc.Models.Field;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace DinamicDataMvc.UnitTests
 {
@@ -46,6 +48,29 @@ namespace DinamicDataMvc.UnitTests
         {
             _KeyService.SetKey();
             return _KeyService.GetKey();
+        }
+
+        [HttpGet("/Test/TestCreateProcess/")]
+        public string TestCreateProcess()
+        {
+            _Connection.DatabaseConnection();
+            _MetadataService.SetDatabase(_Connection.GetDatabase());
+
+            _KeyService.SetKey();
+
+            MetadataModel model = new MetadataModel()
+            {
+                Id = _KeyService.GetKey(),
+                Name = "P4",
+                Version = 1,
+                Date = DateTime.Now.Date,
+                State = "5ceac39b5cef382144c73570",
+                Field = new List<string>() { "5d2b4fd7af3e31420c45bb70", "5d2b97f4509c780c0c45cd76" },
+                Branch = new List<string>() { "5ce95aab70eb31116c6ca8d6" }
+            };
+
+            string message = _MetadataService.CreateMetadata(model);
+            return message;
         }
     }
 }

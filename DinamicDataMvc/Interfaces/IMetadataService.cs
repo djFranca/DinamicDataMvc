@@ -20,7 +20,7 @@ namespace DinamicDataMvc.Interfaces
 
         void DeleteMetadata(string id);
 
-        void CreateMetadata(MetadataModel model);
+        string CreateMetadata(MetadataModel model);
 
         List<MetadataModel> GetProcessByName(string name);
 

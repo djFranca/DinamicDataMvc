@@ -1,5 +1,6 @@
 ﻿using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
+using DinamicDataMvc.Utils;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -140,10 +141,22 @@ namespace DinamicDataMvc.Services.Metadata
             }
         }
 
-        public void CreateMetadata(MetadataModel model)
+        public string CreateMetadata(MetadataModel model)
         {
-            var collection = _Database.GetCollection<MetadataModel>("Metadata");
-            collection.InsertOne(model);
+            try
+            {
+                if(model != null)
+                {
+                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                    collection.InsertOne(model);
+                    return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
+                }
+                return ((int)StatusCode.BadRequest).ToString() + " - " + StatusCode.BadRequest.ToString();
+            }
+            catch
+            {
+                throw new ArgumentNullException();
+            }
         }
 
 
