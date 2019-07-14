@@ -116,7 +116,7 @@ namespace DinamicDataMvc.Controllers.Field
                 Value = properties.Value,
                 Maxlength = properties.Maxlength.ToString(),
                 Required = properties.Required.ToString(),
-                CreationDate = Convert.ToDateTime(field.Date).ToString()
+                CreationDate = Convert.ToDateTime(field.Date).ToString().Substring(0, 10)
             };
 
             return await Task.Run(() => View("Update", ViewModel));
@@ -125,8 +125,8 @@ namespace DinamicDataMvc.Controllers.Field
         [HttpPost("/Field/SaveUpdate/")]
         public async Task<ActionResult> SaveUpdate(string fieldId, string propertiesId, ViewFieldModel model)
         {
-            string x = fieldId;
-            string y = propertiesId;
+            //string x = fieldId;
+            //string y = propertiesId;
 
             _Connection.DatabaseConnection();
             _Field.SetDatabase(_Connection.GetDatabase());

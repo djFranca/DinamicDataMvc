@@ -14,7 +14,7 @@
 </head>
 <body>
     <hr />
-    <h1>Update Field</h1>
+    <h1>Update Field - @Html.DisplayTextFor(model => model.Type)</h1>
     <hr />
     <div class="row">
         <div class="col-md-4">
@@ -53,7 +53,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="CreationDate" class="control-label"></label>
-                    <input asp-for="CreationDate" class="form-control" type="date" required readonly="readonly" name="CreationDate" value="@Model.CreationDate" />
+                    <input asp-for="CreationDate" class="form-control" type="text" required readonly="readonly" name="CreationDate" />
                     <span asp-validation-for="CreationDate" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -72,5 +72,6 @@
             </span>
         }
     </div>
+    <hr />
 </body>
 

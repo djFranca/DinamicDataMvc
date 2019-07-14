@@ -11,8 +11,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <h1>Create Field</h1>
-
+    <hr />
+    <h1>Create Field - @Html.DisplayTextFor(model => model.Type)</h1>
     <hr />
     <div class="row">
         <div class="col-md-4">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Required" class="control-label">Required</label>
-                    <input type="Radio" asp-for="Required" class="form-control" name="Required" required value="false"/>
+                    <input type="checkbox" asp-for="Required" class="form-control" name="Required" required style="vertical-align:top"/>
                     <span asp-validation-for="Required" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -70,4 +70,5 @@
             </span>
         }
     </div>
+    <hr />
 </body>
