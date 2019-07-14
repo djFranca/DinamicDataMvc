@@ -1,9 +1,8 @@
 ﻿using DinamicDataMvc.Interfaces;
-using DinamicDataMvc.Utils;
 using MongoDB.Driver;
 using System;
 
-namespace DinamicDataMvc.Services
+namespace DinamicDataMvc.Services.Database
 {
     public class ConnectionManagementService : IConnectionManagementService
     {

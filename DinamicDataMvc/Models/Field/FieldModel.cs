@@ -26,11 +26,7 @@ namespace DinamicDataMvc.Models.Field
 
         [BsonRequired]
         [BsonElement("Properties")]
-        public List<string> Properties { get; set; }
-
-        [BsonRequired]
-        [BsonElement("Required")]
-        public bool Required { get; set; }
+        public string Properties { get; set; }
 
         [BsonElement("CreationDate")]
         [Display(Name = "Creation Date")]

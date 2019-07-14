@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DinamicDataMvc.Interfaces;
-using DinamicDataMvc.Models;
 using DinamicDataMvc.Models.Field;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,11 +12,15 @@ namespace DinamicDataMvc.Controllers.Field
     {
         private readonly IConnectionManagementService _Connection;
         private readonly IFieldService _Field;
+        private readonly IPropertyService _Properties;
+        private readonly IKeyGenerates _ObjectId;
 
-        public FieldController(IConnectionManagementService Connection, IFieldService Field)
+        public FieldController(IConnectionManagementService Connection, IFieldService Field, IPropertyService Properties, IKeyGenerates ObjectId)
         {
             _Connection = Connection;
             _Field = Field;
+            _Properties = Properties;
+            _ObjectId = ObjectId;
         }
 
         [HttpGet("/Field/Read")]
@@ -35,6 +38,8 @@ namespace DinamicDataMvc.Controllers.Field
         [HttpPost("/Field/Create")]
         public async Task<ActionResult> Create(string type)
         {
+            ViewBag.Type = type;
+
             return await Task.Run(() => View("Create"));
         }
 
@@ -46,25 +51,56 @@ namespace DinamicDataMvc.Controllers.Field
 
 
 
-        [HttpGet("/Field/Delete/{id}")]
-        public async Task<ActionResult> Delete(string id)
+        [HttpPost("/Field/Delete/")]
+        public string Delete(string id)
         {
-            string request = id;
+            if(id == null)
+            {
+                return NotFound().StatusCode.ToString();
+            }
+            _Connection.DatabaseConnection();
+            _Field.SetDatabase(_Connection.GetDatabase());
+            var message = _Field.Delete(id);
 
-            return await Task.Run(() => View("Delete"));
+            return message;
         }
 
 
 
-        [HttpPost("/Field/AddField")]
-        public string AddField()
+        [HttpPost("/Field/AddField/")]
+        public async Task<ActionResult> AddField(ViewFieldModel model)
         {
+            //Defines the properties model key
+            _ObjectId.SetKey(); //Sets a new properties ObjectID collection;
+            string propertiesId = _ObjectId.GetKey();
+
+            //First must create properties model;
+            PropertiesModel properties = new PropertiesModel()
+            {
+                ID = propertiesId,
+                Size = Convert.ToInt32(model.Size),
+                Value = model.Value,
+                Maxlength = Convert.ToInt32(model.Maxlength),
+                Required = Convert.ToBoolean(model.Required)
+            };
+
+            //Third creates field model
+            FieldModel field = new FieldModel()
+            {
+                Name = model.Name,
+                Type = model.Type,
+                Properties = propertiesId,
+                Date = Convert.ToDateTime(model.CreationDate)
+            };
+
             _Connection.DatabaseConnection();
             _Field.SetDatabase(_Connection.GetDatabase());
+            _Field.CreateProperties(properties);
+            _Field.CreateField(field);
 
-            //_Field.CreateInputField(model);
+            _Field.ReadFromDatabase();
 
-            return "successful insertion";
+            return await Task.Run(() => RedirectToAction("Read", "Field"));
         }
     }
 }

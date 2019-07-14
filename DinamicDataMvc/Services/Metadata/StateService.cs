@@ -5,7 +5,7 @@ using MongoDB.Driver;
 using System.Linq;
 using System;
 
-namespace DinamicDataMvc.Services
+namespace DinamicDataMvc.Services.Metadata
 {
     public class StateService : IStateService
     {

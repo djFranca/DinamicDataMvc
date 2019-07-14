@@ -1,6 +1,7 @@
 ﻿using DinamicDataMvc.Interfaces;
-using DinamicDataMvc.Services;
-using DinamicDataMvc.Utils;
+using DinamicDataMvc.Services.Database;
+using DinamicDataMvc.Services.Metadata;
+using DinamicDataMvc.Services.Fields;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
+using DinamicDataMvc.Utils;
 
 namespace DinamicDataMvc
 {
@@ -43,6 +45,8 @@ namespace DinamicDataMvc
             services.AddSingleton<IStateService, StateService>(s => new StateService());
             services.AddSingleton<IFieldService, FieldService>(s => new FieldService());
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<IPropertyService, PropertyService>(s => new PropertyService());
+            services.AddSingleton<IKeyGenerates, KeyGenerates>(s => new KeyGenerates(24)); //24 is the length of the objectId key (properties)
             
             services.AddSwaggerGen(doc =>
             {
@@ -66,7 +70,9 @@ namespace DinamicDataMvc
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                //TODO: Flata criar uma página para erro ou Not Found
+                string error_page = "";
+                app.UseExceptionHandler(error_page);
             }
 
             app.UseStaticFiles();
@@ -78,10 +84,6 @@ namespace DinamicDataMvc
                     name: "default",
                     template: "{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "HomePage" });
-
-                //routes.MapRoute(
-                //    name: "details",
-                //    template: "{controller=Fake}/{action=ProcessDetails}/{name?}");
             });
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.

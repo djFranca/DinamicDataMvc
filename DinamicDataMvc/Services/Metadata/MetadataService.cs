@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DinamicDataMvc.Services
+namespace DinamicDataMvc.Services.Metadata
 {
     public class MetadataService : IMetadataService
     {

@@ -1,10 +1,60 @@
-﻿
+﻿@model DinamicDataMvc.Models.Field.ViewFieldModel
+
 @{
     ViewData["Title"] = "Create";
 }
 
 <h1>Create</h1>
 
-
-
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @using (Html.BeginForm("AddField", "Field", Model, FormMethod.Post))
+        {
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Type" class="control-label"></label>
+                <input asp-for="Type" class="form-control" name="Type" readonly="readonly"/>
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" name="Name" required/>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Size" class="control-label"></label>
+                <input type="number" min="1" max="50" asp-for="Size" class="form-control" name="Size" required/>
+                <span asp-validation-for="Size" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Value" class="control-label"></label>
+                <input type="text" asp-for="Value" class="form-control" name="Value" required/>
+                <span asp-validation-for="Value" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Maxlength" class="control-label"></label>
+                <input type="number" min="1" max="50" asp-for="Maxlength" class="form-control" name="Maxlength" required/>
+                <span asp-validation-for="Maxlength" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Required" class="control-label">True</label>
+                <input type="Radio" asp-for="Required" class="form-control" name="Required" value="true" required/>
+                <span asp-validation-for="Required" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreationDate" class="control-label"></label>
+                <input type="datetime" asp-for="CreationDate" class="form-control" name="CreationDate" required/>
+                <span asp-validation-for="CreationDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        }
+    </div>
+</div>
+<hr />
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
 
