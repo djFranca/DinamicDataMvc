@@ -46,7 +46,7 @@ namespace DinamicDataMvc
             services.AddSingleton<IFieldService, FieldService>(s => new FieldService());
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<IPropertyService, PropertyService>(s => new PropertyService());
-            services.AddSingleton<IKeyGenerates, KeyGenerates>(s => new KeyGenerates(24)); //24 is the length of the objectId key (properties)
+            services.AddSingleton<IKeyGenerates, KeyGenerates>(s => new KeyGenerates(8)); //8 is the number of bits to use ina a hexdecimal generated key
             
             services.AddSwaggerGen(doc =>
             {

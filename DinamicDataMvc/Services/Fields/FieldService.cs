@@ -14,8 +14,6 @@ namespace DinamicDataMvc.Services.Fields
 
         private List<FieldModel> Fields { get; set; }
 
-        //private List<PropertiesModel> Properties { get; set; }
-
         public void SetDatabase(IMongoDatabase database)
         {
             try
@@ -33,8 +31,15 @@ namespace DinamicDataMvc.Services.Fields
 
         public void ReadFromDatabase()
         {
-            var collection = Database.GetCollection<FieldModel>("Field");
-            Fields = collection.Find(s => true).ToList();
+            try
+            {
+                var collection = Database.GetCollection<FieldModel>("Field");
+                Fields = collection.Find(s => true).ToList();
+            }
+            catch
+            {
+                throw new MongoClientException("Database Not Found or Not Connected");
+            }
         }
 
         public string CreateField(FieldModel model)
@@ -73,6 +78,44 @@ namespace DinamicDataMvc.Services.Fields
             }
         }
 
+
+        public string UpdateField(string Id, FieldModel model)
+        {
+            try
+            {
+                if(Id != null && model != null)
+                {
+                    var collection = Database.GetCollection<FieldModel>("Field");
+                    collection.ReplaceOneAsync(s => s.Id == Id, model);
+                    return ((int)StatusCode.NoContent).ToString() + " - " + StatusCode.NoContent.ToString();
+                }
+                return ((int)StatusCode.BadRequest).ToString() + " - " + StatusCode.BadRequest.ToString();
+            }
+            catch
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
+
+        public string UpdateProperties(string Id, PropertiesModel model)
+        {
+            try
+            {
+                if(Id != null && model != null)
+                {
+                    var collection = Database.GetCollection<PropertiesModel>("Properties");
+                    collection.ReplaceOneAsync(s => s.ID == Id, model);
+                    return ((int)StatusCode.NoContent).ToString() + " - " + StatusCode.NoContent.ToString();
+                }
+                return ((int)StatusCode.BadRequest).ToString() + " - " + StatusCode.BadRequest.ToString();
+            }
+            catch
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
         public string Delete(string id)
         {
             try
@@ -95,6 +138,7 @@ namespace DinamicDataMvc.Services.Fields
 
         public List<FieldModel> GetFields()
         {
+            //TODO: If in case Fields length value is zero, it must necessery treath this kind of exception
             return Fields;
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models.Field;
@@ -23,7 +22,7 @@ namespace DinamicDataMvc.Controllers.Field
             _ObjectId = ObjectId;
         }
 
-        [HttpGet("/Field/Read")]
+        [HttpGet("/Field/Read/")]
         public async Task<ActionResult> Read()
         {
             _Connection.DatabaseConnection();
@@ -34,8 +33,7 @@ namespace DinamicDataMvc.Controllers.Field
             return await Task.Run(() => View("Read", models));
         }
 
-
-        [HttpPost("/Field/Create")]
+        [HttpPost("/Field/Create/")]
         public async Task<ActionResult> Create(string type)
         {
             ViewBag.Type = type;
@@ -48,8 +46,6 @@ namespace DinamicDataMvc.Controllers.Field
         {
             return await Task.Run(() => View("Display"));
         }
-
-
 
         [HttpPost("/Field/Delete/")]
         public string Delete(string id)
@@ -64,8 +60,6 @@ namespace DinamicDataMvc.Controllers.Field
 
             return message;
         }
-
-
 
         [HttpPost("/Field/AddField/")]
         public async Task<ActionResult> AddField(ViewFieldModel model)
@@ -97,6 +91,63 @@ namespace DinamicDataMvc.Controllers.Field
             _Field.SetDatabase(_Connection.GetDatabase());
             _Field.CreateProperties(properties);
             _Field.CreateField(field);
+
+            _Field.ReadFromDatabase();
+
+            return await Task.Run(() => RedirectToAction("Read", "Field"));
+        }
+
+        [HttpPost("/Field/Update/")]
+        public async Task<ActionResult> Update(string Id)
+        {
+            _Connection.DatabaseConnection();
+            _Field.SetDatabase(_Connection.GetDatabase());
+            FieldModel field = _Field.GetField(Id);
+            PropertiesModel properties = _Field.GetProperties(field.Properties);
+
+            ViewBag.FieldId = Id;
+            ViewBag.PropertiesID = field.Properties;
+
+            ViewFieldModel ViewModel = new ViewFieldModel()
+            {
+                Type = field.Type,
+                Name = field.Name,
+                Size = properties.Size.ToString(),
+                Value = properties.Value,
+                Maxlength = properties.Maxlength.ToString(),
+                Required = properties.Required.ToString(),
+                CreationDate = Convert.ToDateTime(field.Date).ToString()
+            };
+
+            return await Task.Run(() => View("Update", ViewModel));
+        }
+
+        [HttpPost("/Field/SaveUpdate/")]
+        public async Task<ActionResult> SaveUpdate(string fieldId, string propertiesId, ViewFieldModel model)
+        {
+            string x = fieldId;
+            string y = propertiesId;
+
+            _Connection.DatabaseConnection();
+            _Field.SetDatabase(_Connection.GetDatabase());
+
+            _Field.UpdateField(fieldId, new FieldModel()
+            {
+                Id = fieldId,
+                Type = model.Type,
+                Name = model.Name,
+                Properties = propertiesId,
+                Date = Convert.ToDateTime(model.CreationDate)
+            });
+
+            _Field.UpdateProperties(propertiesId, new PropertiesModel()
+            {
+                ID = propertiesId,
+                Size = Convert.ToInt32(model.Size),
+                Value = model.Value,
+                Maxlength = Convert.ToInt32(model.Maxlength),
+                Required = Convert.ToBoolean(model.Required)
+            });
 
             _Field.ReadFromDatabase();
 

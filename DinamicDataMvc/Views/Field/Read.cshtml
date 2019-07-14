@@ -16,11 +16,13 @@
     </div>
     <hr />
     <div class="container">
-        @using (Html.BeginForm("Display", "Field", FormMethod.Get))
-        {
-            <span><b><label class="form-group"> Create New Field</label></b></span>
-            <button type="submit"><i class="fa fa-file-text"></i></button>
-        }
+        <div>
+            @using (Html.BeginForm("Display", "Field", FormMethod.Get))
+            {
+                <span><label class="form-group"> Create New Field</label></span>
+                <button type="submit"><i class="fa fa-file-text"></i></button>
+            }
+        </div>
     </div>
     <table class="table">
         <thead>
@@ -34,7 +36,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Date)
                 </th>
-                <th>@Html.DisplayName("Edit")</th>
+                <th>@Html.DisplayName("Update")</th>
                 <th>@Html.DisplayName("Delete")</th>
             </tr>
         </thead>
@@ -52,7 +54,7 @@
                         @Html.DisplayFor(modelItem => item.Date)
                     </td>
                     <td>
-                        @using (Html.BeginForm("", "Field", new { ID = item.Id }, FormMethod.Get))
+                        @using (Html.BeginForm("Update", "Field", new { ID = item.Id }, FormMethod.Post))
                         {
                             <button type="submit"><i class="fa fa-list"></i></button>
                         }
