@@ -12,8 +12,8 @@
 </head>
 <body>
     <hr />
-    <div class="container">
-        <h2>Active Field List</h2>
+    <div class="container" style="background-color:darkorange">
+        <h2 style="color:white; text-align:right;">Active Field List</h2>
     </div>
     <hr />
     <div class="container">
@@ -21,15 +21,15 @@
             @using (Html.BeginForm("Display", "Field", FormMethod.Get))
             {
             <span>
-                <label class="form-group"> Create New Field</label>
-                <button type="submit"><i class="fa fa-file-text"></i></button>
+                <button type="submit"><i class="fa fa-plus-square"></i></button>
+                <label class="form-group"><b><i>Add New Field</i></b></label>
             </span>
             }
         </div>
     </div>
-    <table class="table">
+    <table class="table table-striped">
         <thead>
-            <tr>
+            <tr style="background-color:#212529; color:white;">
                 <th>
                     @Html.DisplayNameFor(model => model.Type)
                 </th>
@@ -48,7 +48,7 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Type)
+                        <b>@Html.DisplayFor(modelItem => item.Type)</b>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
@@ -59,7 +59,7 @@
                     <td>
                         @using (Html.BeginForm("Update", "Field", new { ID = item.Id }, FormMethod.Post))
                         {
-                            <button type="submit"><i class="fa fa-list"></i></button>
+                            <button type="submit"><i class="fa fa-pencil"></i></button>
                         }
                     </td>
                     <td>

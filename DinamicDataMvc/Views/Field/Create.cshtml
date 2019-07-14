@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    var type = ViewBag.Type;
 }
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -12,7 +13,7 @@
 </head>
 <body>
     <hr />
-    <h1>Create Field - @Html.DisplayTextFor(model => model.Type)</h1>
+    <h1>Create Field - @type</h1>
     <hr />
     <div class="row">
         <div class="col-md-4">
