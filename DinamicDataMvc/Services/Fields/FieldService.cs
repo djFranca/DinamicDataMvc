@@ -177,5 +177,23 @@ namespace DinamicDataMvc.Services.Fields
                 Required = false
             };
         }
+
+        /*
+         * Method that returns all field types to construct a choice menu for the process creation;
+         */
+        public List<string> GetFieldType()
+        {
+            List<string> _types = new List<string>();
+            var collection = Database.GetCollection<FieldModel>("Field");
+            var _models = collection.Find(s => true).ToList();
+            foreach(var _model in _models)
+            {
+                if (!_types.Contains(_model.Type))
+                {
+                    _types.Add(_model.Type);
+                }
+            }
+            return _types;
+        }
     }
 }

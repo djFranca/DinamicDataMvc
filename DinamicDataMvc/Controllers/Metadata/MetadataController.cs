@@ -14,13 +14,15 @@ namespace DinamicDataMvc.Controllers.Metadata
         private readonly IMetadataService _GetMetadata;
         private readonly IBranchService _GetBranchById;
         private readonly IStateService _GetStateById;
+        private readonly IFieldService _GetFieldTypes;
 
-        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById)
+        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById, IFieldService GetFieldTypes)
         {
             _Connection = Connection;
             _GetMetadata = GetMetadata;
             _GetBranchById = GetBranchById;
             _GetStateById = GetStateById;
+            _GetFieldTypes = GetFieldTypes;
         }
 
         [HttpGet("/Metadata/Read")]
@@ -223,13 +225,28 @@ namespace DinamicDataMvc.Controllers.Metadata
             return await Task.Run(() => RedirectToAction("Read", "Metadata"));
         }
 
-
-
-        //TODO
-        [HttpGet("/Metadata/Create")]
-        public async Task<ActionResult> Create()
+        [HttpGet("/Metadata/CreateProcess/")]
+        public async Task<ActionResult> CreateProcess()
         {
             return await Task.Run(() => View("Create"));
+        }
+
+        [HttpPost("/Metadata/AddProcess/")]
+        public string AddProcess(ViewMetadataModel model)
+        {
+
+
+            return model.Name + ", " + model.Version;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> AddFields()
+        {
+            _Connection.DatabaseConnection();
+            _GetFieldTypes.SetDatabase(_Connection.GetDatabase());
+            List<string> types = _GetFieldTypes.GetFieldType();
+
+            return await Task.Run(() => View("AddFields", types));
         }
     }
 }

@@ -1,0 +1,15 @@
+﻿@model  IEnumerable<string>
+@{
+    ViewData["Title"] = "AddFields";
+}
+
+<h1>AddFields</h1>
+
+<div>
+    @foreach(var type in Model)
+    {
+        <label>@type</label>
+        <input type="checkbox" />
+    }
+</div>
+
