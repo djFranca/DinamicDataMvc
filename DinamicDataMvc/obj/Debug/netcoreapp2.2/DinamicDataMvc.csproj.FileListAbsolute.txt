@@ -28,8 +28,6 @@ C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataM
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.pdb
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.csproj.CopyComplete
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\Index.g.cshtml.cs
-C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Fake\Delete.g.cshtml.cs
-C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Fake\Read.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\Read.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\Display.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Metadata\Read.g.cshtml.cs
@@ -40,3 +38,5 @@ C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\Update.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Metadata\Create.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Metadata\AddFields.g.cshtml.cs
+C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Tools\Delete.g.cshtml.cs
+C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Tools\Read.g.cshtml.cs

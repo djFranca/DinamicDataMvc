@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models.Field;
@@ -13,24 +14,40 @@ namespace DinamicDataMvc.Controllers.Field
         private readonly IFieldService _Field;
         private readonly IPropertyService _Properties;
         private readonly IKeyGenerates _ObjectId;
+        private readonly IPaginationService _SetPagination;
 
-        public FieldController(IConnectionManagementService Connection, IFieldService Field, IPropertyService Properties, IKeyGenerates ObjectId)
+        public FieldController(IConnectionManagementService Connection, IFieldService Field, IPropertyService Properties, IKeyGenerates ObjectId, IPaginationService SetPagination)
         {
             _Connection = Connection;
             _Field = Field;
             _Properties = Properties;
             _ObjectId = ObjectId;
+            _SetPagination = SetPagination;
         }
 
         [HttpGet("/Field/Read/")]
         public async Task<ActionResult> Read()
         {
+
+            string pageNumber = Request.Query["Page"];
+
+            if(pageNumber == null)
+            {
+                pageNumber = 1.ToString();
+            }
+
             _Connection.DatabaseConnection();
             _Field.SetDatabase(_Connection.GetDatabase());
             _Field.ReadFromDatabase();
-            List<FieldModel> models = _Field.GetFields();
+            List<FieldModel> viewModels = _Field.GetFields();
 
-            return await Task.Run(() => View("Read", models));
+            Dictionary<int, List<FieldModel>> modelsToDisplay = _SetPagination.SetModelsByPage(viewModels);
+
+            int NumberOfPages = modelsToDisplay.Count();
+            ViewBag.NumberOfPages = NumberOfPages;
+
+
+            return await Task.Run(() => View("Read", modelsToDisplay[Convert.ToInt32(pageNumber)]));
         }
 
         [HttpPost("/Field/Create/")]

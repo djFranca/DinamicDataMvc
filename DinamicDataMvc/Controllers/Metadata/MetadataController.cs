@@ -6,7 +6,6 @@ using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
 using DinamicDataMvc.Models.Field;
 using DinamicDataMvc.Models.Metadata;
-using DinamicDataMvc.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DinamicDataMvc.Controllers.Metadata
@@ -94,14 +93,6 @@ namespace DinamicDataMvc.Controllers.Metadata
 
                 viewModels.Add(viewModel);
             }
-            //int pageSize = 3;
-
-            //PaginatedList ModelsToDisplay = new PaginatedList(viewModels, pageIndex, pageSize);
-
-            //ViewBag.TotalPages = ModelsToDisplay.TotalPages;
-
-            //return await Task.Run(() => View("Read", ModelsToDisplay.GetModelsList(pageIndex)));
-
             Dictionary<int, List<ViewMetadataModel>> modelsToDisplay = _SetPagination.SetModelsByPage(viewModels);
 
             int NumberOfPages = modelsToDisplay.Count();
