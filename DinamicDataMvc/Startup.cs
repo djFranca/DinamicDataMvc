@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using DinamicDataMvc.Utils;
+using DinamicDataMvc.Services.Pagination;
 
 namespace DinamicDataMvc
 {
@@ -47,7 +48,7 @@ namespace DinamicDataMvc
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<IPropertyService, PropertyService>(s => new PropertyService());
             services.AddSingleton<IKeyGenerates, KeyGenerates>(s => new KeyGenerates(8)); //8 is the number of bits to use ina a hexdecimal generated key
-            
+            services.AddSingleton<IPaginationService, PaginationService>(s => new PaginationService(3));
             services.AddSwaggerGen(doc =>
             {
                 doc.SwaggerDoc("v1", new Info

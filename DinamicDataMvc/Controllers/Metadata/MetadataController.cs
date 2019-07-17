@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
+using DinamicDataMvc.Models.Field;
+using DinamicDataMvc.Models.Metadata;
 using DinamicDataMvc.Utils;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,17 +18,19 @@ namespace DinamicDataMvc.Controllers.Metadata
         private readonly IBranchService _GetBranchById;
         private readonly IStateService _GetStateById;
         private readonly IFieldService _GetFieldTypes;
+        private readonly IPaginationService _SetPagination;
 
-        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById, IFieldService GetFieldTypes)
+        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById, IFieldService GetFieldTypes, IPaginationService SetPagination)
         {
             _Connection = Connection;
             _GetMetadata = GetMetadata;
             _GetBranchById = GetBranchById;
             _GetStateById = GetStateById;
             _GetFieldTypes = GetFieldTypes;
+            _SetPagination = SetPagination;
         }
 
-        [HttpGet("/Metadata/Read")]
+        [HttpGet("/Metadata/Read/")]
         public async Task<ActionResult> Read()
         {
             //Stores data in cache;
@@ -37,12 +42,12 @@ namespace DinamicDataMvc.Controllers.Metadata
             string searchVersion = TempData["Version"].ToString();
             ViewBag.Version = searchVersion;
 
-            TempData["PageNumber"] = Request.Query["PageNumber"];
-            string pageNumber = TempData["PageNumber"].ToString();
+            string pageNumber = Request.Query["Page"];
+            
 
             if (string.IsNullOrEmpty(pageNumber))
             {
-                pageNumber = "1";
+                pageNumber = 1.ToString();
             }
 
             int pageIndex = Convert.ToInt32(pageNumber);
@@ -58,7 +63,7 @@ namespace DinamicDataMvc.Controllers.Metadata
                 searchVersion = "0";
             }
 
-            ViewBag.PageNumber = pageIndex.ToString();
+            ViewBag.PageNumber = pageNumber;
 
             _Connection.DatabaseConnection();
             _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
@@ -89,13 +94,20 @@ namespace DinamicDataMvc.Controllers.Metadata
 
                 viewModels.Add(viewModel);
             }
-            int pageSize = 3;
+            //int pageSize = 3;
 
-            PaginatedList ModelsToDisplay = new PaginatedList(viewModels, pageIndex, pageSize);
+            //PaginatedList ModelsToDisplay = new PaginatedList(viewModels, pageIndex, pageSize);
 
-            ViewBag.TotalPages = ModelsToDisplay.TotalPages;
+            //ViewBag.TotalPages = ModelsToDisplay.TotalPages;
 
-            return await Task.Run(() => View("Read", ModelsToDisplay.GetModelsList(pageIndex)));
+            //return await Task.Run(() => View("Read", ModelsToDisplay.GetModelsList(pageIndex)));
+
+            Dictionary<int, List<ViewMetadataModel>> modelsToDisplay = _SetPagination.SetModelsByPage(viewModels);
+
+            int NumberOfPages = modelsToDisplay.Count();
+            ViewBag.NumberOfPages = NumberOfPages;
+
+            return await Task.Run(() => View("Read", modelsToDisplay[pageIndex]));
         }
 
 
@@ -155,17 +167,42 @@ namespace DinamicDataMvc.Controllers.Metadata
             _GetStateById.SetDatabase(_Connection.GetDatabase());
             _GetStateById.ReadFromDatabase(_model.State);
 
-            ViewMetadataModel _ViewMetadataModel = new ViewMetadataModel()
+            List<string> types = new List<string>();
+            List<string> names = new List<string>();
+            List<PropertiesModel> properties = new List<PropertiesModel>();
+
+            foreach(string fieldID in _model.Field)
             {
-                Id = _model.Id,
-                Name = _model.Name,
-                Version = _model.Version.ToString(),
-                Date = _model.Date.Day.ToString() + "/" + _model.Date.Month.ToString() + "/" + _model.Date.Year.ToString(),
+                FieldModel fieldModel = _GetFieldTypes.GetField(fieldID);
+                types.Add(fieldModel.Type);
+                names.Add(fieldModel.Name);
+                properties.Add(_GetFieldTypes.GetProperties(fieldModel.Properties));
+            }
+
+
+            ViewProcessModel _ViewModel = new ViewProcessModel()
+            {
+                Name = name,
+                Version = version,
+                CreationDate = _model.Date.ToString().Substring(0, 10),
                 Branch = _GetBranchById.GetBranches(),
-                State = _GetStateById.GetStateDescription()
+                Types = types,
+                Names = names,
+                Properties = properties,
+
             };
 
-            return await Task.Run(() => View("GetDetailsByVersion", _ViewMetadataModel));
+            //ViewMetadataModel _ViewMetadataModel = new ViewMetadataModel()
+            //{
+            //    Id = _model.Id,
+            //    Name = _model.Name,
+            //    Version = _model.Version.ToString(),
+            //    Date = _model.Date.Day.ToString() + "/" + _model.Date.Month.ToString() + "/" + _model.Date.Year.ToString(),
+            //    Branch = _GetBranchById.GetBranches(),
+            //    State = _GetStateById.GetStateDescription()
+            //};
+
+            return await Task.Run(() => View("GetDetailsByVersion", _ViewModel));
         }
 
 

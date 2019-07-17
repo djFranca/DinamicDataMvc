@@ -1,17 +1,51 @@
-﻿@model DinamicDataMvc.Models.ViewMetadataModel
+﻿@model DinamicDataMvc.Models.Metadata.ViewProcessModel
 @{
     ViewData["Title"] = "ByVersion";
+
+    bool[] branchesState = new bool[3] { false, false, false };
+
+    string[] branchList = Model.Branch.Split(" ");
+
+    foreach(var description in branchList)
+    {
+        if (description.Equals("Development")) {
+            branchesState[0] = true;
+        }
+        else if (description.Equals("Quality"))
+        {
+            branchesState[1] = true;
+        }
+        else if (description.Equals("Production"))
+        {
+            branchesState[2] = true;
+        }
+    }
 }
 <section id="ProcessName">
     <div class="text-body">
-        <h4>Process @Html.ViewBag.Name</h4>
+        <h4>Process @Html.DisplayTextFor(s => s.Name)</h4>
     </div>
 </section>
 <br />
 <section id="ProcessHeaderInfo">
     <div>
-        @await Html.PartialAsync("_ByVersionHeader", Model)
+        <span>
+            <strong><b>@Html.Label("Version: ")</b></strong>
+            @Html.DisplayTextFor(s => s.Version)
+            <strong><b>@Html.Label("Creation Date: ")</b></strong>
+            @Html.DisplayTextFor(s => s.CreationDate)
+            <strong><b>@Html.Label("Branches: ")</b></strong>
+            <b><i>@Html.Label("Development ")</i></b>
+            @Html.CheckBox("Development", @branchesState[0])
+            <b><i>@Html.Label("Quality ")</i></b>
+            @Html.CheckBox("Quality", @branchesState[1])
+            <b><i>@Html.Label("Production ")</i></b>
+            @Html.CheckBox("Production", @branchesState[2])
+        </span>
     </div>
+    @*<div>
+        @await Html.PartialAsync("_ByVersionHeader", Model)
+    </div>*@
 </section>
 <br />
 <section id="ProcessDataInfo">
@@ -20,22 +54,22 @@
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayName("Type")
+
                     </th>
                     <th>
-                        @Html.DisplayName("Field")
+
                     </th>
-                    <th></th>
+                    <th>
+
+                    </th>
                 </tr>
             </thead>
             <tbody>
-
-
             </tbody>
         </table>
     </div>
     <div>
-        @Html.ActionLink("Back to list", "Read", "Metadata")
+
     </div>
 </section>
 
