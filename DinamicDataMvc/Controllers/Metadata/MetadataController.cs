@@ -158,6 +158,8 @@ namespace DinamicDataMvc.Controllers.Metadata
             _GetStateById.SetDatabase(_Connection.GetDatabase());
             _GetStateById.ReadFromDatabase(_model.State);
 
+            _GetFieldTypes.SetDatabase(_Connection.GetDatabase());
+
             List<string> types = new List<string>();
             List<string> names = new List<string>();
             List<PropertiesModel> properties = new List<PropertiesModel>();

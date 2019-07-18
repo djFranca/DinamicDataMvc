@@ -6,9 +6,10 @@
 
     string[] branchList = Model.Branch.Split(" ");
 
-    foreach(var description in branchList)
+    foreach (var description in branchList)
     {
-        if (description.Equals("Development")) {
+        if (description.Equals("Development"))
+        {
             branchesState[0] = true;
         }
         else if (description.Equals("Quality"))
@@ -19,6 +20,26 @@
         {
             branchesState[2] = true;
         }
+    }
+    var names = string.Empty;
+
+    foreach (var name in Model.Names)
+    {
+        names += name + " ";
+    }
+
+    var types = string.Empty;
+
+    foreach (var type in Model.Types)
+    {
+        types += type + " ";
+    }
+
+    var properties = string.Empty;
+
+    foreach (var propertie in Model.Properties)
+    {
+        properties += propertie + " ";
     }
 }
 <section id="ProcessName">
@@ -43,9 +64,6 @@
             @Html.CheckBox("Production", @branchesState[2])
         </span>
     </div>
-    @*<div>
-        @await Html.PartialAsync("_ByVersionHeader", Model)
-    </div>*@
 </section>
 <br />
 <section id="ProcessDataInfo">
@@ -54,22 +72,33 @@
             <thead>
                 <tr>
                     <th>
-
+                        @Html.DisplayNameFor(s => s.Types)
                     </th>
                     <th>
-
+                        @Html.DisplayNameFor(s => s.Names)
                     </th>
                     <th>
-
+                        @Html.DisplayNameFor(s => s.Properties)
                     </th>
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td>
+                        @Html.DisplayTextFor(s => s.Types)
+                    </td>
+                    <td>
+                        @Html.DisplayTextFor(s => s.Names)
+                    </td>
+                    <td>
+                        @Html.DisplayTextFor(s => s.Properties)
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
     <div>
-
+        @Html.ActionLink("Back to list", "Read", "Metadata")
     </div>
 </section>
 
