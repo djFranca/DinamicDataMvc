@@ -12,14 +12,16 @@ namespace DinamicDataMvc.UnitTests
         private readonly IMetadataService _MetadataService;
         private readonly IConnectionManagementService _Connection;
         private readonly IFieldService _FieldService;
+        private readonly IBranchService _Branch;
         private readonly IKeyGenerates _KeyService;
 
-        public TestController(IConnectionManagementService Connection, IMetadataService MetadataService, IFieldService FieldService, IKeyGenerates KeyService)
+        public TestController(IConnectionManagementService Connection, IMetadataService MetadataService, IFieldService FieldService, IKeyGenerates KeyService, IBranchService Branch)
         {
             _Connection = Connection;
             _MetadataService = MetadataService;
             _FieldService = FieldService;
             _KeyService = KeyService;
+            _Branch = Branch;
         }
 
         [HttpGet]
@@ -71,6 +73,16 @@ namespace DinamicDataMvc.UnitTests
 
             string message = _MetadataService.CreateMetadata(model);
             return message;
+        }
+
+
+        [HttpGet("/Test/GetBranchID/")]
+        public string GetBranchID()
+        {
+            string code = Request.Query["Code"];
+            _Connection.DatabaseConnection();
+            _Branch.SetDatabase(_Connection.GetDatabase());
+            return "Code : " + code + " = ID : " + _Branch.GetBranchID(code);
         }
     }
 }

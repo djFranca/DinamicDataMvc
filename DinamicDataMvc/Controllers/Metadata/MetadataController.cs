@@ -18,8 +18,9 @@ namespace DinamicDataMvc.Controllers.Metadata
         private readonly IStateService _GetStateById;
         private readonly IFieldService _GetFieldTypes;
         private readonly IPaginationService _SetPagination;
+        private readonly IKeyGenerates _KeyID;
 
-        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById, IFieldService GetFieldTypes, IPaginationService SetPagination)
+        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById, IFieldService GetFieldTypes, IPaginationService SetPagination, IKeyGenerates KeyID)
         {
             _Connection = Connection;
             _GetMetadata = GetMetadata;
@@ -27,6 +28,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             _GetStateById = GetStateById;
             _GetFieldTypes = GetFieldTypes;
             _SetPagination = SetPagination;
+            _KeyID = KeyID;
         }
 
         [HttpGet("/Metadata/Read/")]
@@ -255,18 +257,57 @@ namespace DinamicDataMvc.Controllers.Metadata
             return await Task.Run(() => RedirectToAction("Read", "Metadata"));
         }
 
-        [HttpGet("/Metadata/CreateProcess/")]
-        public async Task<ActionResult> CreateProcess()
+        [HttpGet("/Metadata/Create/")]
+        public async Task<ActionResult> Create()
         {
             return await Task.Run(() => View("Create"));
         }
 
-        [HttpPost("/Metadata/AddProcess/")]
-        public string AddProcess(ViewMetadataModel model)
+        [HttpPost("/Metadata/CreateProcess/")]
+        public async Task<ActionResult> CreateProcess(MetadataModel viewModel)
         {
+            try
+            {
+                if (viewModel == null)  //Se o modelo de dados estiver vazio, redirecciona para a mesma página;
+                {
+                    return await Task.Run(() => RedirectToAction("Create", "Metadata"));
+                }
 
+                _Connection.DatabaseConnection();
 
-            return model.Name + ", " + model.Version;
+                _GetBranchById.SetDatabase(_Connection.GetDatabase());
+                _GetStateById.SetDatabase(_Connection.GetDatabase());
+                _GetMetadata.SetDatabase(_Connection.GetDatabase());
+
+                //Defines the properties model key
+                _KeyID.SetKey(); //Sets a new properties ObjectID collection;
+                string modelId = _KeyID.GetKey();
+
+                List<string> branchList = new List<string>();
+
+                foreach (var item in viewModel.Branch)
+                {
+                    branchList.Add(_GetBranchById.GetBranchID(item));
+                }
+
+                MetadataModel model = new MetadataModel()
+                {
+                    Id = modelId,
+                    Name = viewModel.Name,
+                    Version = Convert.ToInt32(viewModel.Version),
+                    Date = Convert.ToDateTime(viewModel.Date),
+                    State = _GetStateById.GetStateID(viewModel.State),
+                    Field = new List<string>() { },
+                    Branch = branchList
+                };
+                ViewBag.ID = viewModel.Id;
+                _GetMetadata.CreateMetadata(model);
+                return await Task.Run(() => RedirectToAction("Display", "Field", new { ID = modelId}));
+            }
+            catch
+            {
+                throw new ArgumentNullException();
+            }
         }
 
         [HttpGet]

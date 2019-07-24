@@ -15,5 +15,7 @@
         public string Required { get; set; }
 
         public string CreationDate { get; set; }
+
+        public string ProcessID { get; set; }
     }
 }

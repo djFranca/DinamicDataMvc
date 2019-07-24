@@ -62,5 +62,29 @@ namespace DinamicDataMvc.Services.Metadata
         {
             _Database = database;
         }
+
+
+        /*
+         * Metodo que permite obter o identivicador de um branch de um determinado processo, recebendo como argumento de entrada
+         * o código correspondente ao branch do qual se pretende obter o moedelo de dados. A lista de códigos é constituida por
+         * { Dev : Desenvolvimento, Qa : Qualidade, Prod : Produção }
+         */
+        public string GetBranchID(string code)
+        {
+            try
+            {
+                if(code == null)
+                {
+                    return string.Empty;
+                }
+                var collection = _Database.GetCollection<BranchModel>("Branch");
+                BranchModel model = collection.Find(s => s.Code == code).Single();
+                return model.Id;
+            }
+            catch
+            {
+                throw new ArgumentNullException();
+            }
+        }
     }
 }

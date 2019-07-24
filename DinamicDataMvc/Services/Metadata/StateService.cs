@@ -22,6 +22,25 @@ namespace DinamicDataMvc.Services.Metadata
             return _State;
         }
 
+        public string GetStateID(string description)
+        {
+            try
+            {
+                if(description == null)
+                {
+                    return null;
+                }
+
+                var collection = _Database.GetCollection<StateModel>("State");
+                StateModel model = collection.Find(s => s.Description == description).Single();
+                return model.Id;
+            }
+            catch
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
         public void ReadFromDatabase(string id)
         {
             try

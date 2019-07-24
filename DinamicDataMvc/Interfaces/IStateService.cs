@@ -9,5 +9,7 @@ namespace DinamicDataMvc.Interfaces
         void ReadFromDatabase(string id);
 
         string GetStateDescription();
+
+        string GetStateID(string description);
     }
 }

@@ -25,5 +25,7 @@ namespace DinamicDataMvc.Interfaces
         List<MetadataModel> GetProcessByName(string name);
 
         MetadataModel GetProcessByVersion(string name, int version);
+
+        string AddFieldToProcess(string processID, string fieldID);
     }
 }

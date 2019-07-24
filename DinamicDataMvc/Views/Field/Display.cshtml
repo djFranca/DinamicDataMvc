@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Display";
+    var processID = ViewBag.ID;
 }
 
 <head>
@@ -13,8 +14,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-4">
-
-                @using (Html.BeginForm("Create", "Field", new { Type = "Password" }, FormMethod.Post))
+                @using (Html.BeginForm("Create", "Field", new { Type = "Password", Process = processID }, FormMethod.Post))
                 {
                     <button type="submit" id="pwdBtn"><img src="~/images/Password.jpg" /></button>
                 }
@@ -22,26 +22,24 @@
             </div>
             <div class="col-sm-4">
 
-                @using (Html.BeginForm("Create", "Field", new { Type = "Text" }, FormMethod.Post))
+                @using (Html.BeginForm("Create", "Field", new { Type = "Text", Process = processID }, FormMethod.Post))
                 {
                     <button type="submit" id="textBtn"><img src="~/images/Text.png" /></button>
                 }
             </div>
             <div class="col-sm-4">
 
-                @using (Html.BeginForm("Create", "Field", new { Type = "Number" }, FormMethod.Post))
+                @using (Html.BeginForm("Create", "Field", new { Type = "Number" , Process = processID }, FormMethod.Post))
                 {
                     <button type="submit" id="numBtn"><img src="~/images/Number.png" /></button>
                 }
             </div>
             <div class="col-sm-4">
-                @using (Html.BeginForm("Create", "Field", new { Type = "Text Box" }, FormMethod.Post))
+                @using (Html.BeginForm("Create", "Field", new { Type = "Text Box", Process = processID }, FormMethod.Post))
                 {
                     <button type="submit" id="txtBoxBtn"><img src="~/images/TextBox.png" /></button>
                 }
             </div>
         </div>
-        <div class="row">
-
-        </div>
+    </div>
 </body>

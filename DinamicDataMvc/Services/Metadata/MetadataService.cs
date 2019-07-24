@@ -1,6 +1,7 @@
 ﻿using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
 using DinamicDataMvc.Utils;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -87,7 +88,7 @@ namespace DinamicDataMvc.Services.Metadata
                     Model = filteredData;
                 }
 
-                else if (_NameFilteringResult != null && _VerionFilteringResult == 0)
+                else if (_NameFilteringResult != null && _VerionFilteringResult != 0)
                 {
                     var filteredData = collection.Find(s => s.Name == _NameFilteringResult).ToList();
                     Model = filteredData;
@@ -148,7 +149,7 @@ namespace DinamicDataMvc.Services.Metadata
                 if(model != null)
                 {
                     var collection = _Database.GetCollection<MetadataModel>("Metadata");
-                    collection.InsertOne(model);
+                    collection.InsertOneAsync(model);
                     return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
                 }
                 return ((int)StatusCode.BadRequest).ToString() + " - " + StatusCode.BadRequest.ToString();
@@ -198,6 +199,27 @@ namespace DinamicDataMvc.Services.Metadata
                     return model;
                 }
                 return null;
+            }
+            catch
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
+
+        public string AddFieldToProcess(string processID, string fieldID)
+        {
+            try
+            {
+                var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                MetadataModel model = collection.Find(s => s.Id == processID).Single();
+
+                model.Field.Add(fieldID); //Add field ID to the field array into the process Model
+
+                var result = collection.ReplaceOneAsync(s => s.Id == processID, model);
+
+
+                return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
             }
             catch
             {

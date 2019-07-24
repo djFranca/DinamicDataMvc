@@ -15,20 +15,21 @@ namespace DinamicDataMvc.Controllers.Field
         private readonly IPropertyService _Properties;
         private readonly IKeyGenerates _ObjectId;
         private readonly IPaginationService _SetPagination;
+        private readonly IMetadataService _Metadata;
 
-        public FieldController(IConnectionManagementService Connection, IFieldService Field, IPropertyService Properties, IKeyGenerates ObjectId, IPaginationService SetPagination)
+        public FieldController(IConnectionManagementService Connection, IMetadataService Metadata, IFieldService Field, IPropertyService Properties, IKeyGenerates ObjectId, IPaginationService SetPagination)
         {
             _Connection = Connection;
             _Field = Field;
             _Properties = Properties;
             _ObjectId = ObjectId;
             _SetPagination = SetPagination;
+            _Metadata = Metadata;
         }
 
         [HttpGet("/Field/Read/")]
         public async Task<ActionResult> Read()
         {
-
             string pageNumber = Request.Query["Page"];
 
             if(pageNumber == null)
@@ -46,22 +47,23 @@ namespace DinamicDataMvc.Controllers.Field
             int NumberOfPages = modelsToDisplay.Count();
             ViewBag.NumberOfPages = NumberOfPages;
 
-
             return await Task.Run(() => View("Read", modelsToDisplay[Convert.ToInt32(pageNumber)]));
         }
 
-        [HttpPost("/Field/Create/")]
-        public async Task<ActionResult> Create(string type)
+        [HttpGet("/Field/Display/")]
+        public async Task<ActionResult> Display(string id)
         {
-            ViewBag.Type = type;
-
-            return await Task.Run(() => View("Create"));
+            ViewBag.ID = id;
+            return await Task.Run(() => View("Display"));
         }
 
-        [HttpGet]
-        public async Task<ActionResult> Display()
+        [HttpPost("/Field/Create/")]
+        public async Task<ActionResult> Create()
         {
-            return await Task.Run(() => View("Display"));
+            ViewBag.Type = Request.Query["Type"];
+            ViewBag.ID = Request.Query["Process"];
+
+            return await Task.Run(() => View("Create"));
         }
 
         [HttpPost("/Field/Delete/")]
@@ -95,9 +97,13 @@ namespace DinamicDataMvc.Controllers.Field
                 Required = Convert.ToBoolean(model.Required)
             };
 
+            _ObjectId.SetKey(); //Sets a new properties ObjectID collection;
+            string fieldId = _ObjectId.GetKey();
+
             //Third creates field model
             FieldModel field = new FieldModel()
             {
+                Id = fieldId,
                 Name = model.Name,
                 Type = model.Type,
                 Properties = propertiesId,
@@ -108,6 +114,9 @@ namespace DinamicDataMvc.Controllers.Field
             _Field.SetDatabase(_Connection.GetDatabase());
             _Field.CreateProperties(properties);
             _Field.CreateField(field);
+
+
+            _Metadata.AddFieldToProcess(model.ProcessID, fieldId);
 
             _Field.ReadFromDatabase();
 
