@@ -13,22 +13,24 @@ namespace DinamicDataMvc.Controllers.Metadata
     public class MetadataController : Controller
     {
         private readonly IConnectionManagementService _Connection;
-        private readonly IMetadataService _GetMetadata;
+        private readonly IMetadataService _Metadata;
         private readonly IBranchService _GetBranchById;
         private readonly IStateService _GetStateById;
-        private readonly IFieldService _GetFieldTypes;
+        private readonly IFieldService _Field;
         private readonly IPaginationService _SetPagination;
         private readonly IKeyGenerates _KeyID;
+        private readonly IPropertyService _Properties;
 
-        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById, IFieldService GetFieldTypes, IPaginationService SetPagination, IKeyGenerates KeyID)
+        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById, IFieldService GetFieldTypes, IPaginationService SetPagination, IKeyGenerates KeyID, IPropertyService Properties)
         {
             _Connection = Connection;
-            _GetMetadata = GetMetadata;
+            _Metadata = GetMetadata;
             _GetBranchById = GetBranchById;
             _GetStateById = GetStateById;
-            _GetFieldTypes = GetFieldTypes;
+            _Field = GetFieldTypes;
             _SetPagination = SetPagination;
             _KeyID = KeyID;
+            _Properties = Properties;
         }
 
         [HttpGet("/Metadata/Read/")]
@@ -67,15 +69,15 @@ namespace DinamicDataMvc.Controllers.Metadata
             ViewBag.PageNumber = pageNumber;
 
             _Connection.DatabaseConnection();
-            _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
+            _Metadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
             _GetBranchById.SetDatabase(_Connection.GetDatabase());
             _GetStateById.SetDatabase(_Connection.GetDatabase());
 
-            _GetMetadata.SetFilterParameters(searchName, Convert.ToInt32(searchVersion));
-            _GetMetadata.ReadFromDatabase();
+            _Metadata.SetFilterParameters(searchName, Convert.ToInt32(searchVersion));
+            _Metadata.ReadFromDatabase();
 
 
-            List<MetadataModel> metadataList = _GetMetadata.GetProcessesMetadataList();
+            List<MetadataModel> metadataList = _Metadata.GetProcessesMetadataList();
             List<ViewMetadataModel> viewModels = new List<ViewMetadataModel>();
 
             foreach (var metadata in metadataList)
@@ -100,6 +102,24 @@ namespace DinamicDataMvc.Controllers.Metadata
             int NumberOfPages = modelsToDisplay.Count();
             ViewBag.NumberOfPages = NumberOfPages;
 
+
+            //Se a base de dados não tiver processos armazenados para mostrar na listagem de processos;
+            if(modelsToDisplay.Count() == 0)
+            {
+                List<ViewMetadataModel> models = new List<ViewMetadataModel>();
+                ViewMetadataModel model = new ViewMetadataModel()
+                {
+                    Id = string.Empty,
+                    Name = string.Empty,
+                    Version = string.Empty,
+                    Date = string.Empty,
+                    Branch = string.Empty,
+                    State = string.Empty
+                };
+                models.Add(model);
+                return await Task.Run(() => View("Read", models));
+            }
+
             return await Task.Run(() => View("Read", modelsToDisplay[pageIndex]));
         }
 
@@ -112,11 +132,11 @@ namespace DinamicDataMvc.Controllers.Metadata
                 return BadRequest();
             }
             _Connection.DatabaseConnection();
-            _GetMetadata.SetDatabase(_Connection.GetDatabase());
+            _Metadata.SetDatabase(_Connection.GetDatabase());
             _GetBranchById.SetDatabase(_Connection.GetDatabase());
 
             
-            List<MetadataModel> modelList = _GetMetadata.GetProcessByName(id);
+            List<MetadataModel> modelList = _Metadata.GetProcessByName(id);
             List<ViewMetadataModel> _ViewModelList = new List<ViewMetadataModel>();
 
             ViewBag.Name = modelList[0].Name; //Stores the process name;
@@ -151,8 +171,8 @@ namespace DinamicDataMvc.Controllers.Metadata
             }
 
             _Connection.DatabaseConnection(); //Estabeleçe-se a conexão com a base de dados;
-            _GetMetadata.SetDatabase(_Connection.GetDatabase());
-            MetadataModel _model = _GetMetadata.GetProcessByVersion(name, versionNumber);
+            _Metadata.SetDatabase(_Connection.GetDatabase());
+            MetadataModel _model = _Metadata.GetProcessByVersion(name, versionNumber);
 
             _GetBranchById.SetDatabase(_Connection.GetDatabase());
             _GetBranchById.ReadFromDatabase(_model.Branch);
@@ -160,7 +180,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             _GetStateById.SetDatabase(_Connection.GetDatabase());
             _GetStateById.ReadFromDatabase(_model.State);
 
-            _GetFieldTypes.SetDatabase(_Connection.GetDatabase());
+            _Field.SetDatabase(_Connection.GetDatabase());
 
             List<string> types = new List<string>();
             List<string> names = new List<string>();
@@ -168,10 +188,10 @@ namespace DinamicDataMvc.Controllers.Metadata
 
             foreach(string fieldID in _model.Field)
             {
-                FieldModel fieldModel = _GetFieldTypes.GetField(fieldID);
+                FieldModel fieldModel = _Field.GetField(fieldID);
                 types.Add(fieldModel.Type);
                 names.Add(fieldModel.Name);
-                properties.Add(_GetFieldTypes.GetProperties(fieldModel.Properties));
+                properties.Add(_Field.GetProperties(fieldModel.Properties));
             }
 
 
@@ -209,11 +229,11 @@ namespace DinamicDataMvc.Controllers.Metadata
                 if (id != null)
                 {
                     _Connection.DatabaseConnection();
-                    _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
+                    _Metadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
                     _GetBranchById.SetDatabase(_Connection.GetDatabase());
                     _GetStateById.SetDatabase(_Connection.GetDatabase());
-                    _GetMetadata.ReadFromDatabase();
-                    MetadataModel model = _GetMetadata.GetMetadata(id);
+                    _Metadata.ReadFromDatabase();
+                    MetadataModel model = _Metadata.GetMetadata(id);
 
                     _GetBranchById.ReadFromDatabase(model.Branch);
                     _GetStateById.ReadFromDatabase(model.State);
@@ -246,8 +266,22 @@ namespace DinamicDataMvc.Controllers.Metadata
                 if (id != null)
                 {
                     _Connection.DatabaseConnection();
-                    _GetMetadata.SetDatabase(_Connection.GetDatabase());
-                    _GetMetadata.DeleteMetadata(id);
+                    _Metadata.SetDatabase(_Connection.GetDatabase());
+                    _Field.SetDatabase(_Connection.GetDatabase());
+                    _Properties.SetDatabase(_Connection.GetDatabase());
+
+                    //Obter os ids dos campos anexos a um processo;
+                    List<string> fields = _Metadata.GetProcessFieldsID(id);
+
+                    foreach(var field in fields)
+                    {
+                        FieldModel fieldModel = _Field.GetField(field);
+                        //Obter os ids das propriedades de um campo pertencente a um processo;
+                        _Properties.Delete(fieldModel.Properties); //Apaga na base de dados as propriedades existentes num campo;
+                        _Field.Delete(field); //Apaga na base de dados os campos existentes num processo;
+                    }
+
+                    _Metadata.DeleteMetadata(id); //Apaga na base de dados o processo propriamente dito;
                 }
             }
             catch (Exception exception)
@@ -277,7 +311,7 @@ namespace DinamicDataMvc.Controllers.Metadata
 
                 _GetBranchById.SetDatabase(_Connection.GetDatabase());
                 _GetStateById.SetDatabase(_Connection.GetDatabase());
-                _GetMetadata.SetDatabase(_Connection.GetDatabase());
+                _Metadata.SetDatabase(_Connection.GetDatabase());
 
                 //Defines the properties model key
                 _KeyID.SetKey(); //Sets a new properties ObjectID collection;
@@ -301,23 +335,13 @@ namespace DinamicDataMvc.Controllers.Metadata
                     Branch = branchList
                 };
                 ViewBag.ID = viewModel.Id;
-                _GetMetadata.CreateMetadata(model);
+                _Metadata.CreateMetadata(model);
                 return await Task.Run(() => RedirectToAction("Display", "Field", new { ID = modelId}));
             }
             catch
             {
                 throw new ArgumentNullException();
             }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> AddFields()
-        {
-            _Connection.DatabaseConnection();
-            _GetFieldTypes.SetDatabase(_Connection.GetDatabase());
-            List<string> types = _GetFieldTypes.GetFieldType();
-
-            return await Task.Run(() => View("AddFields", types));
         }
     }
 }

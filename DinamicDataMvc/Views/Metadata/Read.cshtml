@@ -1,110 +1,113 @@
-﻿<!DOCTYPE html>
+﻿
 @model IEnumerable<DinamicDataMvc.Models.ViewMetadataModel>
-    @{
+@{
     var version = ViewBag.Version;
 
     if (version == null)
     {
-    version = "1";
+        version = "1";
     }
 
     var name = ViewBag.Name;
     var pageNumber = ViewBag.NumberOfPages;
-    }
+}
 
-    <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-        <script src="~/js/site.js"></script>
-    </head>
-    <body>
-        <hr />
-        <div class="container" style="background-color:darkorange">
-            <h2 style="color:white; text-align:right;">Metadata Process List</h2>
-        </div>
-        <hr />
-        <div class="container">
-            <form asp-controller="Metadata" asp-action="Read" method="get" id="searchForm" onsubmit=" return ValidateSearch(); ">
-                <div class="align-content-center">
-                    <label>Name</label>
-                    @Html.TextBox("Name", name as string)
-                    <label>Version</label>
-                    @Html.TextBox("Version", version as string)
-                    @Html.TextBox("PageNumber", pageNumber as string, new { type = "hidden" })
-                    <button type="submit"><i class="fa fa-search"></i></button>
-                </div>
-            </form>
-        </div>
-        <br /><br />
-        <div class="container">
-            <div class="table-responsive table-striped">
-                <table class="table table-bordered" border="1" style="border-style:dotted">
-                    <thead>
-                        <tr style="background-color:#212529; color:white;">
-                            <th>
-                                @Html.DisplayNameFor(model => Model.ElementAt(0).Name)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => Model.ElementAt(0).Version)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => Model.ElementAt(0).Date)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => Model.ElementAt(0).Branch)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => Model.ElementAt(0).State)
-                            </th>
-                            <th>
-                                @Html.DisplayName("Delete Process")
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @foreach (var data in Model)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.ActionLink(@Html.DisplayTextFor(model => data.Name), "GetDetailsByName", "Metadata", new { ID = data.Name })
-                                </td>
-                                <td>
-                                    @Html.ActionLink(@Html.DisplayTextFor(model => data.Version), "GetDetailsByVersion", "Metadata", new { Name = data.Name, Version = data.Version })
-                                </td>
-                                <td>
-                                    @Html.DisplayTextFor(model => data.Date)
-                                </td>
-                                <td>
-                                    @Html.DisplayTextFor(model => data.Branch)
-                                </td>
-                                <td>
-                                    @Html.DisplayTextFor(model => data.State)
-                                </td>
-                                <td align="center">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js"></script>
+</head>
+<body>
+    <hr />
+    <div class="container" style="background-color:darkorange">
+        <h2 style="color:white; text-align:right;">Process Metadata List</h2>
+    </div>
+    <hr />
+    <div class="container">
+        <form asp-controller="Metadata" asp-action="Read" method="get" id="searchForm" onsubmit=" return ValidateSearch(); ">
+            <div class="align-content-center">
+                <label><i><b>Name</b></i></label>
+                @Html.TextBox("Name", name as string)
+                <label><i><b>Version</b></i></label>
+                @Html.TextBox("Version", version as string)
+                @Html.TextBox("PageNumber", pageNumber as string, new { type = "hidden" })
+                <button type="submit"><i class="fa fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+    <div class="container">
+        <div class="table-responsive table-striped">
+            <table class="table table-bordered" border="1" style="border-style:dotted">
+                <thead>
+                    <tr style="background-color:#212529; color:white;">
+                        <th>
+                            @Html.DisplayNameFor(model => Model.ElementAt(0).Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.ElementAt(0).Version)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.ElementAt(0).Date)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.ElementAt(0).Branch)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => Model.ElementAt(0).State)
+                        </th>
+                        <th>
+                            @Html.DisplayName("Delete Process")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var data in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(@Html.DisplayTextFor(model => data.Name), "GetDetailsByName", "Metadata", new { ID = data.Name })
+                            </td>
+                            <td>
+                                @Html.ActionLink(@Html.DisplayTextFor(model => data.Version), "GetDetailsByVersion", "Metadata", new { Name = data.Name, Version = data.Version })
+                            </td>
+                            <td>
+                                @Html.DisplayTextFor(model => data.Date)
+                            </td>
+                            <td>
+                                @Html.DisplayTextFor(model => data.Branch)
+                            </td>
+                            <td>
+                                @Html.DisplayTextFor(model => data.State)
+                            </td>
+                            <td align="center">
+                                @if (data.State.Length > 0)
+                                {
                                     @using (Html.BeginForm("Delete", "Metadata", new { ID = data.Id }, FormMethod.Post))
                                     {
                                         <button type="submit"><i class="fa fa-trash"></i></button>
                                     }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
-        <div class="container">
-            <ul class="pagination pagination-lg">
-                @for (int i = 1; i <= Convert.ToInt32(pageNumber); i++)
-                {
-                    <li class="page-item"><a class="page-link" href="/Metadata/Read?Name=@name&Version=@version&Page=@i">@i</a></li>
-                }
-            </ul>
-        </div>
-    </body>
-</html>
+    </div>
+    <div class="align-content-end">
+        <a href="/Metadata/Create/"><i class="fa fa-database"></i>Create New Process</a>
+    </div>
+    <div class="container">
+        <ul class="pagination pagination-sm">
+            @for (int i = 1; i <= Convert.ToInt32(pageNumber); i++)
+            {
+                <li class="page-item"><a class="page-link" href="/Metadata/Read?Name=@name&Version=@version&Page=@i">@i</a></li>
+            }
+        </ul>
+    </div>
+</body>
+
 

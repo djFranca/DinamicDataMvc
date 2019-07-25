@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MongoDB.Driver;
 
 namespace DinamicDataMvc.Interfaces
 {
     public interface IPropertyService
     {
+        void Delete(string propertiesID);
+
+        void SetDatabase(IMongoDatabase Database);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
 using DinamicDataMvc.Utils;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -220,6 +219,85 @@ namespace DinamicDataMvc.Services.Metadata
 
 
                 return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
+            }
+            catch
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
+
+        /*
+         * Método que permite receber como argumento de entrada o identificador de um determinado processo,
+         * incrementando o número de versão desse mesmo processo e procedendo à sua substituição caso o 
+         * número de versão seja igual a zero;
+         */
+        public void SetProcessVersion(string processID)
+        {
+            try
+            {
+                if(processID != null)
+                {
+                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                    MetadataModel model = collection.Find(s => s.Id == processID).Single();
+
+                    if(model.Version == 0)
+                    {
+
+                        model.Version = 1; //Incrementa o número da versão do processo;
+
+                        model = ActivateState(model);
+
+                        collection.ReplaceOneAsync(s => s.Id == processID, model);
+                    }
+                }
+            }
+            catch
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
+
+        /*
+         * Método que permite ativar o estado de um processo, pois uma vez criado um processo,
+         * ele ficará inativo se não for adicionado qualquer campo (FieldModel)
+         */
+        private MetadataModel ActivateState(MetadataModel model)
+        {
+            try
+            {
+                var collection = _Database.GetCollection<StateModel>("State");
+                var stateModel = collection.Find(s => s.Value == true).Single();
+
+                model.State = stateModel.Id;
+
+                return model;
+            }
+            catch
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
+
+        public List<string> GetProcessFieldsID(string processID)
+        {
+            try
+            {
+                List<string> processFields = new List<string>();
+
+                if (processID != null)
+                {
+                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                    MetadataModel process = collection.Find(s => s.Id == processID).Single();
+
+                    foreach(var field in process.Field)
+                    {
+                        processFields.Add(field);
+                    }
+                }
+                return processFields;
             }
             catch
             {

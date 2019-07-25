@@ -47,6 +47,22 @@ namespace DinamicDataMvc.Controllers.Field
             int NumberOfPages = modelsToDisplay.Count();
             ViewBag.NumberOfPages = NumberOfPages;
 
+
+            //Se não existirem campos para mostrar na listagem
+            if(modelsToDisplay.Count == 0)
+            {
+                List<FieldModel> models = new List<FieldModel>();
+                FieldModel model = new FieldModel()
+                {
+                    Id = string.Empty,
+                    Name = string.Empty,
+                    Type = string.Empty,
+                    Date = DateTime.Now,
+                    Properties = string.Empty
+                };
+                return await Task.Run(() => View("Read", models));
+            }
+
             return await Task.Run(() => View("Read", modelsToDisplay[Convert.ToInt32(pageNumber)]));
         }
 
@@ -115,13 +131,16 @@ namespace DinamicDataMvc.Controllers.Field
             _Field.CreateProperties(properties);
             _Field.CreateField(field);
 
-
+            _Metadata.SetProcessVersion(model.ProcessID);
             _Metadata.AddFieldToProcess(model.ProcessID, fieldId);
 
             _Field.ReadFromDatabase();
 
-            return await Task.Run(() => RedirectToAction("Read", "Field"));
+            return await Task.Run(() => RedirectToAction("Display", "Field", new { ID = model.ProcessID }));
         }
+
+
+
 
         [HttpPost("/Field/Update/")]
         public async Task<ActionResult> Update(string Id)

@@ -1,4 +1,6 @@
 ﻿using DinamicDataMvc.Interfaces;
+using DinamicDataMvc.Models;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,21 +10,11 @@ namespace DinamicDataMvc.Services.Validation
 {
     public class ValidationService : IValidationService
     {
-        public bool IncrementsVersion(string processID)
-        {
-            try
-            {
-                if(processID == null)
-                {
-                    return false;
-                }
+        private IMongoDatabase _Database;
 
-                return true;
-            }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
+        public void SetDatabase(IMongoDatabase Database)
+        {
+            _Database = Database;
         }
     }
 }

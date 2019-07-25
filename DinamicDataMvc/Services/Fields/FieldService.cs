@@ -10,17 +10,17 @@ namespace DinamicDataMvc.Services.Fields
 {
     public class FieldService : IFieldService
     {
-        private IMongoDatabase Database { get; set; }
+        private IMongoDatabase _Database { get; set; }
 
         private List<FieldModel> Fields { get; set; }
 
-        public void SetDatabase(IMongoDatabase database)
+        public void SetDatabase(IMongoDatabase Database)
         {
             try
             {
-                if(database != null)
+                if(Database != null)
                 {
-                    Database = database;
+                    _Database = Database;
                 }
             }
             catch
@@ -33,7 +33,7 @@ namespace DinamicDataMvc.Services.Fields
         {
             try
             {
-                var collection = Database.GetCollection<FieldModel>("Field");
+                var collection = _Database.GetCollection<FieldModel>("Field");
                 Fields = collection.Find(s => true).ToList();
             }
             catch
@@ -48,7 +48,7 @@ namespace DinamicDataMvc.Services.Fields
             {
                 if (model != null)
                 {
-                    var collection = Database.GetCollection<FieldModel>("Field");
+                    var collection = _Database.GetCollection<FieldModel>("Field");
                     collection.InsertOneAsync(model);
                     return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
                 }
@@ -66,7 +66,7 @@ namespace DinamicDataMvc.Services.Fields
             {
                 if(model != null)
                 {
-                    var collection = Database.GetCollection<PropertiesModel>("Properties");
+                    var collection = _Database.GetCollection<PropertiesModel>("Properties");
                     collection.InsertOneAsync(model);
                     return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
                 }
@@ -85,7 +85,7 @@ namespace DinamicDataMvc.Services.Fields
             {
                 if(Id != null && model != null)
                 {
-                    var collection = Database.GetCollection<FieldModel>("Field");
+                    var collection = _Database.GetCollection<FieldModel>("Field");
                     collection.ReplaceOneAsync(s => s.Id == Id, model);
                     return ((int)StatusCode.NoContent).ToString() + " - " + StatusCode.NoContent.ToString();
                 }
@@ -104,7 +104,7 @@ namespace DinamicDataMvc.Services.Fields
             {
                 if(Id != null && model != null)
                 {
-                    var collection = Database.GetCollection<PropertiesModel>("Properties");
+                    var collection = _Database.GetCollection<PropertiesModel>("Properties");
                     collection.ReplaceOneAsync(s => s.ID == Id, model);
                     return ((int)StatusCode.NoContent).ToString() + " - " + StatusCode.NoContent.ToString();
                 }
@@ -122,7 +122,7 @@ namespace DinamicDataMvc.Services.Fields
             {
                 if (id != null)
                 {
-                    var collection = Database.GetCollection<FieldModel>("Field");
+                    var collection = _Database.GetCollection<FieldModel>("Field");
                     collection.DeleteOneAsync(s => s.Id == id);
 
                     return ((int)StatusCode.Ok).ToString() + " - " + StatusCode.Ok.ToString();
@@ -147,8 +147,8 @@ namespace DinamicDataMvc.Services.Fields
         {
             if(id != null)
             {
-                var collection = Database.GetCollection<FieldModel>("Field");
-                FieldModel field = collection.Find(s => s.Id == id).Single();
+                var collection = _Database.GetCollection<FieldModel>("Field");
+                FieldModel field = collection.Find(s => s.Id == id.ToLower()).Single();
 
                 return field;
             }
@@ -167,7 +167,7 @@ namespace DinamicDataMvc.Services.Fields
         {
             if(id != null)
             {
-                var collection = Database.GetCollection<PropertiesModel>("Properties");
+                var collection = _Database.GetCollection<PropertiesModel>("Properties");
                 return collection.Find(s => s.ID == id).FirstOrDefault();
             }
             return new PropertiesModel()
@@ -186,7 +186,7 @@ namespace DinamicDataMvc.Services.Fields
         public List<string> GetFieldType()
         {
             List<string> _types = new List<string>();
-            var collection = Database.GetCollection<FieldModel>("Field");
+            var collection = _Database.GetCollection<FieldModel>("Field");
             var _models = collection.Find(s => true).ToList();
             foreach(var _model in _models)
             {
@@ -197,5 +197,27 @@ namespace DinamicDataMvc.Services.Fields
             }
             return _types;
         }
+
+        //public string GetFieldProperties(string fieldId)
+        //{
+        //    try
+        //    {
+        //        string property = null;
+
+        //        if(fieldId != null)
+        //        {
+        //            var collection = _Database.GetCollection<FieldModel>("Field");
+        //            FieldModel model = collection.Find(s => s.Id == fieldId.ToLower()).Single();
+
+        //            property = model.Properties;
+        //        }
+
+        //        return property;
+        //    }
+        //    catch
+        //    {
+        //        throw new ArgumentNullException();
+        //    }
+        //}
     }
 }
