@@ -71,7 +71,7 @@
                     {
                         <tr>
                             <td>
-                                @Html.ActionLink(@Html.DisplayTextFor(model => data.Name), "GetDetailsByName", "Metadata", new { ID = data.Name })
+                                @Html.ActionLink(@Html.DisplayTextFor(model => data.Name), "GetDetailsByName", "Metadata", new { Name = data.Name })
                             </td>
                             <td>
                                 @Html.ActionLink(@Html.DisplayTextFor(model => data.Version), "GetDetailsByVersion", "Metadata", new { ID = data.Id })

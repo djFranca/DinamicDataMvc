@@ -126,9 +126,9 @@ namespace DinamicDataMvc.Controllers.Metadata
 
         //TODO: Working here;
         [HttpGet("/Metadata/GetDetailsByName")]
-        public async Task<ActionResult> GetDetailsByName(string id)
+        public async Task<ActionResult> GetDetailsByName(string name)
         {
-            if (id == null)
+            if (name == null)
             {
                 return BadRequest();
             }
@@ -137,7 +137,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             _GetBranchById.SetDatabase(_Connection.GetDatabase());
             _GetStateById.SetDatabase(_Connection.GetDatabase());
 
-            List<MetadataModel> modelList = _Metadata.GetProcessByName(id);
+            List<MetadataModel> modelList = _Metadata.GetProcessByName(name);
             List<ViewMetadataModel> _ViewModelList = new List<ViewMetadataModel>();
 
             ViewBag.Name = modelList[0].Name; //Stores the process name;
