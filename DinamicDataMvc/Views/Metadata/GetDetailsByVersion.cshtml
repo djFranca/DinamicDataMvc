@@ -1,10 +1,10 @@
-﻿@model DinamicDataMvc.Models.Metadata.ViewProcessModel
+﻿@model DinamicDataMvc.Models.Process.ViewProcessModel
 @{
     ViewData["Title"] = "ByVersion";
 
     bool[] branchesState = new bool[3] { false, false, false };
 
-    string[] branchList = Model.Branch.Split(" ");
+    string[] branchList = ViewBag.Branches.Split(" ");
 
     foreach (var description in branchList)
     {
@@ -21,84 +21,101 @@
             branchesState[2] = true;
         }
     }
-    var names = string.Empty;
-
-    foreach (var name in Model.Names)
-    {
-        names += name + " ";
-    }
-
-    var types = string.Empty;
-
-    foreach (var type in Model.Types)
-    {
-        types += type + " ";
-    }
-
-    var properties = string.Empty;
-
-    foreach (var propertie in Model.Properties)
-    {
-        properties += propertie + " ";
-    }
 }
-<section id="ProcessName">
-    <div class="text-body">
-        <h4>Process @Html.DisplayTextFor(s => s.Name)</h4>
-    </div>
-</section>
-<br />
-<section id="ProcessHeaderInfo">
-    <div>
-        <span>
-            <strong><b>@Html.Label("Version: ")</b></strong>
-            @Html.DisplayTextFor(s => s.Version)
-            <strong><b>@Html.Label("Creation Date: ")</b></strong>
-            @Html.DisplayTextFor(s => s.CreationDate)
-            <strong><b>@Html.Label("Branches: ")</b></strong>
-            <b><i>@Html.Label("Development ")</i></b>
-            @Html.CheckBox("Development", @branchesState[0])
-            <b><i>@Html.Label("Quality ")</i></b>
-            @Html.CheckBox("Quality", @branchesState[1])
-            <b><i>@Html.Label("Production ")</i></b>
-            @Html.CheckBox("Production", @branchesState[2])
-        </span>
-    </div>
-</section>
-<br />
-<section id="ProcessDataInfo">
-    <div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(s => s.Types)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(s => s.Names)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(s => s.Properties)
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        @Html.DisplayTextFor(s => s.Types)
-                    </td>
-                    <td>
-                        @Html.DisplayTextFor(s => s.Names)
-                    </td>
-                    <td>
-                        @Html.DisplayTextFor(s => s.Properties)
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div>
-        @Html.ActionLink("Back to list", "Read", "Metadata")
-    </div>
-</section>
-
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js"></script>
+</head>
+<body>
+    <section id="ProcessNameTag">
+        <hr />
+        <div class="container" style="background-color:darkorange">
+            <h2 style="color:white; text-align:right;">Process @Model.Metadata.Name</h2>
+        </div>
+        <hr />
+    </section>
+    <section id="ProcessMetadata">
+        <div class="container" style="text-align:center">
+            <span>
+                <label><strong>Version: </strong>@Model.Metadata.Version.ToString()</label>
+                <label><strong>Creation Date: </strong>@Model.Metadata.Date.ToString().Substring(0, 10)</label>
+                <label><strong>Branches: </strong></label>
+                <i>@Html.Label("Development ")</i>
+                @Html.CheckBox("Development", @branchesState[0], new { @disabled = "disabled" })
+                <i>@Html.Label("Quality ")</i>
+                @Html.CheckBox("Quality", @branchesState[1], new { @disabled = "disabled" })
+                <i>@Html.Label("Production ")</i>
+                @Html.CheckBox("Production", @branchesState[2], new { @disabled = "disabled" })
+                <label><strong>State: @ViewBag.State</strong></label>
+            </span>
+        </div>
+    </section>
+    <section id="ProcessFieldsTag">
+        <hr />
+        <div class="container" style="background-color:darkorange">
+            <h2 style="color:white; text-align:right;">Process Fields</h2>
+        </div>
+        <hr />
+    </section>
+    <section id="ProcessFields">
+        <div class="container">
+            <div class="table-responsive table-striped">
+                <table class="table table-bordered" border="1" style="border-style:dotted">
+                    <thead>
+                        <tr style="background-color:#212529; color:white;">
+                            <th>
+                                @Html.DisplayNameFor(model => model.Fields.ElementAt(0).Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Fields.ElementAt(0).Type)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Fields.ElementAt(0).Date)
+                            </th>
+                            <th>
+                                @Html.DisplayName("Properties")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var field in Model.Fields)
+                        {
+                            <tr>
+                                <td>
+                                    <b>@Html.DisplayFor(modelItem => field.Name)</b>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => field.Type)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => field.Date)
+                                </td>
+                                <td align="center">
+                                    @using (Html.BeginForm("DisplayProperties", "Properties", new { Properties = @Model.Properties }, FormMethod.Get))
+                                    {
+                                        <button type="submit"><i class="fa fa-key"></i></button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="container">
+            @using (Html.BeginForm("Read", "Metadata", FormMethod.Get))
+            {
+                <span>
+                    <label class="form-group" style="color:darkorange"><strong>Back to List</strong></label>
+                    <button><i class="fa fa-list"></i></button>
+                </span>
+            }
+        </div>
+    </section>
+</body>

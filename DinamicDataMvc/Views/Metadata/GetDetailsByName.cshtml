@@ -28,7 +28,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Version), "GetDetailsByVersion", "Metadata", new { Name = ViewBag.Name, Version = item.Version })
+                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Version), "GetDetailsByVersion", "Metadata", new { ID = item.Id })
                         </td>
                         <td>
                             @Html.DisplayTextFor(modelItem => item.Date)

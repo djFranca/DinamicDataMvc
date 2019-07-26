@@ -1,5 +1,4 @@
-﻿
-@model IEnumerable<DinamicDataMvc.Models.ViewMetadataModel>
+﻿@model IEnumerable<DinamicDataMvc.Models.ViewMetadataModel>
 @{
     var version = ViewBag.Version;
 
@@ -24,6 +23,10 @@
     <hr />
     <div class="container" style="background-color:darkorange">
         <h2 style="color:white; text-align:right;">Process Metadata List</h2>
+    </div>
+    <hr />
+    <div class="container" style="text-align:end">
+        <a href="/Metadata/Create/"><i class="fa fa-database"></i>Create New Process</a>
     </div>
     <hr />
     <div class="container">
@@ -71,7 +74,7 @@
                                 @Html.ActionLink(@Html.DisplayTextFor(model => data.Name), "GetDetailsByName", "Metadata", new { ID = data.Name })
                             </td>
                             <td>
-                                @Html.ActionLink(@Html.DisplayTextFor(model => data.Version), "GetDetailsByVersion", "Metadata", new { Name = data.Name, Version = data.Version })
+                                @Html.ActionLink(@Html.DisplayTextFor(model => data.Version), "GetDetailsByVersion", "Metadata", new { ID = data.Id })
                             </td>
                             <td>
                                 @Html.DisplayTextFor(model => data.Date)
@@ -96,9 +99,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
-    <div class="align-content-end">
-        <a href="/Metadata/Create/"><i class="fa fa-database"></i>Create New Process</a>
     </div>
     <div class="container">
         <ul class="pagination pagination-sm">

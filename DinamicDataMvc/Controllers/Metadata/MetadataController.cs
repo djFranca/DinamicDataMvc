@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
 using DinamicDataMvc.Models.Field;
-using DinamicDataMvc.Models.Metadata;
+using DinamicDataMvc.Models.Process;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DinamicDataMvc.Controllers.Metadata
@@ -160,64 +160,58 @@ namespace DinamicDataMvc.Controllers.Metadata
         }
 
 
-        [HttpGet("/Metadata/GetDetailsByVersion")]
-        public async Task<ActionResult> GetDetailsByVersion(string name, string version)
-        {
-            int versionNumber = Convert.ToInt32(version);
 
-            if (string.IsNullOrEmpty(name) & versionNumber < 1)
+        //TODO: Working here;
+        [HttpGet("/Metadata/GetDetailsByVersion")]
+        public async Task<ActionResult> GetDetailsByVersion(string id)
+        {
+            _Connection.DatabaseConnection(); //Estabeleçe-se a conexão com a base de dados;
+            _Metadata.SetDatabase(_Connection.GetDatabase()); //Cria uma instância da base de dados no serviço;
+            _Field.SetDatabase(_Connection.GetDatabase()); //Cria uma instância da base de dados no serviço;
+
+            //Se o identificador não tiver qualquer valor armazenado, devolve um bad request;
+            if(id == null)
             {
                 return BadRequest();
             }
+           
+            //1º Passo - obter o MetadataModel;
+            MetadataModel metadata = _Metadata.GetMetadata(id);
 
-            _Connection.DatabaseConnection(); //Estabeleçe-se a conexão com a base de dados;
-            _Metadata.SetDatabase(_Connection.GetDatabase());
-            MetadataModel _model = _Metadata.GetProcessByVersion(name, versionNumber);
+            //2ºPasso - Coverter o Id do estado para a sua descrição;
+            _GetStateById.ReadFromDatabase(metadata.State); 
+            ViewBag.State = _GetStateById.GetStateDescription();
 
-            _GetBranchById.SetDatabase(_Connection.GetDatabase());
-            _GetBranchById.ReadFromDatabase(_model.Branch);
+            //3ºPasso - Agregar oas descrições dos branches ao qual o processo pertence numa string;
+            _GetBranchById.ReadFromDatabase(metadata.Branch);
+            ViewBag.Branches = _GetBranchById.GetBranches();
 
-            _GetStateById.SetDatabase(_Connection.GetDatabase());
-            _GetStateById.ReadFromDatabase(_model.State);
+            //4º Passo - obter o(s) FieldModel(s);
+            List<FieldModel> fields = new List<FieldModel>();
 
-            _Field.SetDatabase(_Connection.GetDatabase());
-
-            List<string> types = new List<string>();
-            List<string> names = new List<string>();
-            List<PropertiesModel> properties = new List<PropertiesModel>();
-
-            foreach(string fieldID in _model.Field)
+            foreach(var fieldId in metadata.Field)
             {
-                FieldModel fieldModel = _Field.GetField(fieldID);
-                types.Add(fieldModel.Type);
-                names.Add(fieldModel.Name);
-                properties.Add(_Field.GetProperties(fieldModel.Properties));
+                FieldModel field = _Field.GetField(fieldId);
+                fields.Add(field);
             }
 
+            //5º Passo - obter o(s) PropertiesModel(s);
+            List<PropertiesModel> properties = new List<PropertiesModel>();
 
-            ViewProcessModel _ViewModel = new ViewProcessModel()
+            foreach(var field in fields)
             {
-                Name = name,
-                Version = version,
-                CreationDate = _model.Date.ToString().Substring(0, 10),
-                Branch = _GetBranchById.GetBranches(),
-                Types = types,
-                Names = names,
+                PropertiesModel property = _Field.GetProperties(field.Properties);
+                properties.Add(property);
+            }
+
+            //6º Passo . construir o modelo que permite efetuar o dsiplay do processo seleccionado através da sua versão;
+            ViewProcessModel modelToDisplay = new ViewProcessModel()
+            {
+                Metadata = metadata,
+                Fields = fields,
                 Properties = properties,
-
             };
-
-            //ViewMetadataModel _ViewMetadataModel = new ViewMetadataModel()
-            //{
-            //    Id = _model.Id,
-            //    Name = _model.Name,
-            //    Version = _model.Version.ToString(),
-            //    Date = _model.Date.Day.ToString() + "/" + _model.Date.Month.ToString() + "/" + _model.Date.Year.ToString(),
-            //    Branch = _GetBranchById.GetBranches(),
-            //    State = _GetStateById.GetStateDescription()
-            //};
-
-            return await Task.Run(() => View("GetDetailsByVersion", _ViewModel));
+            return await Task.Run(() => View("GetDetailsByVersion", modelToDisplay));
         }
 
 
