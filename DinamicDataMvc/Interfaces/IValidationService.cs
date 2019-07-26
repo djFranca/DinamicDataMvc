@@ -11,5 +11,7 @@ namespace DinamicDataMvc.Interfaces
         void SetDatabase(IMongoDatabase Database);
 
         bool ProcessExits(string processName);
+
+        int GetProcessLastVersion(string processName);
     }
 }

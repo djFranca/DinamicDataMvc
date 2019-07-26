@@ -28,7 +28,7 @@ namespace DinamicDataMvc.Services.Validation
         public bool ProcessExits(string processName)
         {
             //Verifica se o nome do processo não está a null;
-            if(processName != null)
+            if(string.IsNullOrEmpty(processName))
             {
                 var collection = _Database.GetCollection<MetadataModel>("Metadata");
                 List<MetadataModel> processes = collection.Find(s => s.Name == processName).ToList();
@@ -41,6 +41,33 @@ namespace DinamicDataMvc.Services.Validation
                 return false; //Não Existem processos, armazenados na base de dados, com o mesmo nome.
             }
             return false;
+        }
+
+
+        /*
+         * Método qie vermite verificar a última versão do processo armazenada na base de dados.
+         */
+        public int GetProcessLastVersion(string processName)
+        {
+            if (string.IsNullOrEmpty(processName))
+            {
+                return -1;
+            }
+            var collection = _Database.GetCollection<MetadataModel>("Metadata");
+
+            //Obter todos os processos armazenados cujo nome seja igual ao nome recebido;
+            List<MetadataModel> processes = collection.Find(s => s.Name == processName).ToList();
+
+            int version = 0;
+
+            foreach(var process in processes)
+            {
+                if(process.Version > version)
+                {
+                    version = process.Version;
+                }
+            }
+            return version;
         }
     }
 }

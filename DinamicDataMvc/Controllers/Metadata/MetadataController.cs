@@ -338,5 +338,47 @@ namespace DinamicDataMvc.Controllers.Metadata
                 throw new ArgumentNullException();
             }
         }
+
+
+        //TODO: Working here
+        [HttpGet("/Metadata/Update")]
+        public async Task<ActionResult> Update()
+        {
+            string processName = Request.Query["ProcessName"];
+
+            if (string.IsNullOrEmpty(processName))
+            {
+                return BadRequest();
+            }
+
+            _Connection.DatabaseConnection(); //Estabeleçe a ligação / conexão com a base de dados;
+            _KeyID.SetKey(); //Cria um novo objectId para identificar univocamente o processo na base de dados;
+            _Metadata.SetDatabase(_Connection.GetDatabase()); //Cria uma instância da base de dados no serviço de Metadados;
+            _Validation.SetDatabase(_Connection.GetDatabase()); //Cria uma instância da base de dados no serviço de validação;
+            _GetStateById.SetDatabase(_Connection.GetDatabase());
+            _GetBranchById.SetDatabase(_Connection.GetDatabase());
+            
+
+            //1º Passo - Obter a última versão deste processo
+            int lastVersion = _Validation.GetProcessLastVersion(processName);
+
+            //2º Passo - Obter o processo anterior ao momento em que sofre uma atualização
+            MetadataModel model = _Metadata.GetProcessByVersion(processName, lastVersion);
+
+            _GetBranchById.ReadFromDatabase(model.Branch);
+
+            //3º Passo - Construir o modelo de dados View Metadata Model
+            ViewMetadataModel modelToDisplay = new ViewMetadataModel()
+            {
+                Id = _KeyID.GetKey(), //4º Passo - Atualizar o ID do processo, pois trata-se de um processo independente;
+                Name = model.Name,
+                Version = (model.Version += 1).ToString(), //5º Passo - Atualizar a versão do processo, para uma versão superior incrementando o número da mesma;
+                Date = DateTime.Now.ToString().Substring(0, 10),
+                State = _GetStateById.GetStateDescription(),
+                Branch = _GetBranchById.GetBranches()
+            };
+
+            return await Task.Run(() => View("Update", modelToDisplay));
+        }
     }
 }
