@@ -95,7 +95,7 @@
                                     @Html.DisplayFor(modelItem => Model.Fields.ElementAt(i).Date)
                                 </td>
                                 <td align="center">
-                                    @using (Html.BeginForm("Details", "Properties", new { PropertiesId = Model.Fields.ElementAt(i).Properties}, FormMethod.Post))
+                                    @using (Html.BeginForm("Details", "Properties", new { PropertiesId = Model.Fields.ElementAt(i).Properties, ProcessName = Model.Metadata.Name, ProcessVersion = Model.Metadata.Version.ToString(), FieldType = Model.Fields.ElementAt(i).Type, FieldName = Model.Fields.ElementAt(i).Name}, FormMethod.Post))
                                     {
                                         <button type="submit" id="@i"><i class="fa fa-key"></i></button>
                                     }

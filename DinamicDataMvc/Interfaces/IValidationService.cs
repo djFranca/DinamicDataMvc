@@ -9,5 +9,7 @@ namespace DinamicDataMvc.Interfaces
     public interface IValidationService
     {
         void SetDatabase(IMongoDatabase Database);
+
+        bool ProcessExits(string processName);
     }
 }

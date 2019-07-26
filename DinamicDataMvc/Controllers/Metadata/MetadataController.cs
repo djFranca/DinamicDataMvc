@@ -20,8 +20,9 @@ namespace DinamicDataMvc.Controllers.Metadata
         private readonly IPaginationService _SetPagination;
         private readonly IKeyGenerates _KeyID;
         private readonly IPropertyService _Properties;
+        private readonly IValidationService _Validation;
 
-        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById, IFieldService GetFieldTypes, IPaginationService SetPagination, IKeyGenerates KeyID, IPropertyService Properties)
+        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById, IFieldService GetFieldTypes, IPaginationService SetPagination, IKeyGenerates KeyID, IPropertyService Properties, IValidationService Validation)
         {
             _Connection = Connection;
             _Metadata = GetMetadata;
@@ -31,6 +32,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             _SetPagination = SetPagination;
             _KeyID = KeyID;
             _Properties = Properties;
+            _Validation = Validation;
         }
 
         /*
@@ -299,6 +301,12 @@ namespace DinamicDataMvc.Controllers.Metadata
                 _GetBranchById.SetDatabase(_Connection.GetDatabase());
                 _GetStateById.SetDatabase(_Connection.GetDatabase());
                 _Metadata.SetDatabase(_Connection.GetDatabase());
+                _Validation.SetDatabase(_Connection.GetDatabase());
+
+                if (_Validation.ProcessExits(viewModel.Name)) //Se o nome já existir na base de dados, redirecciona para a mesma página;
+                {
+                    return await Task.Run(() => RedirectToAction("Create", "Metadata"));
+                }
 
                 //Defines the properties model key
                 _KeyID.SetKey(); //Sets a new properties ObjectID collection;

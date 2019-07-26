@@ -46,10 +46,9 @@ namespace DinamicDataMvc
             services.AddSingleton<IConnectionManagementService, ConnectionManagementService>(s => new ConnectionManagementService(ConnectionString, DatabaseName));
             services.AddSingleton<IStateService, StateService>(s => new StateService());
             services.AddSingleton<IFieldService, FieldService>(s => new FieldService());
-            //services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<IPropertyService, PropertyService>(s => new PropertyService());
             services.AddSingleton<IKeyGenerates, KeyGenerates>(s => new KeyGenerates(8)); //8 is the number of bits to use ina a hexdecimal generated key
-            services.AddSingleton<IPaginationService, PaginationService>(s => new PaginationService(5));
+            services.AddSingleton<IPaginationService, PaginationService>(s => new PaginationService(4));
             services.AddSingleton<IValidationService, ValidationService>(s => new ValidationService());
             services.AddSwaggerGen(doc =>
             {

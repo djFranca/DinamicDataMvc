@@ -138,7 +138,19 @@ namespace DinamicDataMvc.Services.Fields
 
         public List<FieldModel> GetFields()
         {
-            //TODO: If in case Fields length value is zero, it must necessery treath this kind of exception
+            //If in case Fields length value is zero, it must necessery pass an empty model to field model list (Fields);
+            if(Fields.Count == 0)
+            {
+                FieldModel emptyModel = new FieldModel()
+                {
+                    Id = null,
+                    Type = null,
+                    Name = null,
+                    Properties = null,
+                    Date = Convert.ToDateTime(string.Empty)
+                };
+                Fields.Add(emptyModel);
+            }
             return Fields;
         }
 
@@ -158,7 +170,7 @@ namespace DinamicDataMvc.Services.Fields
                 Type = null,
                 Name = null,
                 Properties = null,
-                Date = Convert.ToDateTime("")
+                Date = Convert.ToDateTime(string.Empty)
             };
         }
 

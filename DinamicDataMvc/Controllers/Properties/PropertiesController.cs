@@ -17,8 +17,13 @@ namespace DinamicDataMvc.Controllers.Properties
         }
 
         [HttpPost("/Properties/Details")]
-        public async Task<ActionResult> Details(string propertiesId)
+        public async Task<ActionResult> Details(string propertiesId, string processName, string processVersion, string fieldType, string fieldName)
         {
+            ViewBag.ProcessName = processName;
+            ViewBag.ProcessVersion = processVersion;
+            ViewBag.FieldName = fieldName;
+            ViewBag.FieldType = fieldType;
+
             _Connection.DatabaseConnection();
             _Field.SetDatabase(_Connection.GetDatabase());
             _Field.ReadFromDatabase();
