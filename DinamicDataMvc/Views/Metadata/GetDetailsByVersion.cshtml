@@ -82,22 +82,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var field in Model.Fields)
+                        @for (int i = 0; i < Model.Fields.Count; i++)
                         {
                             <tr>
                                 <td>
-                                    <b>@Html.DisplayFor(modelItem => field.Name)</b>
+                                    <b>@Html.DisplayFor(modelItem => Model.Fields.ElementAt(i).Name)</b>
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => field.Type)
+                                    @Html.DisplayFor(modelItem => Model.Fields.ElementAt(i).Type)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => field.Date)
+                                    @Html.DisplayFor(modelItem => Model.Fields.ElementAt(i).Date)
                                 </td>
                                 <td align="center">
-                                    @using (Html.BeginForm("DisplayProperties", "Properties", new { Properties = @Model.Properties }, FormMethod.Get))
+                                    @using (Html.BeginForm("Details", "Properties", new { PropertiesId = Model.Fields.ElementAt(i).Properties}, FormMethod.Post))
                                     {
-                                        <button type="submit"><i class="fa fa-key"></i></button>
+                                        <button type="submit" id="@i"><i class="fa fa-key"></i></button>
                                     }
                                 </td>
                             </tr>

@@ -33,6 +33,9 @@ namespace DinamicDataMvc.Controllers.Metadata
             _Properties = Properties;
         }
 
+        /*
+         * Read Action - Implementa a lista de Processos ao nivel dos seus Metadados;
+         */
         [HttpGet("/Metadata/Read/")]
         public async Task<ActionResult> Read()
         {
@@ -124,7 +127,6 @@ namespace DinamicDataMvc.Controllers.Metadata
         }
 
 
-        //TODO: Working here;
         [HttpGet("/Metadata/GetDetailsByName")]
         public async Task<ActionResult> GetDetailsByName(string name)
         {
@@ -196,21 +198,11 @@ namespace DinamicDataMvc.Controllers.Metadata
                 fields.Add(field);
             }
 
-            //5º Passo - obter o(s) PropertiesModel(s);
-            List<PropertiesModel> properties = new List<PropertiesModel>();
-
-            foreach(var field in fields)
-            {
-                PropertiesModel property = _Field.GetProperties(field.Properties);
-                properties.Add(property);
-            }
-
-            //6º Passo . construir o modelo que permite efetuar o dsiplay do processo seleccionado através da sua versão;
+            //5º Passo . construir o modelo que permite efetuar o dsiplay do processo seleccionado através da sua versão;
             ViewProcessModel modelToDisplay = new ViewProcessModel()
             {
                 Metadata = metadata,
-                Fields = fields,
-                Properties = properties,
+                Fields = fields
             };
             return await Task.Run(() => View("GetDetailsByVersion", modelToDisplay));
         }
