@@ -124,6 +124,7 @@ namespace DinamicDataMvc.Controllers.Metadata
         }
 
 
+        //TODO: Working here;
         [HttpGet("/Metadata/GetDetailsByName")]
         public async Task<ActionResult> GetDetailsByName(string id)
         {
@@ -134,8 +135,8 @@ namespace DinamicDataMvc.Controllers.Metadata
             _Connection.DatabaseConnection();
             _Metadata.SetDatabase(_Connection.GetDatabase());
             _GetBranchById.SetDatabase(_Connection.GetDatabase());
+            _GetStateById.SetDatabase(_Connection.GetDatabase());
 
-            
             List<MetadataModel> modelList = _Metadata.GetProcessByName(id);
             List<ViewMetadataModel> _ViewModelList = new List<ViewMetadataModel>();
 
@@ -144,14 +145,15 @@ namespace DinamicDataMvc.Controllers.Metadata
             foreach (var model in modelList)
             {
                 _GetBranchById.ReadFromDatabase(model.Branch);
+                _GetStateById.ReadFromDatabase(model.State);
                 ViewMetadataModel _details = new ViewMetadataModel()
                 {
                     Id = model.Id,
                     Name = model.Name,
                     Version = model.Version.ToString(),
-                    Date = model.Date.Day.ToString() + "/" + model.Date.Month.ToString() + "/" + model.Date.Year.ToString(),
+                    Date = model.Date.ToString().Substring(0, 10),
                     Branch = _GetBranchById.GetBranches(),
-                    State = null,
+                    State = _GetStateById.GetStateDescription(),
                 };
                 _ViewModelList.Add(_details);
             }
@@ -161,7 +163,6 @@ namespace DinamicDataMvc.Controllers.Metadata
 
 
 
-        //TODO: Working here;
         [HttpGet("/Metadata/GetDetailsByVersion")]
         public async Task<ActionResult> GetDetailsByVersion(string id)
         {
