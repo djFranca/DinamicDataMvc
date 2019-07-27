@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DinamicDataMvc.Interfaces;
+using DinamicDataMvc.Models;
 using DinamicDataMvc.Models.Field;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,8 +17,10 @@ namespace DinamicDataMvc.Controllers.Field
         private readonly IKeyGenerates _ObjectId;
         private readonly IPaginationService _SetPagination;
         private readonly IMetadataService _Metadata;
+        private readonly IBranchService _Branch;
+        private readonly IStateService _State;
 
-        public FieldController(IConnectionManagementService Connection, IMetadataService Metadata, IFieldService Field, IPropertyService Properties, IKeyGenerates ObjectId, IPaginationService SetPagination)
+        public FieldController(IConnectionManagementService Connection, IMetadataService Metadata, IFieldService Field, IPropertyService Properties, IKeyGenerates ObjectId, IPaginationService SetPagination, IBranchService Branch, IStateService State)
         {
             _Connection = Connection;
             _Field = Field;
@@ -25,10 +28,12 @@ namespace DinamicDataMvc.Controllers.Field
             _ObjectId = ObjectId;
             _SetPagination = SetPagination;
             _Metadata = Metadata;
+            _Branch = Branch;
+            _State = State;
         }
 
-        [HttpGet("/Field/Read/")]
-        public async Task<ActionResult> Read()
+        [HttpPost("/Field/Read/")]
+        public async Task<ActionResult> Read(MetadataModel metadataModel)
         {
             string pageNumber = Request.Query["Page"];
 
@@ -39,10 +44,44 @@ namespace DinamicDataMvc.Controllers.Field
 
             _Connection.DatabaseConnection();
             _Field.SetDatabase(_Connection.GetDatabase());
-            _Field.ReadFromDatabase();
-            List<FieldModel> viewModels = _Field.GetFields();
+            _Metadata.SetDatabase(_Connection.GetDatabase());
+            _Branch.SetDatabase(_Connection.GetDatabase());
+            _State.SetDatabase(_Connection.GetDatabase());
+            
+            //1º Passo - adicionar os campos já existentes na versão anterior para na eventualidade de o utilizador os pretender manter;
+            MetadataModel oldVersionProcess = _Metadata.GetProcessByVersion(metadataModel.Name, metadataModel.Version - 1);
 
-            Dictionary<int, List<FieldModel>> modelsToDisplay = _SetPagination.SetModelsByPage(viewModels);
+            //2º Passo - obter a designação dos branches em que se encontra o processo;
+            List<string> branches = new List<string>();
+            foreach(var branch in metadataModel.Branch)
+            {
+                branches.Add(_Branch.GetBranchID(branch));
+            }
+
+            //3º Passo - Cria e armazena na base de dados uma nova versão do processo atualizado;
+            MetadataModel UpdatedMetadataModel = new MetadataModel()
+            {
+                Id = metadataModel.Id,
+                Name = metadataModel.Name,
+                Version = metadataModel.Version,
+                Date = Convert.ToDateTime(metadataModel.Date),
+                State = _State.GetStateID(metadataModel.State),
+                Field = oldVersionProcess.Field,
+                Branch = branches
+            };
+
+            _Metadata.CreateMetadata(UpdatedMetadataModel); //
+
+            //4º Passo - Obter a lista de Field Models que um processo têm agregado;
+            List<FieldModel> viewFieldModels = new List<FieldModel>();
+
+            foreach(var fieldId in oldVersionProcess.Field)
+            {
+                FieldModel fieldModel = _Field.GetField(fieldId);
+                viewFieldModels.Add(fieldModel);
+            }
+
+            Dictionary<int, List<FieldModel>> modelsToDisplay = _SetPagination.SetModelsByPage(viewFieldModels);
 
             int NumberOfPages = modelsToDisplay.Count();
             ViewBag.NumberOfPages = NumberOfPages;
@@ -65,6 +104,12 @@ namespace DinamicDataMvc.Controllers.Field
 
             return await Task.Run(() => View("Read", modelsToDisplay[Convert.ToInt32(pageNumber)]));
         }
+
+
+
+
+
+
 
         [HttpGet("/Field/Display/")]
         public async Task<ActionResult> Display(string id)
@@ -194,7 +239,6 @@ namespace DinamicDataMvc.Controllers.Field
                 Required = Convert.ToBoolean(model.Required)
             });
 
-            _Field.ReadFromDatabase();
 
             return await Task.Run(() => RedirectToAction("Read", "Field"));
         }

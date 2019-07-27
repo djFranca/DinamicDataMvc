@@ -14,7 +14,7 @@ namespace DinamicDataMvc.Interfaces
 
         string Delete(string id);
 
-        List<FieldModel> GetFields();
+        //List<FieldModel> GetFields();
 
         FieldModel GetField(string id);
 
@@ -27,7 +27,5 @@ namespace DinamicDataMvc.Interfaces
         string UpdateProperties(string Id, PropertiesModel model);
 
         List<string> GetFieldType();
-
-        //string GetFieldProperties(string fieldId);
     }
 }

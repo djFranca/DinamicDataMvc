@@ -10,36 +10,22 @@ namespace DinamicDataMvc.Services.Fields
 {
     public class FieldService : IFieldService
     {
-        private IMongoDatabase _Database { get; set; }
+        private IMongoDatabase _Database;
 
         private List<FieldModel> Fields { get; set; }
 
         public void SetDatabase(IMongoDatabase Database)
         {
-            try
+            if(Database != null)
             {
-                if(Database != null)
-                {
-                    _Database = Database;
-                }
-            }
-            catch
-            {
-                throw new ArgumentNullException();
+                _Database = Database;
             }
         }
 
         public void ReadFromDatabase()
         {
-            try
-            {
-                var collection = _Database.GetCollection<FieldModel>("Field");
-                Fields = collection.Find(s => true).ToList();
-            }
-            catch
-            {
-                throw new MongoClientException("Database Not Found or Not Connected");
-            }
+            var collection = _Database.GetCollection<FieldModel>("Field");
+            Fields = collection.Find(s => true).ToList();
         }
 
         public string CreateField(FieldModel model)
@@ -136,23 +122,23 @@ namespace DinamicDataMvc.Services.Fields
         }
 
 
-        public List<FieldModel> GetFields()
-        {
-            //If in case Fields length value is zero, it must necessery pass an empty model to field model list (Fields);
-            if(Fields.Count == 0)
-            {
-                FieldModel emptyModel = new FieldModel()
-                {
-                    Id = null,
-                    Type = null,
-                    Name = null,
-                    Properties = null,
-                    Date = Convert.ToDateTime(string.Empty)
-                };
-                Fields.Add(emptyModel);
-            }
-            return Fields;
-        }
+        //public List<FieldModel> GetFields()
+        //{
+        //    //If in case Fields length value is zero, it must necessery pass an empty model to field model list (Fields);
+        //    if(Fields.Count == 0)
+        //    {
+        //        FieldModel emptyModel = new FieldModel()
+        //        {
+        //            Id = null,
+        //            Type = null,
+        //            Name = null,
+        //            Properties = null,
+        //            Date = Convert.ToDateTime(string.Empty)
+        //        };
+        //        Fields.Add(emptyModel);
+        //    }
+        //    return Fields;
+        //}
 
 
         public FieldModel GetField(string id)
@@ -209,27 +195,5 @@ namespace DinamicDataMvc.Services.Fields
             }
             return _types;
         }
-
-        //public string GetFieldProperties(string fieldId)
-        //{
-        //    try
-        //    {
-        //        string property = null;
-
-        //        if(fieldId != null)
-        //        {
-        //            var collection = _Database.GetCollection<FieldModel>("Field");
-        //            FieldModel model = collection.Find(s => s.Id == fieldId.ToLower()).Single();
-
-        //            property = model.Properties;
-        //        }
-
-        //        return property;
-        //    }
-        //    catch
-        //    {
-        //        throw new ArgumentNullException();
-        //    }
-        //}
     }
 }

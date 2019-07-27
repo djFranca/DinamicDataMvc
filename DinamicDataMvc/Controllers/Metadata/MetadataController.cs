@@ -375,7 +375,7 @@ namespace DinamicDataMvc.Controllers.Metadata
                 Version = (model.Version += 1).ToString(), //5º Passo - Atualizar a versão do processo, para uma versão superior incrementando o número da mesma;
                 Date = DateTime.Now.ToString().Substring(0, 10),
                 State = _GetStateById.GetStateDescription(),
-                Branch = _GetBranchById.GetBranches()
+                Branch = _GetBranchById.GetBranches(),
             };
 
             return await Task.Run(() => View("Update", modelToDisplay));

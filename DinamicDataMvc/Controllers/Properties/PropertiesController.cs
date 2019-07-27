@@ -26,7 +26,6 @@ namespace DinamicDataMvc.Controllers.Properties
 
             _Connection.DatabaseConnection();
             _Field.SetDatabase(_Connection.GetDatabase());
-            _Field.ReadFromDatabase();
             PropertiesModel propertiesModel = _Field.GetProperties(propertiesId);
             return await Task.Run(() => View("Details", propertiesModel));
         }
