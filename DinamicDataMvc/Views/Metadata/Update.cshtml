@@ -2,6 +2,13 @@
 @{
     ViewData["Title"] = "Update";
     var CurrentDate = DateTime.Now.Date.ToString().Substring(0, 10);
+    string[] fields = ViewBag.Fields.Split(";");
+
+    List<string> processFields = new List<string>();
+    foreach(string field in fields)
+    {
+        processFields.Add(field);
+    }
 }
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -18,7 +25,7 @@
     <hr />
     <div class="row">
         <div class="col-md-4">
-            @using (Html.BeginForm("Read", "Field", FormMethod.Post))
+            @using (Html.BeginForm("UpdateProcess", "Metadata", FormMethod.Post))
             {
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-group">
@@ -62,6 +69,12 @@
                     <label asp-for="State" class="control-label"><b>Current State</b></label>
                     <input asp-for="State" class="form-control" type="text" readonly="readonly" value="@Model.State" size="10" />
                     <span asp-validation-for="State" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    @foreach (var field in @processFields)
+                    {
+                        <input type="hidden" class="form-control" name="Field" value="@field" />
+                    }
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Fields" class="btn btn-secondary btn-lg btn-block" />

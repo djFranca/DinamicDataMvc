@@ -2,6 +2,11 @@
 @{
     ViewData["Title"] = "Read";
     var pageNumber = ViewBag.NumberOfPages;
+    string processId = ViewBag.ProcessId;
+    string processName = ViewBag.ProcessName;
+    string processVersion = ViewBag.ProcessVersion;
+    string processDate = ViewBag.ProcessDate;
+    string processState = ViewBag.ProcessState;
 }
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -12,77 +17,93 @@
     <script src="~/js/site.js"></script>
 </head>
 <body>
-    <hr />
-    <div class="container" style="background-color:darkorange">
-        <h2 style="color:white; text-align:right;">Process Field List</h2>
-    </div>
-    <hr />
-    <div class="container">
-        <div>
-            @using (Html.BeginForm("Display", "Field", FormMethod.Get))
-            {
-                <span>
-                    <button type="submit"><i class="fa fa-plus-square"></i></button>
-                    <label class="form-group"><b><i>Add New Field</i></b></label>
-                </span>
-            }
+    <section id="ProcessDetailsTag">
+        <hr />
+        <div class="container" style="background-color:darkorange">
+            <h2 style="color:white; text-align:right;">Process Details</h2>
         </div>
-    </div>
-    <div class="container">
-        <div class="table-responsive table-striped">
-            <table class="table table-bordered" border="1" style="border-style:dotted">
-                <thead>
-                    <tr style="background-color:#212529; color:white;">
-                        <th>
-                            @Html.DisplayNameFor(model => model.Type)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Name)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.Date)
-                        </th>
-                        <th>@Html.DisplayName("Update")</th>
-                        <th>@Html.DisplayName("Delete")</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                <b>@Html.DisplayFor(modelItem => item.Type)</b>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Date)
-                            </td>
-                            <td>
-                                @using (Html.BeginForm("Update", "Field", new { ID = item.Id }, FormMethod.Post))
-                                {
-                                    <button type="submit"><i class="fa fa-pencil"></i></button>
-                                }
-                            </td>
-                            <td>
-                                @using (Html.BeginForm("Delete", "Field", new { ID = item.Id }, FormMethod.Post))
-                                {
-                                    <button type="submit"><i class="fa fa-trash"></i></button>
-                                }
-                            </td>
+        <hr />
+    </section>
+    <section id="ProcessDetails">
+        <div class="container" style="text-align:center">
+            <span>
+                <label><strong>ID: </strong>@processId</label>
+                <label><strong>Name: </strong>@processName</label>
+                <label><strong>Version: </strong>@processVersion</label>
+                <label><strong>Creation Date: </strong>@processDate</label>
+                <label><strong>State: </strong>@processState</label>
+            </span>
+        </div>
+    </section>
+    <section id="ProcessFieldsTag">
+        <hr />
+        <div class="container" style="background-color:darkorange">
+            <h2 style="color:white; text-align:right;">Fields</h2>
+        </div>
+        <hr />
+    </section>
+    <section id="ProcessFields">
+        <div class="container">
+            <a href="/Field/Display?ID=@processId"><i class="fa fa-database">Add New Field</i></a>
+        </div>
+        <div class="container">
+            <div class="table-responsive table-striped">
+                <table class="table table-bordered" border="1" style="border-style:dotted">
+                    <thead>
+                        <tr style="background-color:#212529; color:white;">
+                            <th>
+                                @Html.DisplayNameFor(model => model.Type)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Date)
+                            </th>
+                            <th>@Html.DisplayName("Update")</th>
+                            <th>@Html.DisplayName("Delete")</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <b>@Html.DisplayFor(modelItem => item.Type)</b>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                                <td>
+                                    @using (Html.BeginForm("Update", "Field", new { ID = item.Id }, FormMethod.Post))
+                                    {
+                                        <button type="submit"><i class="fa fa-pencil"></i></button>
+                                    }
+                                </td>
+                                <td>
+                                    @using (Html.BeginForm("Delete", "Field", new { ID = item.Id }, FormMethod.Post))
+                                    {
+                                        <button type="submit"><i class="fa fa-trash"></i></button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-    <div class="container">
-        <ul class="pagination pagination-sm">
-            @for (int i = 1; i <= Convert.ToInt32(pageNumber); i++)
-            {
-                <li class="page-item"><a class="page-link" href="/Field/Read?Page=@i">@i</a></li>
-            }
-        </ul>
-    </div>
+    </section>
+    <section>
+        <div class="container">
+            <ul class="pagination pagination-sm">
+                @for (int i = 1; i <= Convert.ToInt32(pageNumber); i++)
+                {
+                    <li class="page-item"><a class="page-link" href="/Field/Read?Page=@i">@i</a></li>
+                }
+            </ul>
+        </div>
+    </section>
 </body>

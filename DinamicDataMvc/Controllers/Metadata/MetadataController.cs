@@ -331,7 +331,9 @@ namespace DinamicDataMvc.Controllers.Metadata
                 };
                 ViewBag.ID = viewModel.Id;
                 _Metadata.CreateMetadata(model);
-                return await Task.Run(() => RedirectToAction("Display", "Field", new { ID = modelId}));
+
+                
+                return await Task.Run(() => RedirectToAction("Display", "Field", new { ID = modelId }));
             }
             catch
             {
@@ -378,7 +380,88 @@ namespace DinamicDataMvc.Controllers.Metadata
                 Branch = _GetBranchById.GetBranches(),
             };
 
+            string fields = string.Empty;
+
+            //6º Passo - Obter os ids dos fields agregados ao processo
+            for (int j = 0; j < model.Field.Count(); j++){
+                if(j == model.Field.Count() - 1)
+                {
+                    fields += model.Field.ElementAt(j);
+                }
+                else
+                {
+                    fields += (model.Field.ElementAt(j) + ";");
+                }
+            }
+
+            ViewBag.Fields = fields;
+
             return await Task.Run(() => View("Update", modelToDisplay));
+        }
+
+
+        [HttpPost("/Metadata/UpdateProcess")]
+        public async Task<ActionResult> UpdateProcess(MetadataModel viewModel)
+        {
+            if(viewModel == null) //Se o modelo de dados estiver vazio, redirecciona para a mesma página;
+            {
+                return await Task.Run(() => RedirectToAction("Update", "Metadata"));
+            }
+
+            _Connection.DatabaseConnection();
+            _Field.SetDatabase(_Connection.GetDatabase());
+            _Metadata.SetDatabase(_Connection.GetDatabase());
+            _GetBranchById.SetDatabase(_Connection.GetDatabase());
+            _GetStateById.SetDatabase(_Connection.GetDatabase());
+
+            //1º Passo - Obter os objetos FieldModel e PropertiesModel agregados à versão anterior e passados no Modelo de dados MetadataModel;
+            //-----------------------------------------------------
+            //Sistema independente - Utils
+            //-----------------------------------------------------
+            List<string> fieldIdKeys = new List<string>(); //Armazena a lista de novos ids dos campos do processo atualizado;
+            List<FieldModel> fieldClones = new List<FieldModel>(); //Armazena os campos clonados da versão anterior
+            foreach (var field in viewModel.Field)
+            {
+                FieldModel model = _Field.GetField(field);
+                fieldClones.Add(model);
+            }
+
+            foreach (var fieldCloned in fieldClones)
+            {
+                PropertiesModel model = _Field.GetProperties(fieldCloned.Properties);
+                _KeyID.SetKey(); //Gera um novo object id para criar uma nova coleção na tabela de propriedades;
+                model.ID = _KeyID.GetKey(); //Afecta o novo identificador object id ao modelo de dados properties;
+                _Field.CreateProperties(model); //cria um novo modelo de dados do tipo propriedades;
+                fieldCloned.Properties = model.ID; //Afecta o id dessas propriedades criadas ao campo do novo processo
+
+                _KeyID.SetKey(); //Gera um novo object id para criar uma nova coleção na tabela de campos;
+                fieldCloned.Id = _KeyID.GetKey(); //Afecta o novo identificador object id ao modelo de dados properties;
+                fieldIdKeys.Add(fieldCloned.Id); //Armazena na lista de novas keys referentes aos campos clonados o id do campo clonado;
+                _Field.CreateField(fieldCloned); //cria um novo modelo de dados do tipo campos;
+            }
+            //-----------------------------------------------------
+
+            //2º Passo - obter a designação dos branches em que se encontra o processo;
+            List<string> branches = new List<string>();
+            foreach (var branch in viewModel.Branch)
+            {
+                branches.Add(_GetBranchById.GetBranchID(branch));
+            }
+
+            //3º Passo - Cria e armazena na base de dados uma nova versão do processo atualizado;
+            MetadataModel UpdatedMetadataModel = new MetadataModel()
+            {
+                Id = viewModel.Id,
+                Name = viewModel.Name,
+                Version = viewModel.Version,
+                Date = Convert.ToDateTime(viewModel.Date),
+                State = _GetStateById.GetStateID(viewModel.State),
+                Field = fieldIdKeys,
+                Branch = branches
+            };
+            _Metadata.CreateMetadata(UpdatedMetadataModel); //armazena o processo na base de dados;
+
+            return await Task.Run(() => RedirectToAction("Read", "Field", new { ProcessId = viewModel.Id }));
         }
     }
 }

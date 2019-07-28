@@ -146,7 +146,7 @@ namespace DinamicDataMvc.Services.Fields
             if(id != null)
             {
                 var collection = _Database.GetCollection<FieldModel>("Field");
-                FieldModel field = collection.Find(s => s.Id == id.ToLower()).Single();
+                FieldModel field = collection.Find(s => s.Id == id).Single();
 
                 return field;
             }
