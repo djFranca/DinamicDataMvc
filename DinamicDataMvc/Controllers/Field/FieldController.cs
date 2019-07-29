@@ -60,53 +60,6 @@ namespace DinamicDataMvc.Controllers.Field
                 fields.Add(_Field.GetField(field)); //Adiciona o modelo criado para cada campo (Field) a uma lista do tipo FieldModel;
             }
 
-            ////1º Passo - Obter os objetos FieldModel e PropertiesModel agregados à versão anterior e passados no Modelo de dados MetadataModel;
-            ////-----------------------------------------------------
-            ////Sistema independente - Utils
-            ////-----------------------------------------------------
-            //List<string> fieldIdKeys = new List<string>(); //Armazena a lista de novos ids dos campos do processo atualizado;
-
-            //foreach(var field in metadataModel.Field)
-            //{
-            //    FieldModel model = _Field.GetField(field);
-            //    fieldClones.Add(model);
-            //}
-
-            //foreach (var fieldCloned in fieldClones)
-            //{
-            //    PropertiesModel model = _Field.GetProperties(fieldCloned.Properties);
-            //    _KeyId.SetKey(); //Gera um novo object id para criar uma nova coleção na tabela de propriedades;
-            //    model.ID = _KeyId.GetKey(); //Afecta o novo identificador object id ao modelo de dados properties;
-            //    _Field.CreateProperties(model); //cria um novo modelo de dados do tipo propriedades;
-            //    fieldCloned.Properties = model.ID; //Afecta o id dessas propriedades criadas ao campo do novo processo
-
-            //    _KeyId.SetKey(); //Gera um novo object id para criar uma nova coleção na tabela de campos;
-            //    fieldCloned.Id = _KeyId.GetKey(); //Afecta o novo identificador object id ao modelo de dados properties;
-            //    fieldIdKeys.Add(fieldCloned.Id); //Armazena na lista de novas keys referentes aos campos clonados o id do campo clonado;
-            //    _Field.CreateField(fieldCloned); //cria um novo modelo de dados do tipo campos;
-            //}
-            ////-----------------------------------------------------
-
-            ////2º Passo - obter a designação dos branches em que se encontra o processo;
-            //List<string> branches = new List<string>();
-            //foreach(var branch in metadataModel.Branch)
-            //{
-            //    branches.Add(_Branch.GetBranchID(branch));
-            //}
-
-            ////3º Passo - Cria e armazena na base de dados uma nova versão do processo atualizado;
-            //MetadataModel UpdatedMetadataModel = new MetadataModel()
-            //{
-            //    Id = metadataModel.Id,
-            //    Name = metadataModel.Name,
-            //    Version = metadataModel.Version,
-            //    Date = Convert.ToDateTime(metadataModel.Date),
-            //    State = _State.GetStateID(metadataModel.State),
-            //    Field = fieldIdKeys,
-            //    Branch = branches
-            //};
-            //_Metadata.CreateMetadata(UpdatedMetadataModel); //
-
             //3º Passo - Injetar na página as informações relativas ao processo pai dos campos agregados;
             ViewBag.ProcessId = metadata.Id;
             ViewBag.ProcessName = metadata.Name;
@@ -155,18 +108,19 @@ namespace DinamicDataMvc.Controllers.Field
         }
 
 
+        /*
+         * Action - Apaga do processo o campo cujo identificador é recebido como parâmetro de entrada do controlador;
+         */
         [HttpPost("/Field/Delete/")]
-        public string Delete(string id)
+        public string Delete(string FieldId)
         {
-            if(id == null)
+            if(string.IsNullOrEmpty(FieldId))
             {
                 return NotFound().StatusCode.ToString();
             }
             _Connection.DatabaseConnection();
             _Field.SetDatabase(_Connection.GetDatabase());
-            var message = _Field.Delete(id);
-
-            return message;
+            return _Field.Delete(FieldId);
         }
 
 
@@ -208,71 +162,39 @@ namespace DinamicDataMvc.Controllers.Field
             _Metadata.SetProcessVersion(model.ProcessID);
             _Metadata.AddFieldToProcess(model.ProcessID, fieldId);
 
-            _Field.ReadFromDatabase();
+            //_Field.ReadFromDatabase();
 
-            return await Task.Run(() => RedirectToAction("Read", "Field", new { ProcessId = model.ProcessID })); //Antes na action estava display;
+            return await Task.Run(() => RedirectToAction("Read", "Field", new { ProcessId = model.ProcessID })); //Antes no action estava display;
         }
 
 
+        [HttpPost("/Field/DeleteOnUpdate/")]
+        public async Task<ActionResult> DeleteOnUpdate(string ProcessID, string FieldID)
+        {
+            _Connection.DatabaseConnection();
+            _Metadata.SetDatabase(_Connection.GetDatabase());
+            _Field.SetDatabase(_Connection.GetDatabase());
+            _Properties.SetDatabase(_Connection.GetDatabase());
 
+            MetadataModel metadata = _Metadata.GetMetadata(ProcessID); //Obtem-se os metadados do processo cujo o id foi recebido como argumento de entrada;
+            FieldModel fieldToDelete = _Field.GetField(FieldID); //Obtem-se o modelo do campo a remover da base de dados;
 
+            _Properties.Delete(fieldToDelete.Properties); //Apaga as propriedades agregadas ao campo;
+            _Field.Delete(FieldID); //Apaga o campo agregado ao processo;
 
+            List<string> UpdatedFields = new List<string>();
+            foreach(string field in metadata.Field)
+            {
+                if (!field.Equals(FieldID.ToUpper()))
+                {
+                    UpdatedFields.Add(field);
+                }
+            }
+            metadata.Field = UpdatedFields;
 
+            _Metadata.ReplaceMetadata(ProcessID, metadata); //Efetua o replace do modelo de dados MetadataModel existente pelo novo modelo atualizado;
 
-        //[HttpPost("/Field/Update/")]
-        //public async Task<ActionResult> Update(string Id)
-        //{
-        //    _Connection.DatabaseConnection();
-        //    _Field.SetDatabase(_Connection.GetDatabase());
-        //    FieldModel field = _Field.GetField(Id);
-        //    PropertiesModel properties = _Field.GetProperties(field.Properties);
-
-        //    ViewBag.FieldId = Id;
-        //    ViewBag.PropertiesID = field.Properties;
-
-        //    ViewFieldModel ViewModel = new ViewFieldModel()
-        //    {
-        //        Type = field.Type,
-        //        Name = field.Name,
-        //        Size = properties.Size.ToString(),
-        //        Value = properties.Value,
-        //        Maxlength = properties.Maxlength.ToString(),
-        //        Required = properties.Required.ToString(),
-        //        CreationDate = Convert.ToDateTime(field.Date).ToString().Substring(0, 10)
-        //    };
-
-        //    return await Task.Run(() => View("Update", ViewModel));
-        //}
-
-        //[HttpPost("/Field/SaveUpdate/")]
-        //public async Task<ActionResult> SaveUpdate(string fieldId, string propertiesId, ViewFieldModel model)
-        //{
-        //    //string x = fieldId;
-        //    //string y = propertiesId;
-
-        //    _Connection.DatabaseConnection();
-        //    _Field.SetDatabase(_Connection.GetDatabase());
-
-        //    _Field.UpdateField(fieldId, new FieldModel()
-        //    {
-        //        Id = fieldId,
-        //        Type = model.Type,
-        //        Name = model.Name,
-        //        Properties = propertiesId,
-        //        Date = Convert.ToDateTime(model.CreationDate)
-        //    });
-
-        //    _Field.UpdateProperties(propertiesId, new PropertiesModel()
-        //    {
-        //        ID = propertiesId,
-        //        Size = Convert.ToInt32(model.Size),
-        //        Value = model.Value,
-        //        Maxlength = Convert.ToInt32(model.Maxlength),
-        //        Required = Convert.ToBoolean(model.Required)
-        //    });
-
-
-        //    return await Task.Run(() => RedirectToAction("Read", "Field"));
-        //}
+            return await Task.Run(() => RedirectToAction("Read", "Field", new { ProcessId = ProcessID })); //Antes no action estava display;
+        }
     }
 }

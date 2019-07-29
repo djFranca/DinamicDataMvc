@@ -8,13 +8,9 @@ namespace DinamicDataMvc.Interfaces
     {
         void SetDatabase(IMongoDatabase database);
 
-        void ReadFromDatabase();
-
         string CreateField(FieldModel model);
 
         string Delete(string id);
-
-        //List<FieldModel> GetFields();
 
         FieldModel GetField(string id);
 
@@ -25,7 +21,5 @@ namespace DinamicDataMvc.Interfaces
         string UpdateField(string Id, FieldModel model);
 
         string UpdateProperties(string Id, PropertiesModel model);
-
-        List<string> GetFieldType();
     }
 }

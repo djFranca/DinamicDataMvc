@@ -60,8 +60,9 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Date)
                             </th>
-                            <th>@Html.DisplayName("Update")</th>
-                            <th>@Html.DisplayName("Delete")</th>
+                            <th>
+                                @Html.DisplayName("Delete")
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,13 +79,7 @@
                                     @Html.DisplayFor(modelItem => item.Date)
                                 </td>
                                 <td>
-                                    @using (Html.BeginForm("Update", "Field", new { ID = item.Id }, FormMethod.Post))
-                                    {
-                                        <button type="submit"><i class="fa fa-pencil"></i></button>
-                                    }
-                                </td>
-                                <td>
-                                    @using (Html.BeginForm("Delete", "Field", new { ID = item.Id }, FormMethod.Post))
+                                    @using (Html.BeginForm("DeleteOnUpdate", "Field", new { ProcessID = processId, FieldID = item.Id }, FormMethod.Post))
                                     {
                                         <button type="submit"><i class="fa fa-trash"></i></button>
                                     }

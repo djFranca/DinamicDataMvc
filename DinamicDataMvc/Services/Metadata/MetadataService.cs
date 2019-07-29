@@ -64,6 +64,7 @@ namespace DinamicDataMvc.Services.Metadata
             return Model;
         }
 
+        //TODO:
         public void ReadFromDatabase()
         {
             #region ReadFromDatabase
@@ -98,9 +99,13 @@ namespace DinamicDataMvc.Services.Metadata
             #endregion
         }
 
+
         public void SetDatabase(IMongoDatabase database)
         {
-            _Database = database;
+            if(database != null)
+            {
+                _Database = database;
+            }
         }
 
         public IMongoCollection<MetadataModel> GetMetadataCollection()
@@ -129,7 +134,7 @@ namespace DinamicDataMvc.Services.Metadata
         {
             try
             {
-                if (id != null)
+                if (!string.IsNullOrEmpty(id))
                 {
                     var collection = _Database.GetCollection<MetadataModel>("Metadata");
                     collection.DeleteOne(s => s.Id == id);
@@ -302,6 +307,15 @@ namespace DinamicDataMvc.Services.Metadata
             catch
             {
                 throw new ArgumentNullException();
+            }
+        }
+
+        public void ReplaceMetadata(string ProcessId, MetadataModel model)
+        {
+            if(!string.IsNullOrEmpty(ProcessId) && model != null)
+            {
+                var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                collection.FindOneAndReplace(s => s.Id == ProcessId, model);
             }
         }
 

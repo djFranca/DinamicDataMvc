@@ -289,56 +289,47 @@ namespace DinamicDataMvc.Controllers.Metadata
         [HttpPost("/Metadata/CreateProcess/")]
         public async Task<ActionResult> CreateProcess(MetadataModel viewModel)
         {
-            try
+            if (viewModel == null)  //Se o modelo de dados estiver vazio, redirecciona para a mesma página;
             {
-                if (viewModel == null)  //Se o modelo de dados estiver vazio, redirecciona para a mesma página;
-                {
-                    return await Task.Run(() => RedirectToAction("Create", "Metadata"));
-                }
-
-                _Connection.DatabaseConnection();
-
-                _GetBranchById.SetDatabase(_Connection.GetDatabase());
-                _GetStateById.SetDatabase(_Connection.GetDatabase());
-                _Metadata.SetDatabase(_Connection.GetDatabase());
-                _Validation.SetDatabase(_Connection.GetDatabase());
-
-                if (_Validation.ProcessExits(viewModel.Name)) //Se o nome já existir na base de dados, redirecciona para a mesma página;
-                {
-                    return await Task.Run(() => RedirectToAction("Create", "Metadata"));
-                }
-
-                //Defines the properties model key
-                _KeyID.SetKey(); //Sets a new properties ObjectID collection;
-                string modelId = _KeyID.GetKey();
-
-                List<string> branchList = new List<string>();
-
-                foreach (var item in viewModel.Branch)
-                {
-                    branchList.Add(_GetBranchById.GetBranchID(item));
-                }
-
-                MetadataModel model = new MetadataModel()
-                {
-                    Id = modelId,
-                    Name = viewModel.Name,
-                    Version = Convert.ToInt32(viewModel.Version),
-                    Date = Convert.ToDateTime(viewModel.Date),
-                    State = _GetStateById.GetStateID(viewModel.State),
-                    Field = new List<string>() { },
-                    Branch = branchList
-                };
-                ViewBag.ID = viewModel.Id;
-                _Metadata.CreateMetadata(model);
-
-                
-                return await Task.Run(() => RedirectToAction("Display", "Field", new { ID = modelId }));
+                return await Task.Run(() => RedirectToAction("Create", "Metadata"));
             }
-            catch
+
+            _Connection.DatabaseConnection();
+            _GetBranchById.SetDatabase(_Connection.GetDatabase());
+            _GetStateById.SetDatabase(_Connection.GetDatabase());
+            _Metadata.SetDatabase(_Connection.GetDatabase());
+            _Validation.SetDatabase(_Connection.GetDatabase());
+
+            if (_Validation.ProcessExits(viewModel.Name)) //Se o nome já existir na base de dados, redirecciona para a mesma página;
             {
-                throw new ArgumentNullException();
+                return await Task.Run(() => RedirectToAction("Create", "Metadata"));
             }
+
+            //Defines the properties model key
+            _KeyID.SetKey(); //Sets a new properties ObjectID collection;
+            string modelId = _KeyID.GetKey();
+
+            List<string> branchList = new List<string>();
+
+            foreach (var item in viewModel.Branch)
+            {
+                branchList.Add(_GetBranchById.GetBranchID(item));
+            }
+
+            MetadataModel model = new MetadataModel()
+            {
+                Id = modelId,
+                Name = viewModel.Name,
+                Version = Convert.ToInt32(viewModel.Version),
+                Date = Convert.ToDateTime(viewModel.Date),
+                State = _GetStateById.GetStateID(viewModel.State),
+                Field = new List<string>() { },
+                Branch = branchList
+            };
+            ViewBag.ID = viewModel.Id;
+            _Metadata.CreateMetadata(model);
+            //return await Task.Run(() => RedirectToAction("Display", "Field", new { ID = modelId }));
+            return await Task.Run(() => RedirectToAction("Read", "Field", new { ProcessId = modelId } ));
         }
 
 

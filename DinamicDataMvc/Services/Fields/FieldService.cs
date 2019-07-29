@@ -3,7 +3,6 @@ using DinamicDataMvc.Models.Field;
 using DinamicDataMvc.Utils;
 using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace DinamicDataMvc.Services.Fields
@@ -12,20 +11,12 @@ namespace DinamicDataMvc.Services.Fields
     {
         private IMongoDatabase _Database;
 
-        private List<FieldModel> Fields { get; set; }
-
         public void SetDatabase(IMongoDatabase Database)
         {
             if(Database != null)
             {
                 _Database = Database;
             }
-        }
-
-        public void ReadFromDatabase()
-        {
-            var collection = _Database.GetCollection<FieldModel>("Field");
-            Fields = collection.Find(s => true).ToList();
         }
 
         public string CreateField(FieldModel model)
@@ -121,26 +112,6 @@ namespace DinamicDataMvc.Services.Fields
             }
         }
 
-
-        //public List<FieldModel> GetFields()
-        //{
-        //    //If in case Fields length value is zero, it must necessery pass an empty model to field model list (Fields);
-        //    if(Fields.Count == 0)
-        //    {
-        //        FieldModel emptyModel = new FieldModel()
-        //        {
-        //            Id = null,
-        //            Type = null,
-        //            Name = null,
-        //            Properties = null,
-        //            Date = Convert.ToDateTime(string.Empty)
-        //        };
-        //        Fields.Add(emptyModel);
-        //    }
-        //    return Fields;
-        //}
-
-
         public FieldModel GetField(string id)
         {
             if(id != null)
@@ -168,6 +139,7 @@ namespace DinamicDataMvc.Services.Fields
                 var collection = _Database.GetCollection<PropertiesModel>("Properties");
                 return collection.Find(s => s.ID == id).FirstOrDefault();
             }
+            //Irá ficar numa classe independente - Utils;
             return new PropertiesModel()
             {
                 ID = null,
@@ -176,24 +148,6 @@ namespace DinamicDataMvc.Services.Fields
                 Maxlength = 0,
                 Required = false
             };
-        }
-
-        /*
-         * Method that returns all field types to construct a choice menu for the process creation;
-         */
-        public List<string> GetFieldType()
-        {
-            List<string> _types = new List<string>();
-            var collection = _Database.GetCollection<FieldModel>("Field");
-            var _models = collection.Find(s => true).ToList();
-            foreach(var _model in _models)
-            {
-                if (!_types.Contains(_model.Type))
-                {
-                    _types.Add(_model.Type);
-                }
-            }
-            return _types;
         }
     }
 }
