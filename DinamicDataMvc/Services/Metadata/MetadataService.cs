@@ -13,9 +13,8 @@ namespace DinamicDataMvc.Services.Metadata
         #region Properties
 
         private string _NameFilteringResult;
-        private int _VerionFilteringResult;
+        private string _VerionFilteringResult;
         private IMongoDatabase _Database;
-        private IMongoCollection<MetadataModel> _Collection;
 
         private List<MetadataModel> Model { get; set; }
 
@@ -23,7 +22,7 @@ namespace DinamicDataMvc.Services.Metadata
 
         #region Constructor
 
-        public MetadataService(string nameFilteringResult, int versionFilteringResult)
+        public MetadataService(string nameFilteringResult, string versionFilteringResult)
         {
             _NameFilteringResult = nameFilteringResult;
             _VerionFilteringResult = versionFilteringResult;
@@ -34,28 +33,30 @@ namespace DinamicDataMvc.Services.Metadata
 
         #region Methods
 
-        public void SetFilterParameters(string nameFilteringResult, int versionFilteringResult)
+        public void SetFilterParameters(string nameFilteringResult, string versionFilteringResult)
         {
-            if(!String.IsNullOrEmpty(nameFilteringResult) && versionFilteringResult >= 1)
+            if(!string.IsNullOrEmpty(nameFilteringResult) && !string.IsNullOrEmpty(versionFilteringResult))
             {
                 _NameFilteringResult = nameFilteringResult;
                 _VerionFilteringResult = versionFilteringResult;
             }
 
-            else if(!String.IsNullOrEmpty(nameFilteringResult) && versionFilteringResult == 0)
+            else if(!string.IsNullOrEmpty(nameFilteringResult) && string.IsNullOrEmpty(versionFilteringResult))
             {
                 _NameFilteringResult = nameFilteringResult;
+                _VerionFilteringResult = null;
             }
 
-            else if (String.IsNullOrEmpty(nameFilteringResult) && versionFilteringResult >= 1)
+            else if (string.IsNullOrEmpty(nameFilteringResult) && !string.IsNullOrEmpty(versionFilteringResult))
             {
+                _NameFilteringResult = null;
                 _VerionFilteringResult = versionFilteringResult;
             }
 
             else
             {
                 _NameFilteringResult = null;
-                _VerionFilteringResult = 0;
+                _VerionFilteringResult = null;
             }
         }
 
@@ -64,39 +65,34 @@ namespace DinamicDataMvc.Services.Metadata
             return Model;
         }
 
-        //TODO:
+
         public void ReadFromDatabase()
         {
-            #region ReadFromDatabase
-
             if(_Database != null)
             {
+                List<MetadataModel> filteredData = new List<MetadataModel>();
                 var collection = _Database.GetCollection<MetadataModel>("Metadata");
-                Model = collection.Find(s => true).ToList();
-                _Collection = collection;
 
-                #region Filtering Data
-                if (_NameFilteringResult != null && _VerionFilteringResult != 0)
+                if (_NameFilteringResult != null && _VerionFilteringResult != null)
                 {
-                    var filteredData = collection.Find(s => s.Name == _NameFilteringResult && s.Version == _VerionFilteringResult).ToList();
-                    Model = filteredData;
+                    filteredData = collection.Find(s => s.Name == _NameFilteringResult && s.Version == Convert.ToInt32(_VerionFilteringResult)).ToList();
                 }
 
-                else if (_NameFilteringResult == null && _VerionFilteringResult != 0)
+                else if (_NameFilteringResult == null && _VerionFilteringResult != null)
                 {
-                    var filteredData = collection.Find(s => s.Version == _VerionFilteringResult).ToList();
-                    Model = filteredData;
+                    filteredData = collection.Find(s => s.Version == Convert.ToInt32(_VerionFilteringResult)).ToList();
                 }
 
-                else if (_NameFilteringResult != null && _VerionFilteringResult != 0)
+                else if (_NameFilteringResult != null && _VerionFilteringResult == null)
                 {
-                    var filteredData = collection.Find(s => s.Name == _NameFilteringResult).ToList();
-                    Model = filteredData;
+                    filteredData = collection.Find(s => s.Name == _NameFilteringResult).ToList();
                 }
-                #endregion
+                else
+                {
+                    filteredData = collection.Find(s => true).ToList();
+                }
+                Model = filteredData;
             }
-
-            #endregion
         }
 
 
@@ -108,10 +104,6 @@ namespace DinamicDataMvc.Services.Metadata
             }
         }
 
-        public IMongoCollection<MetadataModel> GetMetadataCollection()
-        {
-            return _Collection;
-        }
 
         public MetadataModel GetMetadata(string id)
         {

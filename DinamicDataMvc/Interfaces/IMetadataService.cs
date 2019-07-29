@@ -8,13 +8,11 @@ namespace DinamicDataMvc.Interfaces
     {
         void SetDatabase(IMongoDatabase database);
 
-        void SetFilterParameters(string nameFilteringResult, int versionFilteringResult);
+        void SetFilterParameters(string nameFilteringResult, string versionFilteringResult);
 
         void ReadFromDatabase();
 
         List<MetadataModel> GetProcessesMetadataList();
-
-        IMongoCollection<MetadataModel> GetMetadataCollection();
 
         MetadataModel GetMetadata(string id);
 

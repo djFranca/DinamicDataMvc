@@ -32,7 +32,7 @@ namespace DinamicDataMvc
             string DatabaseName = "MetadataProcessesDb";
 
             string nameFilteringResult = null;
-            int versionFilteringResult = 0;
+            string versionFilteringResult = null;
 
             services.Configure<CookiePolicyOptions>(options =>
             {

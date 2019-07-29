@@ -68,7 +68,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             //define-se como valor default a versão 1;
             if (string.IsNullOrEmpty(searchVersion))
             {
-                searchVersion = "0";
+                searchVersion = null;
             }
 
             ViewBag.PageNumber = pageNumber;
@@ -78,7 +78,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             _GetBranchById.SetDatabase(_Connection.GetDatabase());
             _GetStateById.SetDatabase(_Connection.GetDatabase());
 
-            _Metadata.SetFilterParameters(searchName, Convert.ToInt32(searchVersion));
+            _Metadata.SetFilterParameters(searchName, searchVersion);
             _Metadata.ReadFromDatabase();
 
 
