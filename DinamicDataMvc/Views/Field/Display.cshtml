@@ -2,16 +2,14 @@
     ViewData["Title"] = "Display";
     var processID = ViewBag.ID;
 }
-
-    <head>
-        <title>Bootstrap Example</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-    </head>
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -20,18 +18,15 @@
                 {
                     <button type="submit" id="pwdBtn"><img src="~/images/Password.jpg" /></button>
                 }
-
             </div>
             <div class="col-sm-4">
-
                 @using (Html.BeginForm("Create", "Field", new { Type = "Text", Process = processID }, FormMethod.Post))
                 {
                     <button type="submit" id="textBtn"><img src="~/images/Text.png" /></button>
                 }
             </div>
             <div class="col-sm-4">
-
-                @using (Html.BeginForm("Create", "Field", new { Type = "Number" , Process = processID }, FormMethod.Post))
+                @using (Html.BeginForm("Create", "Field", new { Type = "Number", Process = processID }, FormMethod.Post))
                 {
                     <button type="submit" id="numBtn"><img src="~/images/Number.png" /></button>
                 }
@@ -44,7 +39,6 @@
             </div>
         </div>
     </div>
-
     <div class="container-fluid">
         @using (Html.BeginForm("Read", "Metadata", FormMethod.Get))
         {

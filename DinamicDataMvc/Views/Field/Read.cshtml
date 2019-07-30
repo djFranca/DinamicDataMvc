@@ -76,12 +76,18 @@
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Date)
+                                    @if (!string.IsNullOrEmpty(item.Name))
+                                    {
+                                        @Html.DisplayFor(modelItem => item.Date)
+                                    }
                                 </td>
                                 <td>
-                                    @using (Html.BeginForm("DeleteOnUpdate", "Field", new { ProcessID = processId, FieldID = item.Id }, FormMethod.Post))
+                                    @if (!string.IsNullOrEmpty(item.Name))
                                     {
-                                        <button type="submit"><i class="fa fa-trash"></i></button>
+                                        @using (Html.BeginForm("DeleteOnUpdate", "Field", new { ProcessID = processId, FieldID = item.Id }, FormMethod.Post))
+                                        {
+                                            <button type="submit"><i class="fa fa-trash"></i></button>
+                                        }
                                     }
                                 </td>
                             </tr>

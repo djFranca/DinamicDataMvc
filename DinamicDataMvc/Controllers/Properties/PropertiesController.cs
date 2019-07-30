@@ -8,12 +8,12 @@ namespace DinamicDataMvc.Controllers.Properties
     public class PropertiesController : Controller
     {
         private readonly IConnectionManagementService _Connection;
-        private readonly IFieldService _Field;
+        private readonly IPropertyService _Properties;
 
-        public PropertiesController(IConnectionManagementService Connection, IFieldService Field)
+        public PropertiesController(IConnectionManagementService Connection, IPropertyService Properties)
         {
             _Connection = Connection;
-            _Field = Field;
+            _Properties = Properties;
         }
 
         [HttpPost("/Properties/Details")]
@@ -25,8 +25,8 @@ namespace DinamicDataMvc.Controllers.Properties
             ViewBag.FieldType = fieldType;
 
             _Connection.DatabaseConnection();
-            _Field.SetDatabase(_Connection.GetDatabase());
-            PropertiesModel propertiesModel = _Field.GetProperties(propertiesId);
+            _Properties.SetDatabase(_Connection.GetDatabase());
+            PropertiesModel propertiesModel = _Properties.GetProperties(propertiesId);
             return await Task.Run(() => View("Details", propertiesModel));
         }
     }

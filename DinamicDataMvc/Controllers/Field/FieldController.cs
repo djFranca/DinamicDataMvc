@@ -55,9 +55,12 @@ namespace DinamicDataMvc.Controllers.Field
             MetadataModel metadata = _Metadata.GetMetadata(processId);
 
             //2º Passo - Obter os Field Models agregados a cada processo;
-            foreach(var field in metadata.Field)
+            if(metadata.Field.Count() > 0)
             {
-                fields.Add(_Field.GetField(field)); //Adiciona o modelo criado para cada campo (Field) a uma lista do tipo FieldModel;
+                foreach (var field in metadata.Field)
+                {
+                    fields.Add(_Field.GetField(field)); //Adiciona o modelo criado para cada campo (Field) a uma lista do tipo FieldModel;
+                }
             }
 
             //3º Passo - Injetar na página as informações relativas ao processo pai dos campos agregados;
@@ -73,10 +76,10 @@ namespace DinamicDataMvc.Controllers.Field
             int NumberOfPages = modelsToDisplay.Count();
             ViewBag.NumberOfPages = NumberOfPages;
 
-            if(modelsToDisplay.Count == 0) //Se não existirem campos para mostrar na listagem
+            if (modelsToDisplay.Count == 0) //Se não existirem campos para mostrar na listagem
             {
-                List<FieldModel> models = new List<FieldModel>();
-                FieldModel model = new FieldModel()
+                List<FieldModel> auxModels = new List<FieldModel>();
+                FieldModel defaultModel = new FieldModel()
                 {
                     Id = string.Empty,
                     Name = string.Empty,
@@ -84,7 +87,9 @@ namespace DinamicDataMvc.Controllers.Field
                     Date = DateTime.Now,
                     Properties = string.Empty
                 };
-                return await Task.Run(() => View("Read", models));
+                auxModels.Add(defaultModel);
+                modelsToDisplay.Add(Convert.ToInt32(pageNumber), auxModels);
+                return await Task.Run(() => View("Read", auxModels));
             }
             return await Task.Run(() => View("Read", modelsToDisplay[Convert.ToInt32(pageNumber)]));
         }
@@ -120,7 +125,7 @@ namespace DinamicDataMvc.Controllers.Field
             }
             _Connection.DatabaseConnection();
             _Field.SetDatabase(_Connection.GetDatabase());
-            return _Field.Delete(FieldId);
+            return _Field.DeleteField(FieldId);
         }
 
 
@@ -155,8 +160,11 @@ namespace DinamicDataMvc.Controllers.Field
             };
 
             _Connection.DatabaseConnection();
+            
+            _Properties.SetDatabase(_Connection.GetDatabase());
+            _Properties.CreateProperties(properties);
+
             _Field.SetDatabase(_Connection.GetDatabase());
-            _Field.CreateProperties(properties);
             _Field.CreateField(field);
 
             _Metadata.SetProcessVersion(model.ProcessID);
@@ -179,8 +187,8 @@ namespace DinamicDataMvc.Controllers.Field
             MetadataModel metadata = _Metadata.GetMetadata(ProcessID); //Obtem-se os metadados do processo cujo o id foi recebido como argumento de entrada;
             FieldModel fieldToDelete = _Field.GetField(FieldID); //Obtem-se o modelo do campo a remover da base de dados;
 
-            _Properties.Delete(fieldToDelete.Properties); //Apaga as propriedades agregadas ao campo;
-            _Field.Delete(FieldID); //Apaga o campo agregado ao processo;
+            _Properties.DeleteProperties(fieldToDelete.Properties); //Apaga as propriedades agregadas ao campo;
+            _Field.DeleteField(FieldID); //Apaga o campo agregado ao processo;
 
             List<string> UpdatedFields = new List<string>();
             foreach(string field in metadata.Field)

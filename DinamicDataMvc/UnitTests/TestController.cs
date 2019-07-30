@@ -12,16 +12,18 @@ namespace DinamicDataMvc.UnitTests
         private readonly IMetadataService _MetadataService;
         private readonly IConnectionManagementService _Connection;
         private readonly IFieldService _FieldService;
+        private readonly IPropertyService _PropertyService;
         private readonly IBranchService _Branch;
         private readonly IKeyGenerates _KeyService;
 
-        public TestController(IConnectionManagementService Connection, IMetadataService MetadataService, IFieldService FieldService, IKeyGenerates KeyService, IBranchService Branch)
+        public TestController(IConnectionManagementService Connection, IMetadataService MetadataService, IFieldService FieldService, IKeyGenerates KeyService, IBranchService Branch, IPropertyService PropertyService)
         {
             _Connection = Connection;
             _MetadataService = MetadataService;
             _FieldService = FieldService;
             _KeyService = KeyService;
             _Branch = Branch;
+            _PropertyService = PropertyService;
         }
 
         [HttpGet]
@@ -39,8 +41,8 @@ namespace DinamicDataMvc.UnitTests
         public string TestGetProperties(string id)
         {
             _Connection.DatabaseConnection();
-            _FieldService.SetDatabase(_Connection.GetDatabase());
-            PropertiesModel model = _FieldService.GetProperties(id);
+            _PropertyService.SetDatabase(_Connection.GetDatabase());
+            PropertiesModel model = _PropertyService.GetProperties(id);
             string message = "ID = " + model.ID + ", Maxlength = " + model.Maxlength + ", Size = " + model.Size + ", Value = " + model.Value + ", Required =" + model.Required;
             return message;
         }

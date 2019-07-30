@@ -19,6 +19,7 @@ namespace DinamicDataMvc.Services.Fields
             }
         }
 
+
         public string CreateField(FieldModel model)
         {
             try
@@ -26,24 +27,6 @@ namespace DinamicDataMvc.Services.Fields
                 if (model != null)
                 {
                     var collection = _Database.GetCollection<FieldModel>("Field");
-                    collection.InsertOneAsync(model);
-                    return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
-                }
-                return ((int)StatusCode.BadRequest).ToString() + " - " + StatusCode.BadRequest.ToString();
-            }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
-        }
-
-        public string CreateProperties(PropertiesModel model)
-        {
-            try
-            {
-                if(model != null)
-                {
-                    var collection = _Database.GetCollection<PropertiesModel>("Properties");
                     collection.InsertOneAsync(model);
                     return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
                 }
@@ -75,25 +58,7 @@ namespace DinamicDataMvc.Services.Fields
         }
 
 
-        public string UpdateProperties(string Id, PropertiesModel model)
-        {
-            try
-            {
-                if(Id != null && model != null)
-                {
-                    var collection = _Database.GetCollection<PropertiesModel>("Properties");
-                    collection.ReplaceOneAsync(s => s.ID == Id, model);
-                    return ((int)StatusCode.NoContent).ToString() + " - " + StatusCode.NoContent.ToString();
-                }
-                return ((int)StatusCode.BadRequest).ToString() + " - " + StatusCode.BadRequest.ToString();
-            }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
-        }
-
-        public string Delete(string id)
+        public string DeleteField(string id)
         {
             try
             {
@@ -128,25 +93,6 @@ namespace DinamicDataMvc.Services.Fields
                 Name = null,
                 Properties = null,
                 Date = Convert.ToDateTime(string.Empty)
-            };
-        }
-
-
-        public PropertiesModel GetProperties(string id)
-        {
-            if(id != null)
-            {
-                var collection = _Database.GetCollection<PropertiesModel>("Properties");
-                return collection.Find(s => s.ID == id).FirstOrDefault();
-            }
-            //Irá ficar numa classe independente - Utils;
-            return new PropertiesModel()
-            {
-                ID = null,
-                Size = 0,
-                Value = null,
-                Maxlength = 0,
-                Required = false
             };
         }
     }

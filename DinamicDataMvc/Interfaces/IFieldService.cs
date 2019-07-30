@@ -10,16 +10,10 @@ namespace DinamicDataMvc.Interfaces
 
         string CreateField(FieldModel model);
 
-        string Delete(string id);
+        string DeleteField(string id);
 
         FieldModel GetField(string id);
 
-        PropertiesModel GetProperties(string id);
-
-        string CreateProperties(PropertiesModel model);
-
         string UpdateField(string Id, FieldModel model);
-
-        string UpdateProperties(string Id, PropertiesModel model);
     }
 }

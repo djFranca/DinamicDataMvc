@@ -1,10 +1,8 @@
 ﻿using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
 using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DinamicDataMvc.Services.Validation
 {
@@ -28,7 +26,7 @@ namespace DinamicDataMvc.Services.Validation
         public bool ProcessExits(string processName)
         {
             //Verifica se o nome do processo não está a null;
-            if(string.IsNullOrEmpty(processName))
+            if(!string.IsNullOrEmpty(processName))
             {
                 var collection = _Database.GetCollection<MetadataModel>("Metadata");
                 List<MetadataModel> processes = collection.Find(s => s.Name == processName).ToList();

@@ -266,8 +266,8 @@ namespace DinamicDataMvc.Controllers.Metadata
                     {
                         FieldModel fieldModel = _Field.GetField(field);
                         //Obter os ids das propriedades de um campo pertencente a um processo;
-                        _Properties.Delete(fieldModel.Properties); //Apaga na base de dados as propriedades existentes num campo;
-                        _Field.Delete(field); //Apaga na base de dados os campos existentes num processo;
+                        _Properties.DeleteProperties(fieldModel.Properties); //Apaga na base de dados as propriedades existentes num campo;
+                        _Field.DeleteField(field); //Apaga na base de dados os campos existentes num processo;
                     }
 
                     _Metadata.DeleteMetadata(id); //Apaga na base de dados o processo propriamente dito;
@@ -302,6 +302,14 @@ namespace DinamicDataMvc.Controllers.Metadata
 
             if (_Validation.ProcessExits(viewModel.Name)) //Se o nome já existir na base de dados, redirecciona para a mesma página;
             {
+                //Default message:
+                string Message = "The process Name already exists in database. \n" +
+                    "Insert a diferent Name.";
+
+                //Alert Message:
+                TempData["AlertMessage"] = Message;
+
+                //Redirect to create page:
                 return await Task.Run(() => RedirectToAction("Create", "Metadata"));
             }
 
@@ -404,6 +412,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             _Metadata.SetDatabase(_Connection.GetDatabase());
             _GetBranchById.SetDatabase(_Connection.GetDatabase());
             _GetStateById.SetDatabase(_Connection.GetDatabase());
+            _Properties.SetDatabase(_Connection.GetDatabase());
 
             //1º Passo - Obter os objetos FieldModel e PropertiesModel agregados à versão anterior e passados no Modelo de dados MetadataModel;
             //-----------------------------------------------------
@@ -419,10 +428,10 @@ namespace DinamicDataMvc.Controllers.Metadata
 
             foreach (var fieldCloned in fieldClones)
             {
-                PropertiesModel model = _Field.GetProperties(fieldCloned.Properties);
+                PropertiesModel model = _Properties.GetProperties(fieldCloned.Properties);
                 _KeyID.SetKey(); //Gera um novo object id para criar uma nova coleção na tabela de propriedades;
                 model.ID = _KeyID.GetKey(); //Afecta o novo identificador object id ao modelo de dados properties;
-                _Field.CreateProperties(model); //cria um novo modelo de dados do tipo propriedades;
+                _Properties.CreateProperties(model); //cria um novo modelo de dados do tipo propriedades;
                 fieldCloned.Properties = model.ID; //Afecta o id dessas propriedades criadas ao campo do novo processo
 
                 _KeyID.SetKey(); //Gera um novo object id para criar uma nova coleção na tabela de campos;
