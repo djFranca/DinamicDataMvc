@@ -15,6 +15,18 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="~/js/site.js"></script>
+    <style>
+        .column1 {
+          margin-left: 50px;
+          float: left;
+          width: 50.00%;
+        }
+        .column2 {
+          margin-left: 25px;
+          float: left;
+          width: 15.00%;
+        }
+    </style>
 </head>
 <body>
     <section id="ProcessDetailsTag">
@@ -25,14 +37,28 @@
         <hr />
     </section>
     <section id="ProcessDetails">
-        <div class="container" style="text-align:center">
-            <span>
-                <label><strong>ID: </strong>@processId</label>
-                <label><strong>Name: </strong>@processName</label>
-                <label><strong>Version: </strong>@processVersion</label>
-                <label><strong>Creation Date: </strong>@processDate</label>
-                <label><strong>State: </strong>@processState</label>
-            </span>
+        <div class="row">
+            <div class="column1">
+                <span>
+                    @*<label><strong>ID: </strong>@processId</label>*@
+                    <label><strong>Name: </strong>@processName</label>
+                    <label><strong>Version: </strong>@processVersion</label>
+                    <label><strong>Creation Date: </strong>@processDate</label>
+                    <label><strong>State: </strong>@processState</label>
+                </span>
+            </div>
+            <div class="column2">
+                @using (Html.BeginForm("Confirm", "Metadata", new { id = processId }, FormMethod.Post))
+                {
+                    <button type="submit"><i class="fa fa-close"></i>Cancel</button>
+                }
+            </div>
+            <div class="column3">
+                @using (Html.BeginForm("Read", "Metadata", new { Name = string.Empty, Version = string.Empty, Page = 1 }, FormMethod.Get))
+                {
+                    <button type="submit"><i class="fa fa-check"></i>Publish</button>
+                }
+            </div>
         </div>
     </section>
     <section id="ProcessFieldsTag">
