@@ -33,3 +33,8 @@ function ValidateSearch() {
         }
     }
 }
+
+
+function GoBack() {
+    window.history.back();
+}

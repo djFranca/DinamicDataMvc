@@ -95,7 +95,7 @@ namespace DinamicDataMvc.Controllers.Metadata
                     Id = metadata.Id,
                     Name = metadata.Name,
                     Version = metadata.Version.ToString(),
-                    Date = metadata.Date.ToString(),
+                    Date = metadata.Date.ToString().Substring(0, 10), //gets only the date in the format: dd/mm/yyyy;
                     Branch = _GetBranchById.GetBranches(),
                     State = _GetStateById.GetStateDescription()
                 };
@@ -136,6 +136,19 @@ namespace DinamicDataMvc.Controllers.Metadata
             {
                 return BadRequest();
             }
+
+            //------------------------------------------
+            //Add - Pagination to Page (Phase 1)
+            //------------------------------------------
+            string pageNumber = Request.Query["Page"];
+            if (string.IsNullOrEmpty(pageNumber))
+            {
+                pageNumber = 1.ToString();
+            }
+            int pageIndex = Convert.ToInt32(pageNumber);
+            ViewBag.PageNumber = pageNumber;
+            //------------------------------------------
+
             _Connection.DatabaseConnection();
             _Metadata.SetDatabase(_Connection.GetDatabase());
             _GetBranchById.SetDatabase(_Connection.GetDatabase());
@@ -162,9 +175,15 @@ namespace DinamicDataMvc.Controllers.Metadata
                 _ViewModelList.Add(_details);
             }
 
-            return await Task.Run(() => View("GetDetailsByName", _ViewModelList));
+            //------------------------------------------
+            //Add - Pagination to Page (Phase 2)
+            //------------------------------------------
+            Dictionary<int, List<ViewMetadataModel>> modelsToDisplay = _SetPagination.SetModelsByPage(_ViewModelList);
+            int NumberOfPages = modelsToDisplay.Count();
+            ViewBag.NumberOfPages = NumberOfPages;
+            //------------------------------------------
+            return await Task.Run(() => View("GetDetailsByName", modelsToDisplay[pageIndex]));
         }
-
 
 
         [HttpGet("/Metadata/GetDetailsByVersion")]
@@ -179,7 +198,20 @@ namespace DinamicDataMvc.Controllers.Metadata
             {
                 return BadRequest();
             }
-           
+
+            //------------------------------------------
+            //Add - Pagination to Page (Phase 1)
+            //------------------------------------------
+            string pageNumber = Request.Query["Page"];
+            if (string.IsNullOrEmpty(pageNumber))
+            {
+                pageNumber = 1.ToString();
+            }
+            int pageIndex = Convert.ToInt32(pageNumber);
+            ViewBag.PageNumber = pageNumber; //Passa para a view o número da página;
+            ViewBag.Id = id; //Passa para a view o identificador do processo;
+            //------------------------------------------
+
             //1º Passo - obter o MetadataModel;
             MetadataModel metadata = _Metadata.GetMetadata(id);
 
@@ -200,51 +232,51 @@ namespace DinamicDataMvc.Controllers.Metadata
                 fields.Add(field);
             }
 
+            //------------------------------------------
+            //Add - Pagination to Page (Phase 2)
+            //------------------------------------------
+            Dictionary<int, List<FieldModel>> fieldsToDisplay = _SetPagination.SetModelsByPage(fields);
+            int NumberOfPages = fieldsToDisplay.Count();
+            ViewBag.NumberOfPages = NumberOfPages;
+            //------------------------------------------
+
             //5º Passo . construir o modelo que permite efetuar o dsiplay do processo seleccionado através da sua versão;
-            ViewProcessModel modelToDisplay = new ViewProcessModel()
+            ViewProcessModel viewModel = new ViewProcessModel()
             {
                 Metadata = metadata,
-                Fields = fields
+                Fields = fieldsToDisplay[pageIndex]
             };
-            return await Task.Run(() => View("GetDetailsByVersion", modelToDisplay));
+            return await Task.Run(() => View("GetDetailsByVersion", viewModel));
         }
 
 
         [HttpPost("/Metadata/Delete/{id}")]
         public async Task<ActionResult> Delete(string id)
         {
-            try
+            if (id != null)
             {
-                if (id != null)
+                _Connection.DatabaseConnection();
+                _Metadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
+                _GetBranchById.SetDatabase(_Connection.GetDatabase());
+                _GetStateById.SetDatabase(_Connection.GetDatabase());
+                _Metadata.ReadFromDatabase();
+                MetadataModel model = _Metadata.GetMetadata(id);
+
+                _GetBranchById.ReadFromDatabase(model.Branch);
+                _GetStateById.ReadFromDatabase(model.State);
+
+                ViewMetadataModel ModelToDelete = new ViewMetadataModel()
                 {
-                    _Connection.DatabaseConnection();
-                    _Metadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
-                    _GetBranchById.SetDatabase(_Connection.GetDatabase());
-                    _GetStateById.SetDatabase(_Connection.GetDatabase());
-                    _Metadata.ReadFromDatabase();
-                    MetadataModel model = _Metadata.GetMetadata(id);
-
-                    _GetBranchById.ReadFromDatabase(model.Branch);
-                    _GetStateById.ReadFromDatabase(model.State);
-
-                    ViewMetadataModel ModelToDelete = new ViewMetadataModel()
-                    {
-                        Id = model.Id,
-                        Name = model.Name,
-                        Version = model.Version.ToString(),
-                        Date = model.Date.ToString(),
-                        Branch = _GetBranchById.GetBranches(),
-                        State = _GetStateById.GetStateDescription()
-                    };
-
-                    return await Task.Run(() => View("Delete", ModelToDelete));
-                }
-                return await Task.Run(() => View("Delete"));
+                    Id = model.Id,
+                    Name = model.Name,
+                    Version = model.Version.ToString(),
+                    Date = model.Date.ToString(),
+                    Branch = _GetBranchById.GetBranches(),
+                    State = _GetStateById.GetStateDescription()
+                };
+                return await Task.Run(() => View("Delete", ModelToDelete));
             }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
+            return await Task.Run(() => View("Delete"));
         }
 
         [HttpPost("/Metadata/Confirm/{id}")]

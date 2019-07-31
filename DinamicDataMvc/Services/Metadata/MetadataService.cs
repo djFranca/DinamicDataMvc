@@ -231,27 +231,17 @@ namespace DinamicDataMvc.Services.Metadata
          */
         public void SetProcessVersion(string processID)
         {
-            try
+            if(processID != null)
             {
-                if(processID != null)
+                var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                MetadataModel model = collection.Find(s => s.Id == processID).Single();
+
+                if(model.Version == 0)
                 {
-                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
-                    MetadataModel model = collection.Find(s => s.Id == processID).Single();
-
-                    if(model.Version == 0)
-                    {
-
-                        model.Version = 1; //Incrementa o número da versão do processo;
-
-                        model = ActivateState(model);
-
-                        collection.ReplaceOneAsync(s => s.Id == processID, model);
-                    }
+                    model.Version = 1; //Incrementa o número da versão do processo;
+                    model = ActivateState(model); //Ativa o estado do modelo metadados;
+                    collection.ReplaceOneAsync(s => s.Id == processID, model); //Substitui na colecção o modelo anterior, cuja versão = 0;
                 }
-            }
-            catch
-            {
-                throw new ArgumentNullException();
             }
         }
 
@@ -262,19 +252,13 @@ namespace DinamicDataMvc.Services.Metadata
          */
         private MetadataModel ActivateState(MetadataModel model)
         {
-            try
+            if(model != null)
             {
                 var collection = _Database.GetCollection<StateModel>("State");
-                var stateModel = collection.Find(s => s.Value == true).Single();
-
-                model.State = stateModel.Id;
-
-                return model;
+                StateModel stateModel = collection.Find(s => s.Value == true).Single();
+                model.State = stateModel.Id; //Change state to Active;
             }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
+            return model;
         }
 
 

@@ -1,0 +1,81 @@
+﻿
+/* This file representes the styles to be applied to all Api pages - Guide Map */
+
+/*-------------------------------------------------------*/
+/*------------- Views/Metadata/Read.cshtml --------------*/
+/*---------Views/Metadata/GetDetailsByName.cshtml--------*/
+/*-------------Views/Metadata/Create.cshtml--------------*/
+/*-------Views/Metadata/Delete.cshtml-------*/
+/*-------------------------------------------------------*/
+body {
+    background-color: ghostwhite;
+}
+
+#subtitleDiv, #fieldDiv, #propertiesDiv {
+    background-color: #FF9333;
+}
+
+#ProcessDescription, #FieldDescription, #PropertiesDescription {
+    color: #FFFFFF;
+    text-align: right;
+}
+
+#linkDiv {
+    text-align: end;
+}
+
+#CreateLink {
+    font-size: large;
+    color: #FF9333;
+    text-decoration:underline
+}
+
+#searchDiv {
+    text-align:end;
+}
+
+#processResultTable {
+    border-style: dotted;
+}
+
+#tableHeader {
+    background-color: #212529;
+    color: #FFFFFF;
+    text-align:center;
+}
+
+#tableBody {
+    font-family:Arial, Helvetica, sans-serif;
+    font-display:auto;
+    font-size:medium;
+    text-align:center;
+}
+
+#deleteIcon {
+    text-align:center;
+}
+
+.processDetails {
+    color: #FF9333;
+    text-decoration:underline;
+}
+
+#updateLink {
+    font-size: large;
+    color: #FF9333;
+    text-decoration: underline
+}
+/*-------------------------------------------------------*/
+
+
+/*-------------------------------------------------------*/
+/*-------Views/Metadata/GetDetailsByVersion.cshtml-------*/
+/*-------------Views/Properties/Delete.cshtml------------*/
+/*-------------------------------------------------------*/
+#processDetails, #fieldDetails {
+    text-align: center;
+    font-display:block;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:large;
+}
+/*-------------------------------------------------------*/

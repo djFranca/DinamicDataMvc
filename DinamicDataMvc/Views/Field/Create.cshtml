@@ -1,5 +1,4 @@
 ﻿@model DinamicDataMvc.Models.Field.ViewFieldModel
-
 @{
     ViewData["Title"] = "Create";
     var type = ViewBag.Type;
@@ -10,12 +9,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="~/css/ListPageStyle.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="~/css/PageStyleFile.css" />
 </head>
 <body>
     <hr />
-    <h1>Create Field - @type</h1>
+    <div class="container" id="subtitleDiv">
+        <h2 id="FieldDescription">Create Field - @type</h2>
+    </div>
     <hr />
     <div class="row">
         <div class="col-md-4">
@@ -35,22 +36,22 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Size" class="control-label"></label>
-                    <input type="number" min="1" max="50" asp-for="Size" class="form-control" name="Size" required />
+                    <input type="number" min="1" max="500" asp-for="Size" class="form-control" name="Size" required />
                     <span asp-validation-for="Size" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Value" class="control-label"></label>
-                    <input type="text" asp-for="Value" class="form-control" name="Value" required />
+                    <input type="text" asp-for="Value" class="form-control" name="Value" />
                     <span asp-validation-for="Value" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Maxlength" class="control-label"></label>
-                    <input type="number" min="1" max="50" asp-for="Maxlength" class="form-control" name="Maxlength" required />
+                    <input type="number" min="1" max="500" asp-for="Maxlength" class="form-control" name="Maxlength" required />
                     <span asp-validation-for="Maxlength" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label asp-for="Required" class="control-label">Required</label>
-                    <input type="checkbox" asp-for="Required" class="form-control" name="Required" required style="vertical-align:top" />
+                    <input type="checkbox" asp-for="Required" class="form-control" name="Required" style="vertical-align:top" />
                     <span asp-validation-for="Required" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -59,7 +60,7 @@
                     <span asp-validation-for="CreationDate" class="text-danger"></span>
                 </div>
                 <div class="from-group">
-                    <input type="text" asp-for="ProcessID" class="form-control" name="ProcessID" value="@processID" readonly/>
+                    <input type="hidden" asp-for="ProcessID" class="form-control" name="ProcessID" value="@processID" readonly />
                 </div>
                 <div class="form-group">
                     <input type="submit" value="Add Field To Process" class="btn btn-primary" />
@@ -67,15 +68,12 @@
             }
         </div>
     </div>
-    <hr />
     <div class="container">
-        @using (Html.BeginForm("Read", "Field", FormMethod.Get))
-        {
-            <span>
-                <label class="form-group">Back to List </label>
-                <button><i class="fa fa-list"></i></button>
-            </span>
-        }
+        <div class="btn-group">
+            @using (Html.BeginForm("Read", "Field", FormMethod.Get))
+            {
+                <button type="submit"><i class="fa fa-list"> Back To List </i></button>
+            }
+        </div>
     </div>
-    <hr />
 </body>

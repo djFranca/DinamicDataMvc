@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<DinamicDataMvc.Models.ViewMetadataModel>
 @{
     ViewData["Title"] = "Details By Process Name";
+    var pageNumber = ViewBag.NumberOfPages;
 }
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -9,42 +10,40 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="~/js/site.js"></script>
+    <link rel="stylesheet" href="~/css/PageStyleFile.css" />
 </head>
 <body>
-    <section id="ProcessNameTag">
-        <hr />
-        <div class="container" style="background-color:darkorange">
-            <h2 style="color:white; text-align:right;">Process @Html.ViewBag.Name Versions</h2>
-        </div>
-        <hr />
-        <div class="container" style="text-align:end">
-            <a href="/Metadata/Update?ProcessName=@Html.ViewBag.Name"><i class="fa fa-database"></i>Update Process</a>
-        </div>
-        <hr />
-    </section>
-    <section id="ProcessVersions">
-        <div class="container">
-            <div class="table-responsive table-striped">
-                <table class="table table-bordered" border="1" style="border-style:dotted">
-                    <thead>
-                        <tr style="background-color:#212529; color:white;">
-                            <th>
-                                @Html.DisplayNameFor(model => model.Version)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Date)
-                            </th>
-                            <th>
-                                @Html.DisplayNameFor(model => model.Branch)
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                        <tr>
+    <hr />
+    <div class="container" id="subtitleDiv">
+        <h2 id="ProcessDescription">Process @Html.ViewBag.Name Versions</h2>
+    </div>
+    <hr />
+    <div class="container" id="linkDiv">
+        <a id="updateLink" href="/Metadata/Update?ProcessName=@Html.ViewBag.Name"><i class="fa fa-database"></i> Update Process </a>
+    </div>
+    <hr />
+    <div class="container">
+        <div class="table-responsive table-striped">
+            <table class="table table-bordered" border="1" id="processResultTable">
+                <thead>
+                    <tr id="tableHeader">
+                        <th>
+                            @Html.DisplayNameFor(model => model.Version)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Date)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Branch)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="tableBody">
                             <td>
-                                @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Version), "GetDetailsByVersion", "Metadata", new { ID = item.Id })
+                                @Html.ActionLink(@Html.DisplayTextFor(modelItem => item.Version), "GetDetailsByVersion", "Metadata", new { ID = item.Id }, new { @class = "processDetails" })
                             </td>
                             <td>
                                 @Html.DisplayTextFor(modelItem => item.Date)
@@ -53,21 +52,23 @@
                                 @Html.DisplayTextFor(modelItem => item.Branch)
                             </td>
                         </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
         </div>
-    </section>
-    <section>
-        <div class="container">
-            @using (Html.BeginForm("Read", "Metadata", FormMethod.Get))
+    </div>
+    <div class="container">
+        <ul class="pagination pagination-sm">
+            @for (int i = 1; i <= Convert.ToInt32(pageNumber); i++)
             {
-            <span>
-                <label class="form-group" style="color:darkorange"><strong>Back to List</strong></label>
-                <button><i class="fa fa-list"></i></button>
-            </span>
+                <li class="page-item"><a class="page-link" style="color:#212529;" href="/Metadata/GetDetailsByName?Name=@Html.ViewBag.Name&Page=@i"><b>@i</b></a></li>
             }
-        </div>
-    </section>
+        </ul>
+    </div>
+    <div class="container">
+        @using (Html.BeginForm("Read", "Metadata", FormMethod.Get))
+        {
+            <button><i class="fa fa-list"></i> Back to List </button>
+        }
+    </div>
 </body>
