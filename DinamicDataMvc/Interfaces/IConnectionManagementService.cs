@@ -7,5 +7,7 @@ namespace DinamicDataMvc.Interfaces
         void DatabaseConnection();
 
         IMongoDatabase GetDatabase();
+
+        string GetConnectionString();
     }
 }

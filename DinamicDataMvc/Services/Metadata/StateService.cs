@@ -1,9 +1,8 @@
 ﻿using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
-using DinamicDataMvc.Utils;
 using MongoDB.Driver;
 using System.Linq;
-using System;
+using System.Collections.Generic;
 
 namespace DinamicDataMvc.Services.Metadata
 {
@@ -14,64 +13,63 @@ namespace DinamicDataMvc.Services.Metadata
 
         public StateService()
         {
-            _State = String.Empty;
+            _State = string.Empty;
         }
+
 
         public string GetStateDescription()
         {
             return _State;
         }
 
+
         public string GetStateID(string description)
         {
-            try
+            if(string.IsNullOrEmpty(description))
             {
-                if(description == null)
-                {
-                    return null;
-                }
+                return null;
+            }
 
-                var collection = _Database.GetCollection<StateModel>("State");
-                StateModel model = collection.Find(s => s.Description == description).Single();
-                return model.Id;
-            }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
+            var collection = _Database.GetCollection<StateModel>("State");
+            StateModel state = collection.Find(s => s.Description == description).Single();
+            return state.Id;
         }
+
 
         public void ReadFromDatabase(string id)
         {
-            try
+            if(_Database != null && !string.IsNullOrEmpty(id))
             {
-                if(_Database != null)
+                var collection = _Database.GetCollection<StateModel>("State");
+                var model = collection.Find(s => s.Id == id).ToList();
+                foreach(var item in model)
                 {
-                    if(id != null)
-                    {
-                        var collection = _Database.GetCollection<StateModel>("State");
-                        var model = collection.Find(s => s.Id == id).ToList();
-                        foreach(var item in model)
-                        {
-                            _State = item.Description.ToString();
-                        }
-                        
-                    }
-                    else
-                    {
-                        Console.WriteLine("Error ocurred: " + ErrorMessages.NullIdentifierException);
-                    }
-                }
-            }
-            catch(Exception exception)
-            {
-                throw exception;
+                    _State = item.Description.ToString();
+                }   
             }
         }
+
 
         public void SetDatabase(IMongoDatabase database)
         {
             _Database = database;
+        }
+
+
+        public List<StateModel> GetStateModels()
+        {
+            var collection = _Database.GetCollection<StateModel>("State");
+            return collection.Find(s => true).ToList();
+        }
+
+
+        public void CreateState(List<StateModel> models)
+        {
+            if(models.Count > 0)
+            {
+                var collection = _Database.GetCollection<StateModel>("State");
+                collection.InsertManyAsync(models);
+            }
         }
     }
 }

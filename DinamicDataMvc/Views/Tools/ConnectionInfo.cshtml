@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "ConnectionInfo";
+    string database = ViewBag.Database;
+    string serverConn = ViewBag.Connection;
+}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <style>
+        body {
+            background-color: ghostwhite;
+        }
+
+        div {
+            display: block;
+        }
+
+        .column {
+            width: 50.00%;
+            height: 50.00%;
+            text-align: center;
+            color: #000000;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: larger;
+            margin-left: 10px;
+            padding: 5px;
+        }
+
+        img {
+            max-width: 65.00%;
+            max-height: 50.00%;
+        }
+    </style>
+</head>
+<body>
+    <div row>
+        <div class="column">
+            <img src="~/images/ConnectionInfoLogo.png" />
+        </div>
+        <div class="column">
+            <p>Current database is:<b>@database</b></p>
+            <p>Server is running at: <b>@serverConn.Substring(10, 15)</b></p>
+        </div>
+    </div>
+    <div class="container">
+        <button type="button" onclick="GoBack();"><i class="fa fa-toggle-left"> Go Back </i></button>
+    </div>
+</body>
+

@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using DinamicDataMvc.Models;
+using MongoDB.Driver;
 using System.Collections.Generic;
 
 namespace DinamicDataMvc.Interfaces
@@ -12,5 +13,9 @@ namespace DinamicDataMvc.Interfaces
         string GetBranches();
 
         string GetBranchID(string code);
+
+        List<BranchModel> GetBranchModels();
+
+        void CreateBranch(List<BranchModel> models);
     }
 }

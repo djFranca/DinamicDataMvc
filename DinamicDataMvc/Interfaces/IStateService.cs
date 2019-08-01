@@ -1,4 +1,6 @@
-﻿using MongoDB.Driver;
+﻿using DinamicDataMvc.Models;
+using MongoDB.Driver;
+using System.Collections.Generic;
 
 namespace DinamicDataMvc.Interfaces
 {
@@ -11,5 +13,9 @@ namespace DinamicDataMvc.Interfaces
         string GetStateDescription();
 
         string GetStateID(string description);
+
+        List<StateModel> GetStateModels();
+
+        void CreateState(List<StateModel> models);
     }
 }

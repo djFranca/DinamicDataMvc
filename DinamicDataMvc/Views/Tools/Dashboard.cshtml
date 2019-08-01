@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        .column {
+            background-color: darkorange; 
+            width:33.33%; 
+            height:50.00%;
+            text-align: center;
+            color:ghostwhite;
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:large;
+        }
+        .panel {
+            max-width:50.00%; 
+            max-height:50.00%;
+        }
+    </style>
+</head>
+<body>
+    <div class="row">
+        <div class="column">
+            <form asp-action="GetAllCollections" asp-controller="Tools" method="get">
+                <label>List all Collections</label>
+                <button type="submit"><img src="~/images/Configuration.png" alt="Create Collection" class="panel"/></button>
+            </form>
+        </div>
+        <div class="column">
+            <form asp-action="PopulateBranchCollection" asp-controller="Tools" method="get">
+                <label>Create Branch Collection</label>
+                <button type="submit"><img src="~/images/CreateBranch.png" alt="Create Branch Collection" class="panel" /></button>
+            </form>
+        </div>
+        <div class="column">
+            <form asp-action="PopulateStateCollection" asp-controller="tools" method="get">
+                <label>Create State Collection</label>
+                <button type="submit"><img src="~/images/CreateState.png" alt="Create State Collection" class="panel" /></button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column">
+            <form asp-action="ConnectionInfo" asp-controller="Tools" method="get">
+                <label>Database Information</label>
+                <button type="submit"><img src="~/images/DatabaseInfo.png" alt="Create State Collection" class="panel" /></button>
+            </form>
+        </div>
+        <div class="column">
+            <form asp-action="#" asp-controller="tools" method="get">
+                <label>Clear Database</label>
+                <button type="submit"><img src="~/images/ClearDatabase.png" alt="Create State Collection" class="panel" /></button>
+            </form>
+        </div>
+        <div class="column">
+            <form asp-action="#" asp-controller="tools" method="get">
+                <label>History</label>
+                <button type="submit"><img src="~/images/History.png" alt="Create State Collection" class="panel" /></button>
+            </form>
+        </div>
+    </div>
+</body>
+

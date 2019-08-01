@@ -18,38 +18,35 @@ namespace DinamicDataMvc.Services.Database
 
         public void DatabaseConnection()
         {
-            try
+
+            //Verifica se existe um valor associado à connection_string
+            if (_ConnectionString != null)
             {
-                MongoClient _Client = null;
+                MongoClient _Client = new MongoClient(_ConnectionString);
 
-                //Verifica se existe um valor associado à connection_string
-                if (_ConnectionString != null)
+                try
                 {
-                    _Client = new MongoClient(_ConnectionString);
-
-                    try
+                    //Verifica se existe um endereço : porto associado a esta conexão e se o nome da base de dados está especificado;
+                    if (_Client != null && !string.IsNullOrEmpty(_DatabaseName))
                     {
-                        //Verifica se existe um endereço : porto associado a esta conexão e se o nome da base de dados está especificado;
-                        if (_Client != null && !String.IsNullOrEmpty(_DatabaseName))
-                        {
-                            _Database = _Client.GetDatabase(_DatabaseName);
-                        }
-                    }
-                    catch(Exception exception)
-                    {
-                        throw new MongoClientException(exception.Message);
+                        _Database = _Client.GetDatabase(_DatabaseName);
                     }
                 }
-            }
-            catch
-            {
-                throw new ArgumentNullException();
+                catch(Exception exception)
+                {
+                    throw new MongoClientException(exception.Message);
+                }
             }
         }
 
         public IMongoDatabase GetDatabase()
         {
             return _Database;
+        }
+
+        public string GetConnectionString()
+        {
+            return _ConnectionString;
         }
     }
 }

@@ -1,14 +1,14 @@
 ﻿using DinamicDataMvc.Interfaces;
-using DinamicDataMvc.Models;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using DinamicDataMvc.Utils;
 using System.Threading.Tasks;
+using DinamicDataMvc.Models.Tools;
+using DinamicDataMvc.Models.Field;
+using DinamicDataMvc.Models;
+using DinamicDataMvc.Models.Data;
 
-namespace DinamicDataMvc.Controllers.Fake
+namespace DinamicDataMvc.Controllers.Tools
 {
     /*
      * Contolador de Teste para testar individualmente os diversos serviços,
@@ -17,156 +17,173 @@ namespace DinamicDataMvc.Controllers.Fake
     public class ToolsController : Controller
     {
         private readonly IConnectionManagementService _Connection;
-        private readonly IMetadataService _GetMetadata;
-        private readonly IBranchService _GetBranchById;
-        private readonly IStateService _GetStateById;
+        private readonly IMetadataService _Metadata;
+        private readonly IBranchService _Branch;
+        private readonly IStateService _State;
+        private readonly IKeyGenerates _KeyId;
+        private readonly IMessage _Message;
 
-        public ToolsController(IConnectionManagementService Connection, IMetadataService Metadata, IBranchService Branch, IStateService State)
+        public ToolsController(IConnectionManagementService Connection, IMetadataService Metadata, IBranchService Branch, IStateService State, IKeyGenerates KeyId, IMessage Message)
         {
             _Connection = Connection;
-            _GetMetadata = Metadata;
-            _GetBranchById = Branch;
-            _GetStateById = State;
+            _Metadata = Metadata;
+            _Branch = Branch;
+            _State = State;
+            _KeyId = KeyId;
+            _Message = Message;
         }
 
-        [HttpGet("/Tools/TestDatabaseConnection/")]
-        public string TestDatabaseConnection()
+
+        [HttpGet("/Tools/Dasboard/")]
+        public async Task<ActionResult> Dashboard()
+        {
+            return await Task.Run(() => View("Dashboard"));
+        }
+
+
+        [HttpGet("/Tools/GetAllCollections/")]
+        public async Task<ActionResult> GetAllCollections()
+        {
+             _Connection.DatabaseConnection();
+            var database = _Connection.GetDatabase();
+
+            Dictionary<string, long> map = new Dictionary<string, long>()
+            {
+                { "Field", await database.GetCollection<FieldModel>("Field").Find(s => true).CountDocumentsAsync()},
+                { "Metadata", await database.GetCollection<MetadataModel>("Metadata").Find(s => true).CountDocumentsAsync()},
+                { "Branch", await database.GetCollection<BranchModel>("Branch").Find(s => true).CountDocumentsAsync()},
+                { "State", await database.GetCollection<StateModel>("State").Find(s => true).CountDocumentsAsync()},
+                { "Properties", await database.GetCollection<PropertiesModel>("Properties").Find(s => true).CountDocumentsAsync()},
+                { "Data", await database.GetCollection<DataModel>("Data").Find(s => true).CountDocumentsAsync()}
+            };
+
+            List<string> _CollectionNames = database.ListCollectionNames().ToList();
+            List<long> _NumberOfDocuments = new List<long>();
+
+            foreach(string name in _CollectionNames)
+            {
+                long NumberOfDocuments = map[name];
+                _NumberOfDocuments.Add(NumberOfDocuments);
+            }
+
+            CollectionModel model = new CollectionModel()
+            {
+                CollectionNames = _CollectionNames,
+                NumberOfDocuments = _NumberOfDocuments
+            };
+
+            return await Task.Run(() => View("GetAllCollections", model));
+        }
+
+
+        [HttpGet("/Tools/ConnectionInfo/")]
+        public async Task<ActionResult> ConnectionInfo()
         {
             _Connection.DatabaseConnection();
             IMongoDatabase database = _Connection.GetDatabase();
 
-            return "Your work database name is: " + database.DatabaseNamespace.DatabaseName;
+            ViewBag.Database = database.DatabaseNamespace.DatabaseName;
+            string serverConnectionInfo = _Connection.GetConnectionString();
+
+            ViewBag.Connection = serverConnectionInfo;
+
+            return await Task.Run(() => View("ConnectionInfo"));
         }
 
 
-        //[HttpPost("/Fake/Confirm/{id}")]
-        //public async Task<ActionResult> Confirm(string id)
-        //{
-        //    try
-        //    {
-        //        if (id != null)
-        //        {
-        //            _Connection.DatabaseConnection();
-        //            _GetMetadata.SetDatabase(_Connection.GetDatabase());
-        //            _GetMetadata.DeleteMetadata(id);
-        //        }
-        //    }
-        //    catch (Exception exception)
-        //    {
-        //        throw new KeyNotFoundException(exception.Message);
-        //    }
-        //    return await Task.Run(() => RedirectToAction("ProcessList", "Fake"));
-        //}
+        [HttpGet("/Tools/PopulateStateCollection")]
+        public async Task<ActionResult> PopulateStateCollection()
+        {
+            _Connection.DatabaseConnection();
+            var database = _Connection.GetDatabase();
+            _State.SetDatabase(database);
+            long documentNumber = await database.GetCollection<StateModel>("State").Find(s => true).CountDocumentsAsync();
+
+            ViewBag.Message = _Message.GetMessage(2);
+            ViewBag.EmptyCollection = "false";
+
+            if (documentNumber == 0)
+            {
+                List<StateModel> stateModels = new List<StateModel>();
+                _KeyId.SetKey();
+                StateModel active = new StateModel()
+                {
+                    Id = _KeyId.GetKey(),
+                    Value = true,
+                    Description = "Active"
+                };
+                stateModels.Add(active);
+
+                _KeyId.SetKey();
+                StateModel inactive = new StateModel()
+                {
+                    Id = _KeyId.GetKey(),
+                    Value = false,
+                    Description = "Inactive"
+                };
+                stateModels.Add(inactive);
+
+                _State.CreateState(stateModels);
+
+                ViewBag.Message = _Message.GetMessage(4);
+                ViewBag.EmptyCollection = "true";
+            }
+
+            List<StateModel> states = _State.GetStateModels();
+
+            return await Task.Run(() => View("PopulateStateCollection", states));
+        }
 
 
-        //[HttpPost("/Fake/Delete/{id}")]
-        //public async Task<ActionResult> Delete(string id)
-        //{
-        //    try
-        //    {
-        //        if (id != null)
-        //        {
-        //            _Connection.DatabaseConnection();
-        //            _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
-        //            _GetBranchById.SetDatabase(_Connection.GetDatabase());
-        //            _GetStateById.SetDatabase(_Connection.GetDatabase());
-        //            _GetMetadata.ReadFromDatabase();
-        //            MetadataModel model = _GetMetadata.GetMetadata(id);
+        [HttpGet("/Tools/PopulateBranchCollection")]
+        public async Task<ActionResult> PopulateBranchCollection()
+        {
+            _Connection.DatabaseConnection();
+            var database = _Connection.GetDatabase();
+            _Branch.SetDatabase(database);
+            long documentNumber = await database.GetCollection<BranchModel>("Branch").Find(s => true).CountDocumentsAsync();
 
-        //            _GetBranchById.ReadFromDatabase(model.Branch);
-        //            _GetStateById.ReadFromDatabase(model.State);
+            ViewBag.Message = _Message.GetMessage(1);
+            ViewBag.EmptyCollection = "false";
 
-        //            ViewMetadataModel ModelToDelete = new ViewMetadataModel()
-        //            {
-        //                Id = model.Id,
-        //                Name = model.Name,
-        //                Version = model.Version.ToString(),
-        //                Date = model.Date.ToString(),
-        //                Branch = _GetBranchById.GetBranches(),
-        //                State = _GetStateById.GetStateDescription()
-        //            };
+            if (documentNumber == 0)
+            {
+                List<BranchModel> branchModels = new List<BranchModel>();
+                _KeyId.SetKey();
+                BranchModel dev = new BranchModel()
+                {
+                    Id = _KeyId.GetKey(),
+                    Code = "Dev",
+                    Description = "Development"
+                };
+                branchModels.Add(dev);
 
-        //            return await Task.Run(() => View("Delete", ModelToDelete));
-        //        }
-        //        return await Task.Run(() => View("Delete"));
-        //    }
-        //    catch
-        //    {
-        //        throw new ArgumentNullException();
-        //    }
-        //}
+                _KeyId.SetKey();
+                BranchModel qa = new BranchModel()
+                {
+                    Id = _KeyId.GetKey(),
+                    Code = "Qa",
+                    Description = "Quality"
+                };
+                branchModels.Add(qa);
 
-        //[HttpGet("/Fake/Read")]
-        //public async Task<ActionResult> Read()
-        //{
-        //    //Stores data in cache;
-        //    TempData["Name"] = Request.Query["Name"];
-        //    string searchName = TempData["Name"].ToString();
-        //    ViewBag.Name = searchName;
+                _KeyId.SetKey();
+                BranchModel prod = new BranchModel()
+                {
+                    Id = _KeyId.GetKey(),
+                    Code = "Prod",
+                    Description = "Production"
+                };
+                branchModels.Add(prod);
 
-        //    TempData["Version"] = Request.Query["Version"];
-        //    string searchVersion = TempData["Version"].ToString();
-        //    ViewBag.Version = searchVersion;
+                _Branch.CreateBranch(branchModels);
+                ViewBag.Message = _Message.GetMessage(3);
+                ViewBag.EmptyCollection = "true";
+            }
 
-        //    TempData["PageNumber"] = Request.Query["PageNumber"];
-        //    string pageNumber = TempData["PageNumber"].ToString();
+            List<BranchModel> branches = _Branch.GetBranchModels(); //Obter todos os branch models armazenados na colecção Branch;
 
-        //    if (string.IsNullOrEmpty(pageNumber))
-        //    {
-        //        pageNumber = "1";
-        //    }
-
-        //    int pageIndex = Convert.ToInt32(pageNumber);
-
-        //    if (string.IsNullOrEmpty(searchName))
-        //    {
-        //        searchName = null;
-        //    }
-        //    //No caso de a string que representa a informação do filtro de pesquisa por versão, ser nula ou vazia,
-        //    //define-se como valor default a versão 1;
-        //    if (string.IsNullOrEmpty(searchVersion))
-        //    {
-        //        searchVersion = "0";
-        //    }
-
-        //    ViewBag.PageNumber = pageIndex.ToString();
-
-        //    _Connection.DatabaseConnection();
-        //    _GetMetadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
-        //    _GetBranchById.SetDatabase(_Connection.GetDatabase());
-        //    _GetStateById.SetDatabase(_Connection.GetDatabase());
-
-        //    _GetMetadata.SetFilterParameters(searchName, Convert.ToInt32(searchVersion));
-        //    _GetMetadata.ReadFromDatabase();
-            
-
-        //    List<MetadataModel> metadataList = _GetMetadata.GetProcessesMetadataList();
-        //    List<ViewMetadataModel> viewModels = new List<ViewMetadataModel>();
-
-        //    foreach (var metadata in metadataList)
-        //    {
-        //        _GetBranchById.ReadFromDatabase(metadata.Branch);
-        //        _GetStateById.ReadFromDatabase(metadata.State);
-
-        //        ViewMetadataModel viewModel = new ViewMetadataModel()
-        //        {
-        //            Id = metadata.Id,
-        //            Name = metadata.Name,
-        //            Version = metadata.Version.ToString(),
-        //            Date = metadata.Date.ToString(),
-        //            Branch = _GetBranchById.GetBranches(),
-        //            State = _GetStateById.GetStateDescription()
-        //        };
-
-        //        viewModels.Add(viewModel);
-        //    }
-        //    int pageSize = 3;
-
-        //    PaginatedList ModelsToDisplay = new PaginatedList(viewModels, pageIndex, pageSize);
-
-        //    ViewBag.TotalPages = ModelsToDisplay.TotalPages;
-
-        //    return await Task.Run(() => View("Read", ModelsToDisplay.GetModelsList(pageIndex)));
-        //}
+            return await Task.Run(() => View("PopulateBranchCollection", branches));
+        }
     }
 }

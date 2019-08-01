@@ -50,6 +50,7 @@ namespace DinamicDataMvc
             services.AddSingleton<IKeyGenerates, KeyGenerates>(s => new KeyGenerates(8)); //8 is the number of bits to use ina a hexdecimal generated key
             services.AddSingleton<IPaginationService, PaginationService>(s => new PaginationService(4));
             services.AddSingleton<IValidationService, ValidationService>(s => new ValidationService());
+            services.AddSingleton<IMessage, Message>(s => new Message());
             services.AddSwaggerGen(doc =>
             {
                 doc.SwaggerDoc("v1", new Info
