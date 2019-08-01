@@ -11,69 +11,61 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="~/css/PageStyleFile.css" />
+    <script src="~/js/site.js"></script>
 </head>
 <body>
     <hr />
     <div class="container" id="subtitleDiv">
-        <h2 id="FieldDescription">Create Field - @type</h2>
+        <h2 id="FieldDescription">Create @type Field</h2>
     </div>
     <hr />
-    <div class="row">
-        <div class="col-md-4">
-            @using (Html.BeginForm("AddField", "Field", Model, FormMethod.Post))
-            {
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Type" class="control-label"></label>
-                    <input asp-for="Type" class="form-control" name="Type" value="@type" readonly="readonly" />
-                    <span asp-validation-for="Type" class="text-danger"></span>
-                </div>
-                <br />
-                <div class="form-group">
-                    <label asp-for="Name" class="control-label"></label>
-                    <input asp-for="Name" class="form-control" name="Name" required />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Size" class="control-label"></label>
-                    <input type="number" min="1" max="500" asp-for="Size" class="form-control" name="Size" required />
-                    <span asp-validation-for="Size" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Value" class="control-label"></label>
-                    <input type="text" asp-for="Value" class="form-control" name="Value" />
-                    <span asp-validation-for="Value" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Maxlength" class="control-label"></label>
-                    <input type="number" min="1" max="500" asp-for="Maxlength" class="form-control" name="Maxlength" required />
-                    <span asp-validation-for="Maxlength" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Required" class="control-label">Required</label>
-                    <input type="checkbox" asp-for="Required" class="form-control" name="Required" style="vertical-align:top" />
-                    <span asp-validation-for="Required" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="CreationDate" class="control-label"></label>
-                    <input type="text" asp-for="CreationDate" class="form-control" name="CreationDate" value="@now" required readonly="readonly" />
-                    <span asp-validation-for="CreationDate" class="text-danger"></span>
-                </div>
-                <div class="from-group">
-                    <input type="hidden" asp-for="ProcessID" class="form-control" name="ProcessID" value="@processID" readonly />
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Add Field To Process" class="btn btn-primary" />
-                </div>
-            }
-        </div>
+    <div class="row justify-content-lg-center" style="margin-left:15px; margin-right:15px; border:none">
+        @using (Html.BeginForm("AddField", "Field", Model, FormMethod.Post, false, new { @width = "60%" }))
+        {
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Type" class="form-control" name="Type" value="@type" readonly />
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"><b>Field Name</b></label>
+                <input asp-for="Name" class="form-control" name="Name" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Size" class="control-label"><b>Field Size</b></label>
+                <input type="number" min="1" max="500" asp-for="Size" class="form-control" name="Size" required />
+                <span asp-validation-for="Size" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Value" class="control-label"><b>Field Value (Data)</b></label>
+                <input type="text" asp-for="Value" class="form-control" name="Value" />
+                <span asp-validation-for="Value" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Maxlength" class="control-label"><b>Field Max Length</b></label>
+                <input type="number" min="1" max="500" asp-for="Maxlength" class="form-control" name="Maxlength" required />
+                <span asp-validation-for="Maxlength" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Required" class="control-label"><b>Required</b></label>
+                <input type="checkbox" asp-for="Required" class="form-control" name="Required" style="vertical-align:top" />
+                <span asp-validation-for="Required" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="CreationDate" class="form-control" name="CreationDate" value="@now" readonly />
+            </div>
+            <div class="from-group">
+                <input type="hidden" asp-for="ProcessID" class="form-control" name="ProcessID" value="@processID" readonly />
+            </div>
+            <div class="button-group" style="margin-top:50px; margin-left:25px;">
+                <button type="reset"><i class="fa fa-eraser"></i> Clear </button>
+                <button type="submit"><i class="fa fa-plus"> Fields </i></button>
+            </div>
+        }
     </div>
-    <div class="container">
-        <div class="btn-group">
-            @using (Html.BeginForm("Read", "Field", FormMethod.Get))
-            {
-                <button type="submit"><i class="fa fa-list"> Back To List </i></button>
-            }
-        </div>
+    <br />
+    <div class="row justify-content-lg-center">
+        <button type="button" onclick="GoBack();"><i class="fa fa-toggle-left"></i> Go Back </button>
     </div>
 </body>

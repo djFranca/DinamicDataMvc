@@ -8,11 +8,8 @@ C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataM
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.RazorCoreGenerate.cache
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\Create.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\Display.g.cshtml.cs
-C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\Index.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\Read.g.cshtml.cs
-C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\Update.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Home\HomePage.g.cshtml.cs
-C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Metadata\AddFields.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Metadata\Create.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Metadata\Delete.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Metadata\GetDetailsByName.g.cshtml.cs

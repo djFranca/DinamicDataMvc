@@ -25,7 +25,7 @@
         <h2 id="ProcessDescription">Create New Process</h2>
     </div>
     <hr />
-    <div class="row justify-content-lg-center" style="margin-right:20px;">
+    <div class="row justify-content-lg-center" style="border:none; margin-left:15px; margin-right:15px;">
         @using (Html.BeginForm("CreateProcess", "Metadata", FormMethod.Post, new { @width = "60%" }))
         {
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -58,28 +58,22 @@
                 <span asp-validation-for="Branch" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Date" class="control-label"><b>Creation Date</b></label>
-                <input asp-for="Date" class="form-control" type="text" value="@CurrentDate" readonly size="10" />
-                <span asp-validation-for="Date" class="text-danger"></span>
+                <input asp-for="Date" class="form-control" type="hidden" value="@CurrentDate" readonly size="10" />
             </div>
             <div class="form-group">
-                <label asp-for="State" class="control-label"><b>Current State</b></label>
-                <input asp-for="State" class="form-control" type="text" readonly="readonly" value="Inactive" size="10" />
-                <span asp-validation-for="State" class="text-danger"></span>
+                <input asp-for="State" class="form-control" type="hidden" readonly="readonly" value="Inactive" size="10" />
             </div>
-            <div class="button-group">
+            <div class="button-group" style="margin-top:50px; margin-left:70px;">
                 <button type="reset"><i class="fa fa-eraser"></i> Clear </button>
                 <button type="submit"><i class="fa fa-plus"> Fields </i></button>
             </div>
         }
     </div>
     <br />
-    <div class="row justify-content-lg-center" style="margin-right:222px;">
-        <div class="button-group">
-            @using (Html.BeginForm("Read", "Metadata", FormMethod.Get))
-            {
-                <button type="submit"><i class="fa fa-close"></i> Cancel </button>
-            }
-        </div>
+    <div class="row justify-content-lg-center">
+        @using (Html.BeginForm("Read", "Metadata", FormMethod.Get))
+        {
+            <button type="submit"><i class="fa fa-close"></i> Cancel </button>
+        }
     </div>
 </body>
