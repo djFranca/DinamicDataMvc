@@ -5,9 +5,29 @@
     string[] fields = ViewBag.Fields.Split(";");
 
     List<string> processFields = new List<string>();
-    foreach(string field in fields)
+    foreach (string field in fields)
     {
         processFields.Add(field);
+    }
+
+    bool [] branches = new bool[3]{ false, false, false};
+    string[] branchDescp = Model.Branch.Split(" ");
+    foreach(string descp in branchDescp)
+    {
+        if (descp.Equals("Development"))
+        {
+            branches[0] = true;
+        }
+
+        else if (descp.Equals("Quality"))
+        {
+            branches[1] = true;
+        }
+
+        else if(descp.Equals("Production"))
+        {
+            branches[2] = true;
+        }
     }
 }
 <head>
@@ -16,81 +36,96 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <script src="~/js/site.js"></script>
+    <link rel="stylesheet" href="~/css/PageStyleFile.css" />
 </head>
 <body style="background-color:ghostwhite">
     <hr />
-    <div class="container" style="text-align:right; background-color:#FF8C00; color:white;">
-        <h1>Update Process</h1>
+    <div class="container" id="subtitleDiv">
+        <h2 id="ProcessDescription">Update Process @Model.Name</h2>
     </div>
     <hr />
-    <div class="row">
-        <div class="col-md-4">
-            @using (Html.BeginForm("UpdateProcess", "Metadata", FormMethod.Post))
-            {
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <input asp-for="Id" class="form-control" type="hidden" value="@Model.Id" />
-                    <span asp-validation-for="Id" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Name" class="control-label"><b>Process Name</b></label>
-                    <input asp-for="Name" class="form-control" type="text" readonly value="@Model.Name" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Version" class="control-label"><b>Process Version</b></label>
-                    <input asp-for="Version" class="form-control" type="text" readonly value="@Model.Version" />
-                    <span asp-validation-for="Version" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Branch" class="control-label"><b>Branch</b></label>
-                    <div class="row">
-                        <div class="columns" style="padding-left:25px;">
-                            <label><b><i>Development</i></b></label>
-                            <input type="checkbox" class="form-control" name="branch" value="Dev" checked required />
-                        </div>
-                        <div class="columns" style="padding-left:25px;">
-                            <label><b><i>Quality</i></b></label>
-                            <input type="checkbox" class="form-control" name="branch" value="Qa" />
-                        </div>
-                        <div class="columns" style="padding-left:25px;">
-                            <label><b><i>Production</i></b></label>
-                            <input type="checkbox" class="form-control" name="branch" value="Prod" />
-                        </div>
-                    </div>
-                    <span asp-validation-for="Branch" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Date" class="control-label"><b>Creation Date</b></label>
-                    <input asp-for="Date" class="form-control" type="text" value="@Model.Date" readonly size="10" />
-                    <span asp-validation-for="Date" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="State" class="control-label"><b>Current State</b></label>
-                    <input asp-for="State" class="form-control" type="text" readonly="readonly" value="@Model.State" size="10" />
-                    <span asp-validation-for="State" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    @foreach (var field in @processFields)
-                    {
-                        <input type="hidden" class="form-control" name="Field" value="@field" />
-                    }
-                </div>
-                <div class="form-group">
-                    <input type="submit" value="Fields" class="btn btn-secondary btn-lg btn-block" />
-                </div>
-            }
-        </div>
-    </div>
-    <hr />
-    <div class="container" style="text-align:right; background-color:#FF8C00; color:white;">
-        @using (Html.BeginForm("Read", "Metadata", FormMethod.Get))
+    <div class="row justify-content-lg-center" style="border:none; margin-left:15px; margin-right:15px;">
+        @using (Html.BeginForm("UpdateProcess", "Metadata", FormMethod.Post))
         {
-            <span>
-                <label>Back to List</label>
-                <button type="submit"><i class="fa fa-list"></i></button>
-            </span>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Id" class="form-control" type="hidden" value="@Model.Id" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"><b>Process Name</b></label>
+                <input asp-for="Name" class="form-control" type="text" readonly value="@Model.Name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Version" class="control-label"><b>Process Version</b></label>
+                <input asp-for="Version" class="form-control" type="text" readonly value="@Model.Version" />
+                <span asp-validation-for="Version" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Branch" class="control-label"><b>Branch</b></label>
+                <div class="row">
+                    <div class="columns" style="padding-left:25px;">
+                        <label><b><i>Development</i></b></label>
+                        @if (@branches[0] == true)
+                        {
+                            <input type="checkbox" class="form-control" name="branch" value="Dev" checked />
+                        }
+                        @if (@branches[0] == false)
+                        {
+                            <input type="checkbox" class="form-control" name="branch" value="Dev" />
+                        }
+                    </div>
+                    <div class="columns" style="padding-left:25px;">
+                        <label><b><i>Quality</i></b></label>
+                        @if (@branches[1] == true)
+                        {
+                            <input type="checkbox" class="form-control" name="branch" value="Qa" checked />
+                        }
+                        @if (@branches[1] == false)
+                        {
+                            <input type="checkbox" class="form-control" name="branch" value="Qa" />
+                        }
+                    </div>
+                    <div class="columns" style="padding-left:25px;">
+                        <label><b><i>Production</i></b></label>
+                        @if (@branches[2] == true)
+                        {
+                            <input type="checkbox" class="form-control" name="branch" value="Prod" checked />
+                        }
+                        @if (@branches[2] == false)
+                        {
+                            <input type="checkbox" class="form-control" name="branch" value="Prod" />
+                        }
+                    </div>
+                </div>
+                <span asp-validation-for="Branch" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"><b>Creation Date</b></label>
+                <input asp-for="Date" class="form-control" type="text" value="@Model.Date" readonly size="10" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="State" class="control-label"><b>Current State</b></label>
+                <input asp-for="State" class="form-control" type="text" readonly="readonly" value="@Model.State" size="10" />
+                <span asp-validation-for="State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                @foreach (var field in @processFields)
+                {
+                    <input type="hidden" class="form-control" name="Field" value="@field" />
+                }
+            </div>
+            <div class="button-group" style="margin-top:50px; margin-left:70px;">
+                <button type="reset"><i class="fa fa-eraser"></i> Clear </button>
+                <button type="submit"><i class="fa fa-check"> Update </i></button>
+            </div>
         }
+    </div>
+    <br />
+    <div class="row justify-content-lg-center">
+        <button type="button" onclick="GoBack();"><i class="fa fa-toggle-left"></i> Go Back </button>
     </div>
 </body>
 
