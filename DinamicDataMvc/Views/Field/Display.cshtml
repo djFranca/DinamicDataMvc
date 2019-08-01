@@ -3,49 +3,73 @@
     var processID = ViewBag.ID;
 }
 <head>
-    <title>Bootstrap Example</title>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        .column {
+            background-color: darkorange;
+            width: 33.33%;
+            height: 50.00%;
+            text-align: center;
+            color: ghostwhite;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: large;
+        }
+
+        .panel {
+            max-width: 50.00%;
+            max-height: 50.00%;
+        }
+    </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-4">
-                @using (Html.BeginForm("Create", "Field", new { Type = "Password", Process = processID }, FormMethod.Post))
-                {
-                    <button type="submit" id="pwdBtn"><img src="~/images/Password.jpg" /></button>
-                }
-            </div>
-            <div class="col-sm-4">
-                @using (Html.BeginForm("Create", "Field", new { Type = "Text", Process = processID }, FormMethod.Post))
-                {
-                    <button type="submit" id="textBtn"><img src="~/images/Text.png" /></button>
-                }
-            </div>
-            <div class="col-sm-4">
-                @using (Html.BeginForm("Create", "Field", new { Type = "Number", Process = processID }, FormMethod.Post))
-                {
-                    <button type="submit" id="numBtn"><img src="~/images/Number.png" /></button>
-                }
-            </div>
-            <div class="col-sm-4">
-                @using (Html.BeginForm("Create", "Field", new { Type = "Text Box", Process = processID }, FormMethod.Post))
-                {
-                    <button type="submit" id="txtBoxBtn"><img src="~/images/TextBox.png" /></button>
-                }
-            </div>
+    <div class="row">
+        <div class="column">
+            @using (Html.BeginForm("Create", "Field", new { Type = "Password", Process = processID }, FormMethod.Post))
+            {
+                <label>Create Password Field</label>
+                <button type="submit"><img src="~/images/password.png" alt="Create Password Field" class="panel" /></button>
+            }
+        </div>
+        <div class="column">
+            @using (Html.BeginForm("Create", "Field", new { Type = "Text", Process = processID }, FormMethod.Post))
+            {
+                <label>Create Text Field</label>
+                <button type="submit"><img src="~/images/text.png" alt="Create Text Field" class="panel" /></button>
+            }
+        </div>
+        <div class="column">
+            @using (Html.BeginForm("Create", "Field", new { Type = "Number", Process = processID }, FormMethod.Post))
+            {
+                <label>Create Number Field</label>
+                <button type="submit"><img src="~/images/number.png" alt="Create Number Field" class="panel" /></button>
+            }
         </div>
     </div>
-    <div class="container-fluid">
-        @using (Html.BeginForm("Read", "Metadata", FormMethod.Get))
-        {
-            <span>
-                <label class="form-group">Back to List </label>
-                <button><i class="fa fa-list"></i></button>
-            </span>
-        }
+    <div class="row">
+        <div class="column">
+            @using (Html.BeginForm("Create", "Field", new { Type = "Text Box", Process = processID }, FormMethod.Post))
+            {
+                <label>Create TextBox Field</label>
+                <button type="submit"><img src="~/images/textbox.png" alt="Create TextBox Field" class="panel" /></button>
+            }
+        </div>
+        <div class="column">
+            @using (Html.BeginForm("Create", "Field", new { Type = "Email", Process = processID }, FormMethod.Post))
+            {
+                <label>Create Email Field</label>
+                <button type="submit"><img src="~/images/email.png" alt="Create Email Field" class="panel" /></button>
+            }
+        </div>
+        <div class="column">
+            @using (Html.BeginForm("Create", "Field", new { Type = "Dropdown Menu", Process = processID }, FormMethod.Post))
+            {
+                <label>Create Dropdown Menu Field</label>
+                <button type="submit"><img src="~/images/dropdownMenu.png" alt="Create Dropdown Menu Field" class="panel" /></button>
+            }
+        </div>
     </div>
 </body>
