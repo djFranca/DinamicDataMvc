@@ -1,0 +1,58 @@
+﻿@model IEnumerable<DinamicDataMvc.Models.MetadataModel>
+@{
+    ViewData["Title"] = "GetLastProcessVersions";
+    var pageNumber = ViewBag.NumberOfPages;
+}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <link rel="stylesheet" href="~/css/PageStyleFile.css" />
+</head>
+<body style="background-color:ghostwhite">
+    <hr />
+    <div class="container" id="subtitleDiv">
+        <h2 id="ProcessDescription">Process last versions</h2>
+    </div>
+    <hr />
+    <div class="container">
+        <div class="table-responsive table-striped">
+            <table class="table table-bordered" border="1" id="processResultTable">
+                <thead>
+                    <tr id="tableHeader">
+                        <th>
+                            @Html.DisplayNameFor(model => model.Name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Version)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr id="tableBody">
+                            <td>
+                                @Html.ActionLink(@Html.DisplayTextFor(modelItme => item.Name), "", "", new { }, new { @class = "processDetails" })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Version)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="container">
+        <ul class="pagination pagination-sm">
+            @for (int i = 1; i <= Convert.ToInt32(pageNumber); i++)
+            {
+                <li class="page-item"><a class="page-link" style="color:#212529;" href="/Data/GetLastProcessVersions?Page=@i"><b>@i</b></a></li>
+            }
+        </ul>
+    </div>
+</body>

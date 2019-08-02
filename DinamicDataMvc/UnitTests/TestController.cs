@@ -86,5 +86,29 @@ namespace DinamicDataMvc.UnitTests
             _Branch.SetDatabase(_Connection.GetDatabase());
             return "Code : " + code + " = ID : " + _Branch.GetBranchID(code);
         }
+
+
+        [HttpGet("/Test/GetProcessNames/")]
+        public string GetProcessNames()
+        {
+            _Connection.DatabaseConnection();
+            _MetadataService.SetDatabase(_Connection.GetDatabase());
+            string message = string.Empty;
+
+            List<string> processNames = _MetadataService.GetProcessNames();
+
+            for(int i=0; i<processNames.Count; i++)
+            {
+                if(i == processNames.Count - 1)
+                {
+                    message += processNames[i];
+                }
+                else
+                {
+                    message += (processNames[i] + ", ");
+                }
+            }
+            return message;
+        }
     }
 }

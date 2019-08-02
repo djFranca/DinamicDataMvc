@@ -108,77 +108,53 @@ namespace DinamicDataMvc.Services.Metadata
         public MetadataModel GetMetadata(string id)
         {
             MetadataModel model = null;
-            try
+
+            if(!string.IsNullOrEmpty(id))
             {
-                if(id != null)
-                {
-                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
-                    model = collection.Find(s => s.Id == id).FirstOrDefault();
-                }
-            }catch
-            {
-                throw new KeyNotFoundException();
+                var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                model = collection.Find(s => s.Id == id).FirstOrDefault();
             }
+
             return model;
         }
 
         public void DeleteMetadata(string id)
         {
-            try
+            if (!string.IsNullOrEmpty(id))
             {
-                if (!string.IsNullOrEmpty(id))
-                {
-                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
-                    collection.DeleteOne(s => s.Id == id);
-                }
-            }
-            catch
-            {
-                throw new KeyNotFoundException();
+                var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                collection.DeleteOne(s => s.Id == id);
             }
         }
 
         public string CreateMetadata(MetadataModel model)
         {
-            try
+            if(model == null)
             {
-                if(model != null)
-                {
-                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
-                    collection.InsertOneAsync(model);
-                    return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
-                }
-                return ((int)StatusCode.BadRequest).ToString() + " - " + StatusCode.BadRequest.ToString();
+                return ((int)StatusCode.NoContent).ToString() + " - " + StatusCode.NoContent.ToString();
             }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
+                
+            var collection = _Database.GetCollection<MetadataModel>("Metadata");
+            collection.InsertOneAsync(model);
+            return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
         }
 
 
         public List<MetadataModel> GetProcessByName(string name)
         {
-            try
-            {   
-                List<MetadataModel> models = new List<MetadataModel>();
+            List<MetadataModel> models = new List<MetadataModel>();
 
-                if (name != null)
-                {
-                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
-                    var result = collection.Find(s => s.Name == name).ToList();
-                    foreach (var model in result)
-                    {
-                        models.Add(model);
-                    }
-                }
-
-                return models;
-            }
-            catch (Exception exception)
+            if (!string.IsNullOrEmpty(name))
             {
-                throw exception;
+                var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                var result = collection.Find(s => s.Name == name).ToList();
+                foreach (var model in result)
+                {
+                    models.Add(model);
+                }
             }
+
+            return models;
         }
 
         /*
@@ -186,41 +162,31 @@ namespace DinamicDataMvc.Services.Metadata
          */
         public MetadataModel GetProcessByVersion(string name, int version)
         {
-            try
+            if (!string.IsNullOrEmpty(name) & version > 0)
             {
-                if (name != null & version > 0)
-                {
-                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
-                    MetadataModel model = collection.Find(s => s.Name == name & s.Version == version).FirstOrDefault();
-                    return model;
-                }
-                return null;
+                var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                MetadataModel model = collection.Find(s => s.Name == name & s.Version == version).FirstOrDefault();
+                return model;
             }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
+            return null;
         }
 
 
         public string AddFieldToProcess(string processID, string fieldID)
         {
-            try
+            if(string.IsNullOrEmpty(processID) && string.IsNullOrEmpty(fieldID))
             {
-                var collection = _Database.GetCollection<MetadataModel>("Metadata");
-                MetadataModel model = collection.Find(s => s.Id == processID).Single();
-
-                model.Field.Add(fieldID); //Add field ID to the field array into the process Model
-
-                var result = collection.ReplaceOneAsync(s => s.Id == processID, model);
-
-
-                return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
+                return ((int)StatusCode.NoContent).ToString() + " - " + StatusCode.NoContent.ToString();
             }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
+
+            var collection = _Database.GetCollection<MetadataModel>("Metadata");
+            MetadataModel model = collection.Find(s => s.Id == processID).Single();
+
+            model.Field.Add(fieldID); //Add field ID to the field array into the process Model
+
+            var result = collection.ReplaceOneAsync(s => s.Id == processID, model);
+
+            return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
         }
 
 
@@ -231,7 +197,7 @@ namespace DinamicDataMvc.Services.Metadata
          */
         public void SetProcessVersion(string processID)
         {
-            if(processID != null)
+            if(!string.IsNullOrEmpty(processID))
             {
                 var collection = _Database.GetCollection<MetadataModel>("Metadata");
                 MetadataModel model = collection.Find(s => s.Id == processID).Single();
@@ -264,26 +230,19 @@ namespace DinamicDataMvc.Services.Metadata
 
         public List<string> GetProcessFieldsID(string processID)
         {
-            try
-            {
-                List<string> processFields = new List<string>();
+            List<string> processFields = new List<string>();
 
-                if (processID != null)
+            if (!string.IsNullOrEmpty(processID))
+            {
+                var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                MetadataModel process = collection.Find(s => s.Id == processID).Single();
+
+                foreach(var field in process.Field)
                 {
-                    var collection = _Database.GetCollection<MetadataModel>("Metadata");
-                    MetadataModel process = collection.Find(s => s.Id == processID).Single();
-
-                    foreach(var field in process.Field)
-                    {
-                        processFields.Add(field);
-                    }
+                    processFields.Add(field);
                 }
-                return processFields;
             }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
+            return processFields;
         }
 
         public void ReplaceMetadata(string ProcessId, MetadataModel model)
@@ -293,6 +252,24 @@ namespace DinamicDataMvc.Services.Metadata
                 var collection = _Database.GetCollection<MetadataModel>("Metadata");
                 collection.FindOneAndReplace(s => s.Id == ProcessId, model);
             }
+        }
+
+        public List<string> GetProcessNames()
+        {
+            List<string> processNames = new List<string>();
+
+            var collection = _Database.GetCollection<MetadataModel>("Metadata");
+            var models = collection.Find(s => true).ToList();
+
+            foreach(var model in models)
+            {
+                if (!processNames.Contains(model.Name))
+                {
+                    processNames.Add(model.Name);
+                }
+            }
+
+            return processNames;
         }
 
         #endregion
