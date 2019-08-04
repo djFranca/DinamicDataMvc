@@ -84,5 +84,26 @@ namespace DinamicDataMvc.Services.Fields
                 throw new ArgumentNullException();
             }
         }
+
+        public string GetPropertyValue(string propertyId)
+        {
+            if (!string.IsNullOrEmpty(propertyId))
+            {
+                var collection = _Database.GetCollection<PropertiesModel>("Properties");
+                PropertiesModel properties = collection.Find(s => s.ID == propertyId).Single();
+                return properties.Value;
+            }
+            return string.Empty;
+        }
+
+        public void UpdatePropertyValue(string propertyId, string newValue)
+        {
+            var collection = _Database.GetCollection<PropertiesModel>("Properties");
+            PropertiesModel properties = collection.Find(s => s.ID == propertyId).Single();
+
+            properties.Value = newValue; //Substitui o valor dos dados pelo novo valor definido pelo utilizador;
+
+            collection.FindOneAndReplace(s => s.ID == properties.ID, properties);
+        }
     }
 }

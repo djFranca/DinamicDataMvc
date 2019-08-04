@@ -1,0 +1,72 @@
+﻿@model DinamicDataMvc.Models.Data.ViewDataModel
+@{
+    ViewData["Title"] = "GetProcessFieldDataByVersions";
+
+    var header = ViewBag.ProcessDetails;
+
+    string[] headerFragments = header.Split(",");
+}
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <link rel="stylesheet" href="~/css/PageStyleFile.css" />
+</head>
+<body style="background-color:ghostwhite">
+    <hr />
+    <div class="container" id="subtitleDiv">
+        <h2 id="ProcessDescription">@headerFragments[0] V @headerFragments[1] @headerFragments[2]</h2>
+    </div>
+    <hr />
+    <div class="container">
+        @foreach (string version in Model.Versions)
+        {
+            <br />
+            <div class="table-responsive table-striped">
+                <table class="table table-bordered" border="1" id="processResultTable">
+                    <thead>
+                        <tr id="tableHeader">
+                            <th>
+                                Version
+                            </th>
+                            @for (int i = 0; i < Model.FieldTypesByVersion[version].Count; i++)
+                            {
+                                <th>@Model.FieldTypesByVersion[version].ElementAt(i)</th>
+                            }
+                            <th>
+                                Edit
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="tableBody">
+                            <td>
+                                @version
+                            </td>
+                            @for (int j = 0; j < Model.DataByProcessField[version].Count; j++)
+                            {
+                                <td>@Model.DataByProcessField[version].ElementAt(j)</td>
+                            }
+                            <td>
+                                @using (Html.BeginForm("UpdateFieldData", "Data", new { Name = headerFragments[0], Version = @version }))
+                                {
+                                    <button type="submit"><i class="fa fa-pencil"></i></button>
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br />
+        }
+    </div>
+    <br />
+    <div class="container">
+        <button type="button" onclick="GoBack();"><i class="fa fa-toggle-left"> Go Back </i></button>
+    </div>
+</body>
+

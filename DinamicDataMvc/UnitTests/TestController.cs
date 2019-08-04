@@ -110,5 +110,14 @@ namespace DinamicDataMvc.UnitTests
             }
             return message;
         }
+
+        [HttpGet("/Test/GetPropertyValue/")]
+        public string GetPropertyValue()
+        {
+            _Connection.DatabaseConnection();
+            var database = _Connection.GetDatabase();
+            _PropertyService.SetDatabase(database);
+            return _PropertyService.GetPropertyValue("070d09e54202d6a96e09fb84");
+        }
     }
 }

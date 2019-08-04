@@ -54,7 +54,7 @@ namespace DinamicDataMvc.Controllers.Tools
                 { "Branch", await database.GetCollection<BranchModel>("Branch").Find(s => true).CountDocumentsAsync()},
                 { "State", await database.GetCollection<StateModel>("State").Find(s => true).CountDocumentsAsync()},
                 { "Properties", await database.GetCollection<PropertiesModel>("Properties").Find(s => true).CountDocumentsAsync()},
-                { "Data", await database.GetCollection<DataModel>("Data").Find(s => true).CountDocumentsAsync()}
+                { "Data", await database.GetCollection<ViewDataModel>("Data").Find(s => true).CountDocumentsAsync()}
             };
 
             List<string> _CollectionNames = database.ListCollectionNames().ToList();
