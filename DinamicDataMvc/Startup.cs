@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
@@ -51,6 +50,7 @@ namespace DinamicDataMvc
             services.AddSingleton<IPaginationService, PaginationService>(s => new PaginationService(4));
             services.AddSingleton<IValidationService, ValidationService>(s => new ValidationService());
             services.AddSingleton<IMessage, Message>(s => new Message());
+            services.AddSingleton<IProcessHistory, ProcessHistory>(s => new ProcessHistory());
             services.AddSwaggerGen(doc =>
             {
                 doc.SwaggerDoc("v1", new Info

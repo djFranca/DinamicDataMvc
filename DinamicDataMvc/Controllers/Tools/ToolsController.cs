@@ -7,6 +7,7 @@ using DinamicDataMvc.Models.Tools;
 using DinamicDataMvc.Models.Field;
 using DinamicDataMvc.Models;
 using DinamicDataMvc.Models.Data;
+using DinamicDataMvc.Models.Log;
 
 namespace DinamicDataMvc.Controllers.Tools
 {
@@ -22,8 +23,9 @@ namespace DinamicDataMvc.Controllers.Tools
         private readonly IStateService _State;
         private readonly IKeyGenerates _KeyId;
         private readonly IMessage _Message;
+        private readonly IProcessHistory _Log;
 
-        public ToolsController(IConnectionManagementService Connection, IMetadataService Metadata, IBranchService Branch, IStateService State, IKeyGenerates KeyId, IMessage Message)
+        public ToolsController(IConnectionManagementService Connection, IMetadataService Metadata, IBranchService Branch, IStateService State, IKeyGenerates KeyId, IMessage Message, IProcessHistory Log)
         {
             _Connection = Connection;
             _Metadata = Metadata;
@@ -31,6 +33,7 @@ namespace DinamicDataMvc.Controllers.Tools
             _State = State;
             _KeyId = KeyId;
             _Message = Message;
+            _Log = Log;
         }
 
 
@@ -54,7 +57,7 @@ namespace DinamicDataMvc.Controllers.Tools
                 { "Branch", await database.GetCollection<BranchModel>("Branch").Find(s => true).CountDocumentsAsync()},
                 { "State", await database.GetCollection<StateModel>("State").Find(s => true).CountDocumentsAsync()},
                 { "Properties", await database.GetCollection<PropertiesModel>("Properties").Find(s => true).CountDocumentsAsync()},
-                { "Data", await database.GetCollection<ViewDataModel>("Data").Find(s => true).CountDocumentsAsync()}
+                { "History", await database.GetCollection<ViewDataModel>("History").Find(s => true).CountDocumentsAsync()}
             };
 
             List<string> _CollectionNames = database.ListCollectionNames().ToList();
@@ -184,6 +187,18 @@ namespace DinamicDataMvc.Controllers.Tools
             List<BranchModel> branches = _Branch.GetBranchModels(); //Obter todos os branch models armazenados na colecção Branch;
 
             return await Task.Run(() => View("PopulateBranchCollection", branches));
+        }
+
+
+        [HttpGet("/Tools/GetProcessLogs/")]
+        public async Task<ActionResult> GetProcessLogs()
+        {
+            _Connection.DatabaseConnection();
+            var database = _Connection.GetDatabase();
+            _Log.SetDatabase(database);
+            List<LogModel> logs = _Log.GetProcessesLogs();
+
+            return await Task.Run(() => View("GetProcessLogs", logs));
         }
     }
 }

@@ -21,8 +21,9 @@ namespace DinamicDataMvc.Controllers.Metadata
         private readonly IKeyGenerates _KeyID;
         private readonly IPropertyService _Properties;
         private readonly IValidationService _Validation;
+        private readonly IProcessHistory _Log;
 
-        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById, IFieldService GetFieldTypes, IPaginationService SetPagination, IKeyGenerates KeyID, IPropertyService Properties, IValidationService Validation)
+        public MetadataController(IConnectionManagementService Connection, IMetadataService GetMetadata, IBranchService GetBranchById, IStateService GetStateById, IFieldService GetFieldTypes, IPaginationService SetPagination, IKeyGenerates KeyID, IPropertyService Properties, IValidationService Validation, IProcessHistory Log)
         {
             _Connection = Connection;
             _Metadata = GetMetadata;
@@ -33,6 +34,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             _KeyID = KeyID;
             _Properties = Properties;
             _Validation = Validation;
+            _Log = Log;
         }
 
         /*
@@ -279,6 +281,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             return await Task.Run(() => View("Delete"));
         }
 
+
         [HttpPost("/Metadata/Confirm/{id}")]
         public async Task<ActionResult> Confirm(string id)
         {
@@ -290,6 +293,7 @@ namespace DinamicDataMvc.Controllers.Metadata
                     _Metadata.SetDatabase(_Connection.GetDatabase());
                     _Field.SetDatabase(_Connection.GetDatabase());
                     _Properties.SetDatabase(_Connection.GetDatabase());
+                    _Log.SetDatabase(_Connection.GetDatabase());
 
                     //Obter os ids dos campos anexos a um processo;
                     List<string> fields = _Metadata.GetProcessFieldsID(id);
@@ -301,6 +305,16 @@ namespace DinamicDataMvc.Controllers.Metadata
                         _Properties.DeleteProperties(fieldModel.Properties); //Apaga na base de dados as propriedades existentes num campo;
                         _Field.DeleteField(field); //Apaga na base de dados os campos existentes num processo;
                     }
+
+                    /* 
+                     * -------------------------------------------------------------------------------------
+                     * Log section
+                     * -------------------------------------------------------------------------------------
+                     */
+                    MetadataModel metadataModel = _Metadata.GetMetadata(id);
+                    _KeyID.SetKey(); //Generates a log model object id (unique key) 
+                    _Log.CreateProcessLog(_KeyID.GetKey(), id, metadataModel.Name, metadataModel.Version, "Delete");
+                    //--------------------------------------------------------------------------------------
 
                     _Metadata.DeleteMetadata(id); //Apaga na base de dados o processo propriamente dito;
                 }
@@ -331,6 +345,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             _GetStateById.SetDatabase(_Connection.GetDatabase());
             _Metadata.SetDatabase(_Connection.GetDatabase());
             _Validation.SetDatabase(_Connection.GetDatabase());
+            _Log.SetDatabase(_Connection.GetDatabase());
 
             if (_Validation.ProcessExits(viewModel.Name)) //Se o nome já existir na base de dados, redirecciona para a mesma página;
             {
@@ -367,6 +382,16 @@ namespace DinamicDataMvc.Controllers.Metadata
                 Branch = branchList
             };
             ViewBag.ID = viewModel.Id;
+
+            /* 
+             * -------------------------------------------------------------------------------------
+             * Log section
+             * -------------------------------------------------------------------------------------
+             */
+            _KeyID.SetKey(); //Generates a log model object id (unique key) 
+            _Log.CreateProcessLog(_KeyID.GetKey(), model.Id, model.Name, 1, "Create");
+            //--------------------------------------------------------------------------------------
+
             _Metadata.CreateMetadata(model);
             //return await Task.Run(() => RedirectToAction("Display", "Field", new { ID = modelId }));
             return await Task.Run(() => RedirectToAction("Read", "Field", new { ProcessId = modelId } ));
@@ -445,6 +470,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             _GetBranchById.SetDatabase(_Connection.GetDatabase());
             _GetStateById.SetDatabase(_Connection.GetDatabase());
             _Properties.SetDatabase(_Connection.GetDatabase());
+            _Log.SetDatabase(_Connection.GetDatabase());
 
             //1º Passo - Obter os objetos FieldModel e PropertiesModel agregados à versão anterior e passados no Modelo de dados MetadataModel;
             //-----------------------------------------------------
@@ -491,6 +517,16 @@ namespace DinamicDataMvc.Controllers.Metadata
                 Field = fieldIdKeys,
                 Branch = branches
             };
+
+            /* 
+             * -------------------------------------------------------------------------------------
+             * Log section
+             * -------------------------------------------------------------------------------------
+             */
+            _KeyID.SetKey(); //Generates a log model object id (unique key) 
+            _Log.CreateProcessLog(_KeyID.GetKey(), viewModel.Id, viewModel.Name, viewModel.Version, "Update");
+            //--------------------------------------------------------------------------------------
+
             _Metadata.CreateMetadata(UpdatedMetadataModel); //armazena o processo na base de dados;
 
             return await Task.Run(() => RedirectToAction("Read", "Field", new { ProcessId = viewModel.Id }));

@@ -1,12 +1,34 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<body style="background-color:ghostwhite">
+<head>
+    <style>
+        body {
+            background-color:ghostwhite;
+        }
+
+        h1 {
+            font-family:Arial, Helvetica, sans-serif; 
+            color:dimgray;
+            text-shadow: 3px 3px lightgray;
+        }
+
+        #title {
+            direction:ltr;
+        }
+    </style>
+</head>
+<body>
     <div class="progress-bar-animated">
         <img id="main_image" src="~/images/layout_logo.png" alt="funcional_logo" />
     </div>
     <div class="text-center">
-        <h1 class="display-4" lang="en-us" style="font-family:Arial, Helvetica, sans-serif;"> <strong>Motor de Estados com Modelo de Dados de Estrutura Dinâmica</strong></h1>
+        <h1 class="display-4" lang="en-us"> <strong>Motor de Estados com Modelo de Dados de Estrutura Dinâmica</strong></h1>
+    </div>
+    <div class="text-center">
+        <marquee id="title">
+
+        </marquee>
     </div>
 </body>
 
