@@ -1,25 +1,56 @@
-﻿@model DinamicDataMvc.Models.Data.ViewDataModel
+﻿@model IEnumerable<DinamicDataMvc.Models.Field.PropertiesModel>
 
 @{
     ViewData["Title"] = "UpdateFieldData";
+
+    string ProcessName = ViewBag.ProcessName;
+
+    string ProcessVersion = ViewBag.ProcessVersion;
+
+    string[] Fields = ViewBag.Fields.Split(" ");
 }
-
-<h1>UpdateFieldData</h1>
-
-<h4>ViewDataModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="UpdateFieldData">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <link rel="stylesheet" href="~/css/PageStyleFile.css" />
+</head>
+<body>
+    <hr />
+    <div class="container" id="subtitleDiv">
+        <h2 id="ProcessDescription">@ProcessName  Version @ProcessVersion</h2>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+    <hr />
+    <div class="row">
+        <div class="col-md-5" style="margin-left:15px;">
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                <form asp-action="ConfirmUpdateData" asp-route-name="@ProcessName" asp-route-version="@ProcessVersion">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <input type="hidden" asp-for="@Model.ElementAt(i).ID" value="@Model.ElementAt(i).ID" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"><strong>@Fields.ElementAt(i)</strong></label>
+                        <input type="text" asp-for="@Model.ElementAt(i).Value" class="form-control" />
+                        <span asp-validation-for="@Model.ElementAt(i).Value" class="text-danger"></span>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit"><i class="fa fa-check"> Save </i></button>
+                    </div>
+                    <br />
+                </form>
+            }
+        </div>
+    </div>
+    <br />
+    <div class="container">
+        @using (Html.BeginForm("HomePage", "Home", FormMethod.Get))
+        {
+            <button type="submit"><i class="fa fa-close"></i> Close </button>
+        }
+    </div>
+</body>

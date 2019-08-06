@@ -29,7 +29,7 @@ namespace DinamicDataMvc.Controllers.Data
             _Property = Property;
         }
 
-
+        [HttpGet("/Data/GetLastProcessVersions/")]
         public async Task<ActionResult> GetLastProcessVersions()
         {
             List<MetadataModel> metadataList = new List<MetadataModel>();
@@ -129,7 +129,8 @@ namespace DinamicDataMvc.Controllers.Data
             return await Task.Run(() => View("GetProcessFieldDataByVersions", modelToDisplay));
         }
 
-        [HttpPost("/Data/UpdateFieldData/")]
+
+        [HttpGet("/Data/UpdateFieldData/{Name}/{Version}/")]
         public async Task<ActionResult> UpdateFieldData(string Name, string Version)
         {
             _Connection.DatabaseConnection();
@@ -140,39 +141,45 @@ namespace DinamicDataMvc.Controllers.Data
 
             MetadataModel metadataModel = _Metadata.GetProcessByVersion(Name, Convert.ToInt32(Version));
 
-            ViewBag.ProcessDetails = Name + ", " + Version;
-            string propertiesId = string.Empty;
+            ViewBag.ProcessName = Name;
+            ViewBag.ProcessVersion = Version;
 
-            Dictionary<string, List<string>> FieldTypesByVersion = new Dictionary<string, List<string>>(); 
-            Dictionary<string, List<string>> DataByProcessField = new Dictionary<string, List<string>>();
+            string fieldsType = string.Empty;
 
-            List<string> fieldsType = new List<string>();
-            List<string> fieldsData = new List<string>();
+            List<PropertiesModel> listPropertiesModel = new List<PropertiesModel>();
 
             foreach (var fieldId in metadataModel.Field)
             {
                 FieldModel field = _Field.GetField(fieldId);
-                fieldsType.Add(field.Type);
-                
-                propertiesId += field.Properties + " ";
 
-                fieldsData.Add(_Property.GetPropertyValue(field.Properties));
+                PropertiesModel model = new PropertiesModel()
+                {
+                    ID = field.Properties,
+                    Maxlength = _Property.GetProperties(field.Properties).Maxlength,
+                    Size = _Property.GetProperties(field.Properties).Size,
+                    Required = _Property.GetProperties(field.Properties).Required,
+                    Value = _Property.GetProperties(field.Properties).Value
+                };
+
+                fieldsType += field.Type + " ";
+                listPropertiesModel.Add(model);
             }
 
-            List<string> Versions = new List<string>() { Version };
-            FieldTypesByVersion.Add(Version, fieldsType);
-            DataByProcessField.Add(Version, fieldsData);
+            ViewBag.Fields = fieldsType;
 
-            ViewDataModel viewDataModel = new ViewDataModel()
-            {
-                Versions = Versions,
-                FieldTypesByVersion = FieldTypesByVersion,
-                DataByProcessField = DataByProcessField,
-            };
+            return await Task.Run(() => View("UpdateFieldData", listPropertiesModel));
+        }
 
-            ViewBag.PropertiesId = propertiesId;
 
-            return await Task.Run(() => View("UpdateFieldData", viewDataModel));
+        [HttpPost("/data/ConfirmUpdateData/")]
+        public async Task<ActionResult> ConfirmUpdateData(PropertiesModel model, string name, string version)
+        {
+            _Connection.DatabaseConnection();
+            var database = _Connection.GetDatabase();
+            _Property.SetDatabase(database);
+            _Property.UpdatePropertyValue(model.ID, model.Value);
+
+            return await Task.Run(() => Redirect("/Data/UpdateFieldData/" + name + "/" + version + "/"));
         }
     }
 }

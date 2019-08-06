@@ -52,7 +52,7 @@
                                 <td>@Model.DataByProcessField[version].ElementAt(j)</td>
                             }
                             <td>
-                                @using (Html.BeginForm("UpdateFieldData", "Data", new { Name = headerFragments[0], Version = @version }))
+                                @using (Html.BeginForm("UpdateFieldData", "Data", new { Name = headerFragments[0], Version = @version }, FormMethod.Get))
                                 {
                                     <button type="submit"><i class="fa fa-pencil"></i></button>
                                 }
