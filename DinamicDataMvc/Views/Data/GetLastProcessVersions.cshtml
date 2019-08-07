@@ -29,6 +29,9 @@
                         <th>
                             @Html.DisplayNameFor(model => model.Version)
                         </th>
+                        <th>
+                            Web Form Generator
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,6 +43,12 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Version)
+                            </td>
+                            <td>
+                                @using (Html.BeginForm("", "", new { }, FormMethod.Get))
+                                {
+                                    <button type="submit"><i class="fa fa-file-code-o"></i></button>
+                                }
                             </td>
                         </tr>
                     }

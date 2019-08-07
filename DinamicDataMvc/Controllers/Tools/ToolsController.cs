@@ -190,6 +190,17 @@ namespace DinamicDataMvc.Controllers.Tools
         }
 
 
+        [HttpPost("/Tools/WebFormGenerator/")]
+        public async Task<ActionResult> WebFormGenerator()
+        {
+            ViewBag.Fragment1 = "<div class='container'><h1>Login Page</h1></div>";
+            ViewBag.Fragment2 = "<div class='container'><label><b>Username</b></label><br /><input type='email' value='123456@email.com' size='25' maxlength='20' name='email_22 /></div><br />";
+            ViewBag.Fragment3 = "<div class='container'><label><b>Password</b></label><br /><input type='password' value='123456' size='25' maxlength='50' name='password_22 /></div><br />";
+            ViewBag.Fragment4 = "<div class='container'><button type='submit'> Login </button></div>";
+            return await Task.Run(() => View("WebFormGenerator"));
+        }
+
+
         [HttpGet("/Tools/GetProcessLogs/")]
         public async Task<ActionResult> GetProcessLogs()
         {

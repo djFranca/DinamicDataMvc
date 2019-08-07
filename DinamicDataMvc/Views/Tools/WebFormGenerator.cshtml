@@ -1,0 +1,25 @@
+﻿@*First web form test *@
+@{
+    ViewData["Title"] = "WebFormGenerator";
+
+    string fragment1 = ViewBag.Fragment1;
+    string fragment2 = ViewBag.Fragment2;
+    string fragment3 = ViewBag.Fragment3;
+    string fragment4 = ViewBag.Fragment4;
+}
+<head>
+    <style>
+        body {
+            background-color: ghostwhite;
+        }
+    </style>
+</head>
+<body>
+    @Html.Raw(fragment1)
+    @Html.Raw("<br />")
+    @Html.Raw(fragment2)
+    @Html.Raw("<br />")
+    @Html.Raw(fragment3)
+    @Html.Raw("<br />")
+    @Html.Raw(fragment4)
+</body>

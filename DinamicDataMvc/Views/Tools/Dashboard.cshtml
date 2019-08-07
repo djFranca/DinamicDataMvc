@@ -48,19 +48,19 @@
         <div class="column">
             <form asp-action="ConnectionInfo" asp-controller="Tools" method="get">
                 <label>Database Information</label>
-                <button type="submit"><img src="~/images/DatabaseInfo.png" alt="Create State Collection" class="panel" /></button>
+                <button type="submit"><img src="~/images/DatabaseInfo.png" alt="Database Info" class="panel" /></button>
             </form>
         </div>
         <div class="column">
-            <form asp-action="#" asp-controller="Tools" method="get">
-                <label>Clear Database</label>
-                <button type="submit"><img src="~/images/ClearDatabase.png" alt="Create State Collection" class="panel" /></button>
+            <form asp-action="WebFormGenerator" asp-controller="Tools" method="post">
+                <label>Web Form Generator</label>
+                <button type="submit"><img src="~/images/WebForm.png" alt="Web Form Generator" class="panel" /></button>
             </form>
         </div>
         <div class="column">
             <form asp-action="GetProcessLogs" asp-controller="Tools" method="get">
-                <label>History</label>
-                <button type="submit"><img src="~/images/History.png" alt="Create State Collection" class="panel" /></button>
+                <label>Processes Logs</label>
+                <button type="submit"><img src="~/images/History.png" alt="Processes Logs" class="panel" /></button>
             </form>
         </div>
     </div>
