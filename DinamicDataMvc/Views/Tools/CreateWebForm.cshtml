@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "CreateWebForm";
+
+    string template = ViewBag.Template;
+
+    string[] htmlElements = template.Split("|");
+}
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <link rel="stylesheet" href="~/css/PageStyleFile.css" />
+</head>
+<body style="background-color:ghostwhite">
+    <hr />
+    <div class="container" id="subtitleDiv">
+        <h2> Generated Web Form </h2>
+    </div>
+    <hr />
+    <div class="container">
+        @for(int i = 0; i < htmlElements.Length; i++)
+        {
+            @Html.Raw(htmlElements.ElementAt(i))
+            @Html.Raw("<br />")
+        }
+    </div>
+</body>

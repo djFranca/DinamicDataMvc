@@ -8,12 +8,12 @@ using DinamicDataMvc.Models.Field;
 using DinamicDataMvc.Models;
 using DinamicDataMvc.Models.Data;
 using DinamicDataMvc.Models.Log;
+using DinamicDataMvc.Utils;
 
 namespace DinamicDataMvc.Controllers.Tools
 {
     /*
-     * Contolador de Teste para testar individualmente os diversos serviços,
-     * criados para tratar os pedidos dos utilizadores;
+     * Controlador para controlo de funcionalidades do sistema;
      */
     public class ToolsController : Controller
     {
@@ -24,8 +24,10 @@ namespace DinamicDataMvc.Controllers.Tools
         private readonly IKeyGenerates _KeyId;
         private readonly IMessage _Message;
         private readonly IProcessHistory _Log;
+        private readonly IFieldService _Field;
+        private readonly IPropertyService _Property;
 
-        public ToolsController(IConnectionManagementService Connection, IMetadataService Metadata, IBranchService Branch, IStateService State, IKeyGenerates KeyId, IMessage Message, IProcessHistory Log)
+        public ToolsController(IConnectionManagementService Connection, IMetadataService Metadata, IBranchService Branch, IStateService State, IKeyGenerates KeyId, IMessage Message, IProcessHistory Log, IFieldService Field, IPropertyService Property)
         {
             _Connection = Connection;
             _Metadata = Metadata;
@@ -34,6 +36,8 @@ namespace DinamicDataMvc.Controllers.Tools
             _KeyId = KeyId;
             _Message = Message;
             _Log = Log;
+            _Field = Field;
+            _Property = Property;
         }
 
 
@@ -47,7 +51,7 @@ namespace DinamicDataMvc.Controllers.Tools
         [HttpGet("/Tools/GetAllCollections/")]
         public async Task<ActionResult> GetAllCollections()
         {
-             _Connection.DatabaseConnection();
+            _Connection.DatabaseConnection();
             var database = _Connection.GetDatabase();
 
             Dictionary<string, long> map = new Dictionary<string, long>()
@@ -63,7 +67,7 @@ namespace DinamicDataMvc.Controllers.Tools
             List<string> _CollectionNames = database.ListCollectionNames().ToList();
             List<long> _NumberOfDocuments = new List<long>();
 
-            foreach(string name in _CollectionNames)
+            foreach (string name in _CollectionNames)
             {
                 long NumberOfDocuments = map[name];
                 _NumberOfDocuments.Add(NumberOfDocuments);
@@ -210,6 +214,57 @@ namespace DinamicDataMvc.Controllers.Tools
             List<LogModel> logs = _Log.GetProcessesLogs();
 
             return await Task.Run(() => View("GetProcessLogs", logs));
+        }
+
+
+        [HttpPost("/Tools/CreateWebForm/")]
+        public async Task<ActionResult> CreateWebForm(List<string> fields)
+        {
+            _Connection.DatabaseConnection();
+            var database = _Connection.GetDatabase();
+            _Field.SetDatabase(database);
+            _Property.SetDatabase(database);
+
+            List<WebFormModel> webFormElements = new List<WebFormModel>();
+
+            foreach(string field in fields)
+            {
+                FieldModel fieldModel = _Field.GetField(field);
+                PropertiesModel propertiesModel = _Property.GetProperties(fieldModel.Properties);
+
+                WebFormModel webFormElement = new WebFormModel()
+                {
+                    Type = fieldModel.Type,
+                    Name = fieldModel.Name,
+                    Size = propertiesModel.Size.ToString(),
+                    Value = propertiesModel.Value,
+                    Maxlength = propertiesModel.Maxlength.ToString(),
+                    Required = propertiesModel.Required.ToString()
+                };
+
+                webFormElements.Add(webFormElement);
+            }
+
+            //Passar a lista de webform elements a uma classe que vai criar uma array com as linhas a serem renderizadas;
+            WebFormTemplate webFormTemplate = new WebFormTemplate(webFormElements);
+            List<string> fragments = webFormTemplate.Template();
+
+            string template = string.Empty;
+            for(int j = 0; j < fragments.Count; j++)
+            {
+                if(j == fragments.Count - 1)
+                {
+                    template += fragments[j];
+                }
+                else
+                {
+                    template += (fragments[j] + "|");
+                }
+            }
+
+            ViewBag.Template = template;
+
+            return await Task.Run(() => View("CreateWebForm"));
         }
     }
 }

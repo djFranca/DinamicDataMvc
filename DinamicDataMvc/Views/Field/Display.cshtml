@@ -51,10 +51,10 @@
     </div>
     <div class="row">
         <div class="column">
-            @using (Html.BeginForm("Create", "Field", new { Type = "Text Box", Process = processID }, FormMethod.Post))
+            @using (Html.BeginForm("Create", "Field", new { Type = "Label", Process = processID }, FormMethod.Post))
             {
-                <label>Create TextBox Field</label>
-                <button type="submit"><img src="~/images/textbox.png" alt="Create TextBox Field" class="panel" /></button>
+                <label>Create Label Field</label>
+                <button type="submit"><img src="~/images/Label.png" alt="Create Label Field" class="panel" /></button>
             }
         </div>
         <div class="column">
@@ -65,10 +65,10 @@
             }
         </div>
         <div class="column">
-            @using (Html.BeginForm("Create", "Field", new { Type = "Dropdown Menu", Process = processID }, FormMethod.Post))
+            @using (Html.BeginForm("Create", "Field", new { Type = "Button", Process = processID }, FormMethod.Post))
             {
-                <label>Create Dropdown Menu Field</label>
-                <button type="submit"><img src="~/images/dropdownMenu.png" alt="Create Dropdown Menu Field" class="panel" /></button>
+                <label>Create Button Field</label>
+                <button type="submit"><img src="~/images/Button.png" alt="Create Button Field" class="panel" /></button>
             }
         </div>
     </div>

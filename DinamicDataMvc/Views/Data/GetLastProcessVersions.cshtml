@@ -45,7 +45,7 @@
                                 @Html.DisplayFor(modelItem => item.Version)
                             </td>
                             <td>
-                                @using (Html.BeginForm("", "", new { }, FormMethod.Get))
+                                @using (Html.BeginForm("CreateWebForm", "Tools", new { fields = item.Field }, FormMethod.Post))
                                 {
                                     <button type="submit"><i class="fa fa-file-code-o"></i></button>
                                 }
