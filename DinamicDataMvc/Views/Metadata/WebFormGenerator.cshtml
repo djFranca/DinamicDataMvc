@@ -1,6 +1,6 @@
 ﻿@{
-    ViewData["Title"] = "CreateWebForm";
-
+    ViewData["Title"] = "WebFormGenerator";
+    
     string template = ViewBag.Template;
 
     string[] htmlElements = template.Split("|");
@@ -21,10 +21,11 @@
     </div>
     <hr />
     <div class="container">
-        @for(int i = 0; i < htmlElements.Length; i++)
+        @for (int i = 0; i < htmlElements.Length; i++)
         {
             @Html.Raw(htmlElements.ElementAt(i))
             @Html.Raw("<br />")
         }
     </div>
 </body>
+

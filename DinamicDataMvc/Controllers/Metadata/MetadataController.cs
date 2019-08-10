@@ -6,6 +6,8 @@ using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models;
 using DinamicDataMvc.Models.Field;
 using DinamicDataMvc.Models.Process;
+using DinamicDataMvc.Models.Tools;
+using DinamicDataMvc.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DinamicDataMvc.Controllers.Metadata
@@ -54,7 +56,6 @@ namespace DinamicDataMvc.Controllers.Metadata
 
             string pageNumber = Request.Query["Page"];
             
-
             if (string.IsNullOrEmpty(pageNumber))
             {
                 pageNumber = 1.ToString();
@@ -83,7 +84,6 @@ namespace DinamicDataMvc.Controllers.Metadata
             _Metadata.SetFilterParameters(searchName, searchVersion);
             _Metadata.ReadFromDatabase();
 
-
             List<MetadataModel> metadataList = _Metadata.GetProcessesMetadataList();
             List<ViewMetadataModel> viewModels = new List<ViewMetadataModel>();
 
@@ -97,7 +97,7 @@ namespace DinamicDataMvc.Controllers.Metadata
                     Id = metadata.Id,
                     Name = metadata.Name,
                     Version = metadata.Version.ToString(),
-                    Date = metadata.Date.ToString().Substring(0, 10), //gets only the date in the format: dd/mm/yyyy;
+                    Date = metadata.Date.ToString(), 
                     Branch = _GetBranchById.GetBranches(),
                     State = _GetStateById.GetStateDescription()
                 };
@@ -119,7 +119,7 @@ namespace DinamicDataMvc.Controllers.Metadata
                     Id = string.Empty,
                     Name = string.Empty,
                     Version = string.Empty,
-                    Date = string.Empty,
+                    Date = DateTime.Now.ToLocalTime().ToString(),
                     Branch = string.Empty,
                     State = string.Empty
                 };
@@ -170,7 +170,7 @@ namespace DinamicDataMvc.Controllers.Metadata
                     Id = model.Id,
                     Name = model.Name,
                     Version = model.Version.ToString(),
-                    Date = model.Date.ToString().Substring(0, 10),
+                    Date = model.Date.ToString(),
                     Branch = _GetBranchById.GetBranches(),
                     State = _GetStateById.GetStateDescription(),
                 };
@@ -261,7 +261,7 @@ namespace DinamicDataMvc.Controllers.Metadata
                 _Metadata.SetDatabase(_Connection.GetDatabase()); //Estabeleçe a conexão;
                 _GetBranchById.SetDatabase(_Connection.GetDatabase());
                 _GetStateById.SetDatabase(_Connection.GetDatabase());
-                _Metadata.ReadFromDatabase();
+                //_Metadata.ReadFromDatabase();
                 MetadataModel model = _Metadata.GetMetadata(id);
 
                 _GetBranchById.ReadFromDatabase(model.Branch);
@@ -398,7 +398,6 @@ namespace DinamicDataMvc.Controllers.Metadata
         }
 
 
-        //TODO: Working here
         [HttpGet("/Metadata/Update")]
         public async Task<ActionResult> Update()
         {
@@ -530,6 +529,65 @@ namespace DinamicDataMvc.Controllers.Metadata
             _Metadata.CreateMetadata(UpdatedMetadataModel); //armazena o processo na base de dados;
 
             return await Task.Run(() => RedirectToAction("Read", "Field", new { ProcessId = viewModel.Id }));
+        }
+
+
+        [HttpPost("/Metadata/WebFormGenerator")]
+        public async Task<ActionResult> WebFormGenerator(string processId)
+        {
+            if (string.IsNullOrEmpty(processId))
+            {
+                return BadRequest();
+            }
+
+            _Connection.DatabaseConnection();
+            var database = _Connection.GetDatabase();
+            _Metadata.SetDatabase(database);
+            List<string> fields = _Metadata.GetProcessFieldsID(processId);
+
+            _Field.SetDatabase(database);
+            _Properties.SetDatabase(database);
+
+            List<WebFormModel> webFormElements = new List<WebFormModel>();
+
+            foreach (string field in fields)
+            {
+                FieldModel fieldModel = _Field.GetField(field);
+                PropertiesModel propertiesModel = _Properties.GetProperties(fieldModel.Properties);
+
+                WebFormModel webFormElement = new WebFormModel()
+                {
+                    Type = fieldModel.Type,
+                    Name = fieldModel.Name,
+                    Size = propertiesModel.Size.ToString(),
+                    Value = propertiesModel.Value,
+                    Maxlength = propertiesModel.Maxlength.ToString(),
+                    Required = propertiesModel.Required.ToString()
+                };
+
+                webFormElements.Add(webFormElement);
+            }
+
+            //Passar a lista de webform elements a uma classe que vai criar uma array com as linhas a serem renderizadas;
+            WebFormTemplate webFormTemplate = new WebFormTemplate(webFormElements);
+            List<string> fragments = webFormTemplate.Template();
+
+            string template = string.Empty;
+            for (int j = 0; j < fragments.Count; j++)
+            {
+                if (j == fragments.Count - 1)
+                {
+                    template += fragments[j];
+                }
+                else
+                {
+                    template += (fragments[j] + "|");
+                }
+            }
+
+            ViewBag.Template = template;
+
+            return await Task.Run(() => View("WebFormGenerator"));
         }
     }
 }

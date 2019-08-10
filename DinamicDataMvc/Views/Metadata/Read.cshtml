@@ -34,9 +34,10 @@
         <form asp-controller="Metadata" asp-action="Read" method="get" id="searchForm" onsubmit=" return ValidateSearch(); ">
             <div class="align-content-center">
                 <label><b>Name</b></label>
-                @Html.TextBox("Name", name as string, new { @size = "40" })
+                @Html.TextBox("Name", name as string, new { @size = "50" })
                 <label><b>Version</b></label>
-                @Html.TextBox("Version", version as string, new { @size = "5" })
+                @*@Html.TextBox("Version", version as string, new { @size = "5" })*@
+                <input type="number" min="1" max="500" name="version" size="4" />
                 @Html.TextBox("PageNumber", pageNumber as string, new { @type = "hidden" })
                 <button type="submit"><i class="fa fa-search"></i></button>
             </div>
@@ -65,6 +66,9 @@
                         <th>
                             @Html.DisplayName("Delete Process")
                         </th>
+                        <th>
+                            @Html.DisplayName("Generate WebForm")
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,6 +96,15 @@
                                     @using (Html.BeginForm("Delete", "Metadata", new { ID = data.Id }, FormMethod.Post))
                                     {
                                         <button type="submit"><i class="fa fa-trash"></i></button>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @if (data.State.Length > 0)
+                                {
+                                    @using (Html.BeginForm("WebFormGenerator", "Metadata", new { processId = data.Id }, FormMethod.Post))
+                                    {
+                                        <button type="submit"><i class="fa fa-file-code-o"></i></button>
                                     }
                                 }
                             </td>

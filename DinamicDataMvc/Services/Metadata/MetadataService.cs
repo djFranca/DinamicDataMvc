@@ -89,7 +89,8 @@ namespace DinamicDataMvc.Services.Metadata
                 }
                 else
                 {
-                    filteredData = collection.Find(s => true).ToList();
+                    var branch = _Database.GetCollection<StateModel>("State").Find(s => s.Description == "Active").Single();
+                    filteredData = collection.Find(s => s.Version > 0 && s.State == branch.Id).ToList();
                 }
                 Model = filteredData;
             }

@@ -1,7 +1,7 @@
 ﻿@model DinamicDataMvc.Models.MetadataModel
 @{
     ViewData["Title"] = "Create";
-    var CurrentDate = DateTime.Now.Date.ToString().Substring(0, 10);
+    var CurrentDate = DateTime.Now.ToLocalTime().ToString();
 
     //Display an alert message if the Process Name already exists in the database;
     if (TempData["AlertMessage"] != null)

@@ -84,7 +84,7 @@ namespace DinamicDataMvc.Controllers.Field
                     Id = string.Empty,
                     Name = string.Empty,
                     Type = string.Empty,
-                    Date = DateTime.Now,
+                    Date = DateTime.Now.ToLocalTime(),
                     Properties = string.Empty
                 };
                 auxModels.Add(defaultModel);
