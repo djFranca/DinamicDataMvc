@@ -36,6 +36,9 @@
                         <th>
                             @Html.DisplayNameFor(model => model.Branch)
                         </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.State)
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,6 +54,9 @@
                             <td>
                                 @Html.DisplayTextFor(modelItem => item.Branch)
                             </td>
+                            <td>
+                                @Html.DisplayTextFor(modelItem => item.State)
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -65,6 +71,7 @@
             }
         </ul>
     </div>
+    <hr />
     <div class="container">
         @using (Html.BeginForm("Read", "Metadata", FormMethod.Get))
         {

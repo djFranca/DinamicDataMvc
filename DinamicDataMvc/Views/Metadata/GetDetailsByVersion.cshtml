@@ -36,20 +36,20 @@
 <body>
     <hr />
     <div class="container" id="subtitleDiv">
-        <h2 id="ProcessDescription">Process @Model.Metadata.Name Version @Model.Metadata.Version.ToString()</h2>
+        <h2 id="ProcessDescription">Process @Model.Metadata.Name V @Model.Metadata.Version.ToString()</h2>
     </div>
     <hr />
     <div class="container" id="processDetails">
         <span>
-            <label><strong>Creation Date: </strong>@Model.Metadata.Date.ToString().Substring(0, 10)</label>
-            <label><strong>Branches: </strong></label>
-            <i>@Html.Label("Development ")</i>
+            <label>Creation Date: <strong> @Model.Metadata.Date.ToString().Substring(0, 10) </strong></label>
+            <label>Branches: </label>
+            <strong>@Html.Label("Development ")</strong>
             @Html.CheckBox("Development", @branchesState[0], new { @disabled = "disabled" })
-            <i>@Html.Label("Quality ")</i>
+            <strong>@Html.Label("Quality ")</strong>
             @Html.CheckBox("Quality", @branchesState[1], new { @disabled = "disabled" })
-            <i>@Html.Label("Production ")</i>
+            <strong>@Html.Label("Production ")</strong>
             @Html.CheckBox("Production", @branchesState[2], new { @disabled = "disabled" })
-            <label><strong>State: </strong>@ViewBag.State</label>
+            <label>State: <strong> @ViewBag.State </strong></label>
         </span>
     </div>
     <hr />
@@ -92,7 +92,7 @@
                             <td align="center">
                                 @using (Html.BeginForm("Details", "Properties", new { PropertiesId = Model.Fields.ElementAt(i).Properties, ProcessName = Model.Metadata.Name, ProcessVersion = Model.Metadata.Version.ToString(), FieldType = Model.Fields.ElementAt(i).Type, FieldName = Model.Fields.ElementAt(i).Name }, FormMethod.Post))
                                 {
-                                    <button type="submit" id="@i"><i class="fa fa-key"></i></button>
+                                    <button type="submit" id="@i"><i class="fa fa-cog"></i></button>
                                 }
                             </td>
                         </tr>
@@ -109,13 +109,14 @@
             }
         </ul>
     </div>
+    <hr />
     <div class="container">
         <div class="btn-group">
-            @using (Html.BeginForm("Read", "Metadata", FormMethod.Get))
+            <button type="button" onclick="GoBack();"><i class="fa fa-toggle-left"></i> Go Back </button>
+            @using (Html.BeginForm("Read", "Metadata", FormMethod.Get, new { style = "padding-left:10px" }))
             {
                 <button type="submit"><i class="fa fa-list"></i> Back to List </button>
             }
-            <button type="button" onclick="GoBack();"><i class="fa fa-toggle-left"></i> Go Back </button>
         </div>
     </div>
 </body>

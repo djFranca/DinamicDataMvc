@@ -14,13 +14,13 @@
 <body>
     <hr />
     <div class="container" id="subtitleDiv">
-        <h2 id="ProcessDescription">Process @ViewBag.ProcessName Version @ViewBag.ProcessVersion</h2>
+        <h2 id="ProcessDescription">Process @ViewBag.ProcessName V @ViewBag.ProcessVersion Field</h2>
     </div>
     <hr />
     <div class="container" id="fieldDetails">
         <span>
-            <label><strong>Field Type: </strong>@ViewBag.FieldType</label>
-            <label><strong>Field Name: </strong>@ViewBag.FieldName</label>
+            <label>Type: <strong> @ViewBag.FieldType </strong></label>
+            <label>Name: <strong> @ViewBag.FieldName </strong></label>
         </span>
     </div>
     <hr />
@@ -56,6 +56,7 @@
             </dd>
         </dl>
     </div>
+    <hr />
     <div class="container">
         <button type="button" onclick="GoBack();"><i class="fa fa-toggle-left"> Go Back </i></button>
     </div>

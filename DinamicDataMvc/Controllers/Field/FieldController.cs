@@ -156,7 +156,7 @@ namespace DinamicDataMvc.Controllers.Field
                 Name = model.Name,
                 Type = model.Type,
                 Properties = propertiesId,
-                Date = Convert.ToDateTime(model.CreationDate)
+                Date = DateTime.Now.ToLocalTime()
             };
 
             _Connection.DatabaseConnection();

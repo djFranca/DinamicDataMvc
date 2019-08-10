@@ -119,7 +119,7 @@ namespace DinamicDataMvc.Controllers.Metadata
                     Id = string.Empty,
                     Name = string.Empty,
                     Version = string.Empty,
-                    Date = DateTime.Now.ToLocalTime().ToString(),
+                    Date = string.Empty,
                     Branch = string.Empty,
                     State = string.Empty
                 };
@@ -285,44 +285,40 @@ namespace DinamicDataMvc.Controllers.Metadata
         [HttpPost("/Metadata/Confirm/{id}")]
         public async Task<ActionResult> Confirm(string id)
         {
-            try
+            if (id == null)
             {
-                if (id != null)
-                {
-                    _Connection.DatabaseConnection();
-                    _Metadata.SetDatabase(_Connection.GetDatabase());
-                    _Field.SetDatabase(_Connection.GetDatabase());
-                    _Properties.SetDatabase(_Connection.GetDatabase());
-                    _Log.SetDatabase(_Connection.GetDatabase());
-
-                    //Obter os ids dos campos anexos a um processo;
-                    List<string> fields = _Metadata.GetProcessFieldsID(id);
-
-                    foreach(var field in fields)
-                    {
-                        FieldModel fieldModel = _Field.GetField(field);
-                        //Obter os ids das propriedades de um campo pertencente a um processo;
-                        _Properties.DeleteProperties(fieldModel.Properties); //Apaga na base de dados as propriedades existentes num campo;
-                        _Field.DeleteField(field); //Apaga na base de dados os campos existentes num processo;
-                    }
-
-                    /* 
-                     * -------------------------------------------------------------------------------------
-                     * Log section
-                     * -------------------------------------------------------------------------------------
-                     */
-                    MetadataModel metadataModel = _Metadata.GetMetadata(id);
-                    _KeyID.SetKey(); //Generates a log model object id (unique key) 
-                    _Log.CreateProcessLog(_KeyID.GetKey(), id, metadataModel.Name, metadataModel.Version, "Delete");
-                    //--------------------------------------------------------------------------------------
-
-                    _Metadata.DeleteMetadata(id); //Apaga na base de dados o processo propriamente dito;
-                }
+                return BadRequest();
             }
-            catch (Exception exception)
+
+            _Connection.DatabaseConnection();
+            _Metadata.SetDatabase(_Connection.GetDatabase());
+            _Field.SetDatabase(_Connection.GetDatabase());
+            _Properties.SetDatabase(_Connection.GetDatabase());
+            _Log.SetDatabase(_Connection.GetDatabase());
+
+            //Obter os ids dos campos anexos a um processo;
+            List<string> fields = _Metadata.GetProcessFieldsID(id);
+
+            foreach (var field in fields)
             {
-                throw new KeyNotFoundException(exception.Message);
+                FieldModel fieldModel = _Field.GetField(field);
+                //Obter os ids das propriedades de um campo pertencente a um processo;
+                _Properties.DeleteProperties(fieldModel.Properties); //Apaga na base de dados as propriedades existentes num campo;
+                _Field.DeleteField(field); //Apaga na base de dados os campos existentes num processo;
             }
+
+            /* 
+                * -------------------------------------------------------------------------------------
+                * Log section
+                * -------------------------------------------------------------------------------------
+                */
+            MetadataModel metadataModel = _Metadata.GetMetadata(id);
+            _KeyID.SetKey(); //Generates a log model object id (unique key) 
+            _Log.CreateProcessLog(_KeyID.GetKey(), id, metadataModel.Name, metadataModel.Version, "Delete");
+            //--------------------------------------------------------------------------------------
+
+            _Metadata.DeleteMetadata(id); //Apaga na base de dados o processo propriamente dito;
+
             return await Task.Run(() => RedirectToAction("Read", "Metadata"));
         }
 
