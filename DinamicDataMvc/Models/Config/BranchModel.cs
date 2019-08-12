@@ -2,9 +2,9 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations;
 
-namespace DinamicDataMvc.Models
+namespace DinamicDataMvc.Models.Config
 {
-    public class StateModel
+    public class BranchModel
     {
         [BsonRequired]
         [BsonElement("Id")]
@@ -12,9 +12,9 @@ namespace DinamicDataMvc.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
-        [BsonElement("Value")]
-        [Display(Name = "Active")]
-        public bool Value { get; set; }
+        [BsonElement("Code")]
+        [Display(Name = "Code")]
+        public string Code { get; set; }
 
         [BsonElement("Description")]
         [Display(Name = "Description")]

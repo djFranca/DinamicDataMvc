@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DinamicDataMvc.Interfaces;
-using DinamicDataMvc.Models;
+using DinamicDataMvc.Models.Metadata;
 using DinamicDataMvc.Models.Field;
 using Microsoft.AspNetCore.Mvc;
 

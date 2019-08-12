@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace DinamicDataMvc.Models
+namespace DinamicDataMvc.Models.Metadata
 {
     public class ViewMetadataModel
     {

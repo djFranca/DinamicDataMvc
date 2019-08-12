@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DinamicDataMvc.Controllers.Metadata.MetadataController">
+    <Position X="0.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAIAAQAFABQQQAAAAgAIEAQEAAAgIgAAAEAQA=</HashCode>
+      <FileName>Controllers\Metadata\MetadataController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DinamicDataMvc.Controllers.Field.FieldController">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAEAAAAABAAQQAAAQEgAAEAQEAAAAAAACAEAQA=</HashCode>
+      <FileName>Controllers\Field\FieldController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DinamicDataMvc.Controllers.Properties.PropertiesController">
+    <Position X="4.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABABAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\Properties\PropertiesController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DinamicDataMvc.Controllers.Data.DataController">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAQAAAAEAABAgQAYAAAAAAAAEAAA=</HashCode>
+      <FileName>Controllers\Data\DataController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DinamicDataMvc.Controllers.Tools.ToolsController">
+    <Position X="8" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAEAEAAAQQAAAAEAAJAEUEAAAAEAACAEAAA=</HashCode>
+      <FileName>Controllers\Tools\ToolsController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DinamicDataMvc.Controllers.Home.HomeController">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\Home\HomeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DinamicDataMvc.Services.Database.ConnectionManagementService">
+    <Position X="7.75" Y="6.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAEAAAAgAAAAkACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Database\ConnectionManagementService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="DinamicDataMvc.Services.Metadata.BranchService" BaseTypeListCollapsed="true">
+    <Position X="10.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JQAEAAAAAAAAAAEAAAAAAAAAAAAAAAgAAAgBAAAAAAA=</HashCode>
+      <FileName>Services\Metadata\BranchService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DinamicDataMvc.Services.Metadata.MetadataService" BaseTypeListCollapsed="true">
+    <Position X="13.75" Y="6.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>BAAEAAAABAAAEAEBgCAgAAEBEAAgAwAAQAgAAAAEAAA=</HashCode>
+      <FileName>Services\Metadata\MetadataService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DinamicDataMvc.Services.Metadata.StateService" BaseTypeListCollapsed="true">
+    <Position X="12" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAEAAAAAAAAAAEAEAAAAAAAAABAAEAAAEAAACAAAAA=</HashCode>
+      <FileName>Services\Metadata\StateService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Interface Name="DinamicDataMvc.Interfaces.IBranchService">
+    <Position X="0.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JQAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAgBAAAAAAA=</HashCode>
+      <FileName>Interfaces\IBranchService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DinamicDataMvc.Interfaces.IConnectionManagementService">
+    <Position X="2.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAgAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IConnectionManagementService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DinamicDataMvc.Interfaces.IFieldService">
+    <Position X="4" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BACgAAAAgAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IFieldService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DinamicDataMvc.Interfaces.IKeyGenerates">
+    <Position X="5.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IKeyGenerates.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DinamicDataMvc.Interfaces.IMessage">
+    <Position X="0.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IMessage.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DinamicDataMvc.Interfaces.IMetadataService">
+    <Position X="2.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAABAAAAAEBgCAgAAEBAAAgAwAAQAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IMetadataService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DinamicDataMvc.Interfaces.IPaginationService">
+    <Position X="4" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IPaginationService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DinamicDataMvc.Interfaces.IProcessHistory">
+    <Position X="5.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAAAAABAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IProcessHistory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DinamicDataMvc.Interfaces.IPropertyService">
+    <Position X="0.5" Y="10" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAACAAAABAAAAAAAAAAAAAAAgAAAAEAAAAgAAAAAgA=</HashCode>
+      <FileName>Interfaces\IPropertyService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DinamicDataMvc.Interfaces.IStateService">
+    <Position X="2.25" Y="11.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAEAEAAAAAAAAABAAEAAAEAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IStateService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="DinamicDataMvc.Interfaces.IValidationService">
+    <Position X="4" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Interfaces\IValidationService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

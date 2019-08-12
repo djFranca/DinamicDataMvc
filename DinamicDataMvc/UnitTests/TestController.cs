@@ -1,5 +1,6 @@
 ﻿using DinamicDataMvc.Interfaces;
-using DinamicDataMvc.Models;
+using DinamicDataMvc.Models.Metadata;
+using DinamicDataMvc.Models.Config;
 using DinamicDataMvc.Models.Field;
 using Microsoft.AspNetCore.Mvc;
 using System;

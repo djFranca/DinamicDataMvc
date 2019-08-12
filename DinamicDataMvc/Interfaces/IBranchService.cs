@@ -1,4 +1,4 @@
-﻿using DinamicDataMvc.Models;
+﻿using DinamicDataMvc.Models.Config;
 using MongoDB.Driver;
 using System.Collections.Generic;
 

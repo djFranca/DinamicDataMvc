@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace DinamicDataMvc.Models
+namespace DinamicDataMvc.Models.Metadata
 {
     [BsonIgnoreExtraElements]
     public class MetadataModel
