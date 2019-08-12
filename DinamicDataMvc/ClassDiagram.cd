@@ -50,27 +50,11 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="DinamicDataMvc.Services.Metadata.BranchService" BaseTypeListCollapsed="true">
-    <Position X="10.25" Y="6.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>JQAEAAAAAAAAAAEAAAAAAAAAAAAAAAgAAAgBAAAAAAA=</HashCode>
-      <FileName>Services\Metadata\BranchService.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
   <Class Name="DinamicDataMvc.Services.Metadata.MetadataService" BaseTypeListCollapsed="true">
     <Position X="13.75" Y="6.25" Width="2" />
     <TypeIdentifier>
       <HashCode>BAAEAAAABAAAEAEBgCAgAAEBEAAgAwAAQAgAAAAEAAA=</HashCode>
       <FileName>Services\Metadata\MetadataService.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="DinamicDataMvc.Services.Metadata.StateService" BaseTypeListCollapsed="true">
-    <Position X="12" Y="6.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>BAAEAAAAAAAAAAEAEAAAAAAAAABAAEAAAEAAACAAAAA=</HashCode>
-      <FileName>Services\Metadata\StateService.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>

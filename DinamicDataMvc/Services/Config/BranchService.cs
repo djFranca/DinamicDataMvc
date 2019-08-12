@@ -4,7 +4,7 @@ using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DinamicDataMvc.Services.Metadata
+namespace DinamicDataMvc.Services.Config
 {
     public class BranchService : IBranchService
     {

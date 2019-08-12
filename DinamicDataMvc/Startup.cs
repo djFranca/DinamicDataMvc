@@ -12,6 +12,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using DinamicDataMvc.Utils;
 using DinamicDataMvc.Services.Pagination;
 using DinamicDataMvc.Services.Validation;
+using DinamicDataMvc.Services.Config;
 
 namespace DinamicDataMvc
 {
