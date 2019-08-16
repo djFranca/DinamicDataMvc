@@ -11,17 +11,11 @@ namespace DinamicDataMvc.Services.Metadata
 {
     public class MetadataService : IMetadataService
     {
-        #region Properties
-
         private string _NameFilteringResult;
         private string _VerionFilteringResult;
         private IMongoDatabase _Database;
-
         private List<MetadataModel> Model { get; set; }
 
-        #endregion
-
-        #region Constructor
 
         public MetadataService(string nameFilteringResult, string versionFilteringResult)
         {
@@ -30,9 +24,6 @@ namespace DinamicDataMvc.Services.Metadata
             Model = new List<MetadataModel>();
         }
 
-        #endregion
-
-        #region Methods
 
         public void SetFilterParameters(string nameFilteringResult, string versionFilteringResult)
         {
@@ -66,7 +57,6 @@ namespace DinamicDataMvc.Services.Metadata
             return Model;
         }
 
-
         public void ReadFromDatabase()
         {
             if(_Database != null)
@@ -97,7 +87,6 @@ namespace DinamicDataMvc.Services.Metadata
             }
         }
 
-
         public void SetDatabase(IMongoDatabase database)
         {
             if(database != null)
@@ -105,7 +94,6 @@ namespace DinamicDataMvc.Services.Metadata
                 _Database = database;
             }
         }
-
 
         public MetadataModel GetMetadata(string id)
         {
@@ -120,27 +108,28 @@ namespace DinamicDataMvc.Services.Metadata
             return model;
         }
 
-        public void DeleteMetadata(string id)
+        public string DeleteMetadata(string id)
         {
             if (!string.IsNullOrEmpty(id))
             {
                 var collection = _Database.GetCollection<MetadataModel>("Metadata");
                 collection.DeleteOne(s => s.Id == id);
+                return ((int)StatusCode.NoContent).ToString();
             }
+            return ((int)StatusCode.BadRequest).ToString();
         }
 
         public string CreateMetadata(MetadataModel model)
         {
             if(model == null)
             {
-                return ((int)StatusCode.NoContent).ToString() + " - " + StatusCode.NoContent.ToString();
+                return ((int)StatusCode.BadRequest).ToString();
             }
                 
             var collection = _Database.GetCollection<MetadataModel>("Metadata");
             collection.InsertOneAsync(model);
-            return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
+            return ((int)StatusCode.Created).ToString();
         }
-
 
         public List<MetadataModel> GetProcessByName(string name)
         {
@@ -173,12 +162,11 @@ namespace DinamicDataMvc.Services.Metadata
             return null;
         }
 
-
         public string AddFieldToProcess(string processID, string fieldID)
         {
             if(string.IsNullOrEmpty(processID) && string.IsNullOrEmpty(fieldID))
             {
-                return ((int)StatusCode.NoContent).ToString() + " - " + StatusCode.NoContent.ToString();
+                return ((int)StatusCode.NotFound).ToString();
             }
 
             var collection = _Database.GetCollection<MetadataModel>("Metadata");
@@ -188,9 +176,8 @@ namespace DinamicDataMvc.Services.Metadata
 
             var result = collection.ReplaceOneAsync(s => s.Id == processID, model);
 
-            return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
+            return ((int)StatusCode.Created).ToString();
         }
-
 
         /*
          * Método que permite receber como argumento de entrada o identificador de um determinado processo,
@@ -213,7 +200,6 @@ namespace DinamicDataMvc.Services.Metadata
             }
         }
 
-
         /*
          * Método que permite ativar o estado de um processo, pois uma vez criado um processo,
          * ele ficará inativo se não for adicionado qualquer campo (FieldModel)
@@ -228,7 +214,6 @@ namespace DinamicDataMvc.Services.Metadata
             }
             return model;
         }
-
 
         public List<string> GetProcessFieldsID(string processID)
         {
@@ -247,14 +232,16 @@ namespace DinamicDataMvc.Services.Metadata
             return processFields;
         }
 
-
-        public void ReplaceMetadata(string ProcessId, MetadataModel model)
+        public string ReplaceMetadata(string ProcessId, MetadataModel model)
         {
             if(!string.IsNullOrEmpty(ProcessId) && model != null)
             {
                 var collection = _Database.GetCollection<MetadataModel>("Metadata");
                 collection.FindOneAndReplace(s => s.Id == ProcessId, model);
+
+                return ((int)StatusCode.NoContent).ToString();
             }
+            return ((int)StatusCode.NotFound).ToString();
         }
 
         public List<string> GetProcessNames()
@@ -274,7 +261,5 @@ namespace DinamicDataMvc.Services.Metadata
 
             return processNames;
         }
-
-        #endregion
     }
 }

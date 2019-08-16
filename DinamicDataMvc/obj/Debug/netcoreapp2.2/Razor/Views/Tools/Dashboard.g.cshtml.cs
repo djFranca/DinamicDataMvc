@@ -13,18 +13,8 @@ namespace AspNetCore
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
-#line 1 "C:\Projeto\localRepos\source\DinamicDataMvc\Views\_ViewImports.cshtml"
-using DinamicDataMvc;
-
-#line default
-#line hidden
-#line 2 "C:\Projeto\localRepos\source\DinamicDataMvc\Views\_ViewImports.cshtml"
-using DinamicDataMvc.Models;
-
-#line default
-#line hidden
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"960a764f3bc61604d7a5ce641ccb21f2e20a90cd", @"/Views/Tools/Dashboard.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"4b135ee1f7fb118fdd58813180c92355d712160c", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"a9af4978b9c2bfca24ef48e96efe5f8573634464", @"/Views/_ViewImports.cshtml")]
     public class Views_Tools_Dashboard : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("src", new global::Microsoft.AspNetCore.Html.HtmlString("~/images/Configuration.png"), global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
@@ -83,7 +73,7 @@ using DinamicDataMvc.Models;
 #line default
 #line hidden
             BeginContext(45, 888, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd11561", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("head", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd11284", async() => {
                 BeginContext(51, 875, true);
                 WriteLiteral(@"
     <meta http-equiv=""Content-Type"" content=""text/html; charset=ISO-8859-1"">
@@ -124,17 +114,17 @@ using DinamicDataMvc.Models;
             WriteLiteral("\r\n");
             EndContext();
             BeginContext(935, 2085, false);
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd13635", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("body", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd13358", async() => {
                 BeginContext(941, 67, true);
                 WriteLiteral("\r\n    <div class=\"row\">\r\n        <div class=\"column\">\r\n            ");
                 EndContext();
                 BeginContext(1008, 273, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd14093", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd13816", async() => {
                     BeginContext(1081, 93, true);
                     WriteLiteral("\r\n                <label>List all Collections</label>\r\n                <button type=\"submit\">");
                     EndContext();
                     BeginContext(1174, 77, false);
-                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd14593", async() => {
+                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd14316", async() => {
                     }
                     );
                     __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();
@@ -177,12 +167,12 @@ using DinamicDataMvc.Models;
                 WriteLiteral("\r\n        </div>\r\n        <div class=\"column\">\r\n            ");
                 EndContext();
                 BeginContext(1341, 291, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd17939", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd17662", async() => {
                     BeginContext(1421, 97, true);
                     WriteLiteral("\r\n                <label>Create Branch Collection</label>\r\n                <button type=\"submit\">");
                     EndContext();
                     BeginContext(1518, 84, false);
-                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd18443", async() => {
+                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd18166", async() => {
                     }
                     );
                     __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();
@@ -225,12 +215,12 @@ using DinamicDataMvc.Models;
                 WriteLiteral("\r\n        </div>\r\n        <div class=\"column\">\r\n            ");
                 EndContext();
                 BeginContext(1692, 287, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd21789", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd21512", async() => {
                     BeginContext(1771, 96, true);
                     WriteLiteral("\r\n                <label>Create State Collection</label>\r\n                <button type=\"submit\">");
                     EndContext();
                     BeginContext(1867, 82, false);
-                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd22292", async() => {
+                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd22015", async() => {
                     }
                     );
                     __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();
@@ -273,12 +263,12 @@ using DinamicDataMvc.Models;
                 WriteLiteral("\r\n        </div>\r\n    </div>\r\n    <div class=\"row\">\r\n        <div class=\"column\">\r\n            ");
                 EndContext();
                 BeginContext(2074, 266, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd25684", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd25407", async() => {
                     BeginContext(2144, 93, true);
                     WriteLiteral("\r\n                <label>Database Information</label>\r\n                <button type=\"submit\">");
                     EndContext();
                     BeginContext(2237, 73, false);
-                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd26184", async() => {
+                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd25907", async() => {
                     }
                     );
                     __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();
@@ -321,12 +311,12 @@ using DinamicDataMvc.Models;
                 WriteLiteral("\r\n        </div>\r\n        <div class=\"column\">\r\n            ");
                 EndContext();
                 BeginContext(2400, 267, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd29534", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd29257", async() => {
                     BeginContext(2473, 91, true);
                     WriteLiteral("\r\n                <label>Web Form Generator</label>\r\n                <button type=\"submit\">");
                     EndContext();
                     BeginContext(2564, 73, false);
-                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd30032", async() => {
+                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd29755", async() => {
                     }
                     );
                     __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();
@@ -369,12 +359,12 @@ using DinamicDataMvc.Models;
                 WriteLiteral("\r\n        </div>\r\n        <div class=\"column\">\r\n            ");
                 EndContext();
                 BeginContext(2727, 256, false);
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd33384", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("form", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd33107", async() => {
                     BeginContext(2797, 87, true);
                     WriteLiteral("\r\n                <label>Processes Logs</label>\r\n                <button type=\"submit\">");
                     EndContext();
                     BeginContext(2884, 69, false);
-                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd33878", async() => {
+                    __tagHelperExecutionContext = __tagHelperScopeManager.Begin("img", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "960a764f3bc61604d7a5ce641ccb21f2e20a90cd33601", async() => {
                     }
                     );
                     __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();

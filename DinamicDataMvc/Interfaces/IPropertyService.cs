@@ -1,4 +1,4 @@
-﻿using DinamicDataMvc.Models.Field;
+﻿using DinamicDataMvc.Models.Properties;
 using MongoDB.Driver;
 
 namespace DinamicDataMvc.Interfaces
@@ -7,7 +7,7 @@ namespace DinamicDataMvc.Interfaces
     {
         void SetDatabase(IMongoDatabase Database);
 
-        void DeleteProperties(string propertiesID);
+        string DeleteProperties(string propertiesID);
 
         PropertiesModel GetProperties(string id);
 
@@ -17,6 +17,6 @@ namespace DinamicDataMvc.Interfaces
 
         string GetPropertyValue(string propertyId);
 
-        void UpdatePropertyValue(string propertyId, string newValue);
+        string UpdatePropertyValue(string propertyId, string newValue);
     }
 }

@@ -16,7 +16,7 @@ namespace DinamicDataMvc.Interfaces
 
         MetadataModel GetMetadata(string id);
 
-        void DeleteMetadata(string id);
+        string DeleteMetadata(string id);
 
         string CreateMetadata(MetadataModel model);
 
@@ -30,7 +30,7 @@ namespace DinamicDataMvc.Interfaces
 
         List<string> GetProcessFieldsID(string processID);
 
-        void ReplaceMetadata(string ProcessId, MetadataModel model);
+        string ReplaceMetadata(string ProcessId, MetadataModel model);
 
         List<string> GetProcessNames();
     }

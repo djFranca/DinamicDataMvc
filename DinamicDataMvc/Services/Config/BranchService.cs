@@ -12,10 +12,6 @@ namespace DinamicDataMvc.Services.Config
 
         private string Branch { get; set; }
 
-        public BranchService()
-        {
-            Branch = string.Empty;
-        }
 
         /*
          * Método que retorna uma string composta pela descrição de todos os branches, separados por um espaço em branco, armazenados na base de dados.

@@ -19,62 +19,27 @@ namespace DinamicDataMvc.Services.Fields
             }
         }
 
-
         public string CreateField(FieldModel model)
         {
-            try
+            if (model != null)
             {
-                if (model != null)
-                {
-                    var collection = _Database.GetCollection<FieldModel>("Field");
-                    collection.InsertOneAsync(model);
-                    return ((int)StatusCode.Created).ToString() + " - " + StatusCode.Created.ToString();
-                }
-                return ((int)StatusCode.BadRequest).ToString() + " - " + StatusCode.BadRequest.ToString();
+                var collection = _Database.GetCollection<FieldModel>("Field");
+                collection.InsertOneAsync(model);
+                return ((int)StatusCode.Created).ToString();
             }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
+            return ((int)StatusCode.BadRequest).ToString();
         }
-
-
-        public string UpdateField(string Id, FieldModel model)
-        {
-            try
-            {
-                if(Id != null && model != null)
-                {
-                    var collection = _Database.GetCollection<FieldModel>("Field");
-                    collection.ReplaceOneAsync(s => s.Id == Id, model);
-                    return ((int)StatusCode.NoContent).ToString() + " - " + StatusCode.NoContent.ToString();
-                }
-                return ((int)StatusCode.BadRequest).ToString() + " - " + StatusCode.BadRequest.ToString();
-            }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
-        }
-
 
         public string DeleteField(string id)
         {
-            try
+            if (id != null)
             {
-                if (id != null)
-                {
-                    var collection = _Database.GetCollection<FieldModel>("Field");
-                    collection.DeleteOneAsync(s => s.Id == id);
+                var collection = _Database.GetCollection<FieldModel>("Field");
+                collection.DeleteOneAsync(s => s.Id == id);
 
-                    return ((int)StatusCode.Ok).ToString() + " - " + StatusCode.Ok.ToString();
-                }
-                return ((int)StatusCode.BadRequest).ToString() + " - " +StatusCode.BadRequest.ToString();
+                return ((int)StatusCode.Ok).ToString();
             }
-            catch
-            {
-                throw new ArgumentNullException();
-            }
+            return ((int)StatusCode.BadRequest).ToString();
         }
 
         public FieldModel GetField(string id)

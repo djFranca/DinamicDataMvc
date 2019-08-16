@@ -12,7 +12,5 @@ namespace DinamicDataMvc.Interfaces
         string DeleteField(string id);
 
         FieldModel GetField(string id);
-
-        string UpdateField(string Id, FieldModel model);
     }
 }

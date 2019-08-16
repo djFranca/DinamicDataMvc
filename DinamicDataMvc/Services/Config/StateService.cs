@@ -11,11 +11,6 @@ namespace DinamicDataMvc.Services.Config
         private IMongoDatabase _Database;
         private string _State;
 
-        public StateService()
-        {
-            _State = string.Empty;
-        }
-
 
         public string GetStateDescription()
         {

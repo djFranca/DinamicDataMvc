@@ -13,6 +13,7 @@ using DinamicDataMvc.Utils;
 using DinamicDataMvc.Services.Pagination;
 using DinamicDataMvc.Services.Validation;
 using DinamicDataMvc.Services.Config;
+using DinamicDataMvc.Services.Properties;
 
 namespace DinamicDataMvc
 {

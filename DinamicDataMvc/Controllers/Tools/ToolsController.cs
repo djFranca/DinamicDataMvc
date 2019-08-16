@@ -9,6 +9,7 @@ using DinamicDataMvc.Models.Metadata;
 using DinamicDataMvc.Models.Data;
 using DinamicDataMvc.Models.Log;
 using DinamicDataMvc.Models.Config;
+using DinamicDataMvc.Models.Properties;
 
 namespace DinamicDataMvc.Controllers.Tools
 {

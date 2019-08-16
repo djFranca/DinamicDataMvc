@@ -9,6 +9,7 @@ using DinamicDataMvc.Models.Process;
 using DinamicDataMvc.Models.Tools;
 using DinamicDataMvc.Utils;
 using Microsoft.AspNetCore.Mvc;
+using DinamicDataMvc.Models.Properties;
 
 namespace DinamicDataMvc.Controllers.Metadata
 {

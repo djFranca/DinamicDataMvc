@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DinamicDataMvc.Interfaces;
-using DinamicDataMvc.Models.Field;
+using DinamicDataMvc.Models.Properties;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DinamicDataMvc.Controllers.Properties
