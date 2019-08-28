@@ -32,6 +32,6 @@ namespace DinamicDataMvc.Interfaces
 
         string ReplaceMetadata(string ProcessId, MetadataModel model);
 
-        List<string> GetProcessNames();
+        List<string> GetProcessNames(List<MetadataModel> metadataModels);
     }
 }

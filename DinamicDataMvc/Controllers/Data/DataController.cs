@@ -19,8 +19,9 @@ namespace DinamicDataMvc.Controllers.Data
         private readonly IBranchService _Branch;
         private readonly IFieldService _Field;
         private readonly IPropertyService _Property;
+        private readonly IStateService _State;
 
-        public DataController(IConnectionManagementService Connection, IMetadataService Metadata, IPaginationService Pagination, IBranchService Branch, IFieldService Field, IPropertyService Property)
+        public DataController(IConnectionManagementService Connection, IMetadataService Metadata, IPaginationService Pagination, IBranchService Branch, IFieldService Field, IPropertyService Property, IStateService State)
         {
             _Connection = Connection;
             _Metadata = Metadata;
@@ -28,16 +29,42 @@ namespace DinamicDataMvc.Controllers.Data
             _Branch = Branch;
             _Field = Field;
             _Property = Property;
+            _State = State;
         }
 
         [HttpGet("/Data/GetLastProcessVersions/")]
         public async Task<ActionResult> GetLastProcessVersions()
         {
+            //Stores data in cache;
+            TempData["Name"] = Request.Query["Name"];
+            string searchName = TempData["Name"].ToString();
+            ViewBag.Name = searchName;
+
+            TempData["Version"] = Request.Query["Version"];
+            string searchVersion = TempData["Version"].ToString();
+            ViewBag.Version = searchVersion;
+
+            if (string.IsNullOrEmpty(searchName))
+            {
+                searchName = null;
+            }
+
+            //No caso de a string que representa a informação do filtro de pesquisa por versão, ser nula ou vazia,
+            if (string.IsNullOrEmpty(searchVersion))
+            {
+                searchVersion = null;
+            }
+
             List<MetadataModel> metadataList = new List<MetadataModel>();
 
             _Connection.DatabaseConnection();
             var database = _Connection.GetDatabase();
             _Metadata.SetDatabase(database);
+            _Branch.SetDatabase(database);
+            _State.SetDatabase(database);
+
+            _Metadata.SetFilterParameters(searchName, searchVersion);
+            _Metadata.ReadFromDatabase();
 
             //------------------------------------------
             //Add - Pagination to Page (Phase 1)
@@ -51,15 +78,31 @@ namespace DinamicDataMvc.Controllers.Data
             ViewBag.PageNumber = pageNumber; //Passa para a view o número da página;
             //------------------------------------------
 
-            List<string> distinctProcessNames = _Metadata.GetProcessNames();
+            //------------------------------------------
+            //Obter as últimas versões dos processos
+            //------------------------------------------
+            string resultBranch = string.Empty;
+            string resultState = string.Empty;
+
+            List<string> distinctProcessNames = _Metadata.GetProcessNames(new List<MetadataModel>() { });
 
             foreach (string processName in distinctProcessNames)
             {
                 int currentVersion = _Metadata.GetProcessByName(processName).Count(); //Contagem do número de documentos existentes com o nome passado como argumento de input;
                 MetadataModel metadataModel = _Metadata.GetProcessByVersion(processName, currentVersion);
 
+                _Branch.ReadFromDatabase(metadataModel.Branch);
+                resultBranch += (_Branch.GetBranches() + "|");
+
+                _State.ReadFromDatabase(metadataModel.State);
+                resultState += (_State.GetStateDescription() + "|");
+
                 metadataList.Add(metadataModel);
             }
+            //------------------------------------------
+
+            ViewBag.BranchesByProcess = resultBranch; //Armazena as descrições dos branches por processo;
+            ViewBag.StatesByProcess = resultState; //Armazena as descrições dos estados por processo;
 
             //------------------------------------------
             //Add - Pagination to Page (Phase 2)

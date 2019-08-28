@@ -273,7 +273,7 @@ namespace Tests
             //Arrange
             manager.DatabaseConnection();
             property.SetDatabase(manager.GetDatabase());
-            string propertiesId = "18c8870a363bd02b32aa6677";
+            string propertiesId = "09a36f7f45683eba7e0e8dae";
             string value = "daniel.franca@mail.pt";
 
             //Act
@@ -442,7 +442,7 @@ namespace Tests
             metadata.SetDatabase(manager.GetDatabase());
 
             //Act
-            List<string> processNames = metadata.GetProcessNames();
+            List<string> processNames = metadata.GetProcessNames(new List<MetadataModel>() { });
 
             if(processNames.Count >= 0)
             {

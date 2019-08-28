@@ -83,7 +83,25 @@ namespace DinamicDataMvc.Services.Metadata
                     var branch = _Database.GetCollection<StateModel>("State").Find(s => s.Description == "Active").Single();
                     filteredData = collection.Find(s => s.Version > 0 && s.State == branch.Id).ToList();
                 }
-                Model = filteredData;
+
+
+                //------------------------------------------
+                //Obter as últimas versões dos processos
+                //------------------------------------------
+                List<MetadataModel> finalModels = new List<MetadataModel>();
+                List<string> distinctProcessNames = GetProcessNames(filteredData); //Ober os nomes dos processos;
+
+                foreach (string processName in distinctProcessNames)
+                {
+                    int currentVersion = GetProcessByName(processName).Count(); //Obter a última versão para um determinado processo;
+                    MetadataModel metadataModel = GetProcessByVersion(processName, currentVersion);
+
+                    finalModels.Add(metadataModel);
+
+                }
+                //------------------------------------------
+
+                Model = finalModels;  //Afeta a lista filtrada ao Modelo de retorno;
             }
         }
 
@@ -244,12 +262,18 @@ namespace DinamicDataMvc.Services.Metadata
             return ((int)StatusCode.NotFound).ToString();
         }
 
-        public List<string> GetProcessNames()
+        public List<string> GetProcessNames(List<MetadataModel> metadataModels)
         {
             List<string> processNames = new List<string>();
 
-            var collection = _Database.GetCollection<MetadataModel>("Metadata");
-            var models = collection.Find(s => true).ToList();
+            var models = metadataModels;
+
+            //Se a lista de modelos recebida não contiver qualquer elemento;
+            if(metadataModels.Count == 0)
+            {
+                var collection = _Database.GetCollection<MetadataModel>("Metadata");
+                models = collection.Find(s => true).ToList();
+            }
 
             foreach(var model in models)
             {
