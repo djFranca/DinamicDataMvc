@@ -55,8 +55,6 @@ namespace DinamicDataMvc.Controllers.Data
                 searchVersion = null;
             }
 
-            List<MetadataModel> metadataList = new List<MetadataModel>();
-
             _Connection.DatabaseConnection();
             var database = _Connection.GetDatabase();
             _Metadata.SetDatabase(database);
@@ -84,35 +82,52 @@ namespace DinamicDataMvc.Controllers.Data
             string resultBranch = string.Empty;
             string resultState = string.Empty;
 
-            List<string> distinctProcessNames = _Metadata.GetProcessNames(new List<MetadataModel>() { });
+            List<MetadataModel> metadataList = _Metadata.GetProcessesMetadataList();
 
-            foreach (string processName in distinctProcessNames)
+            if(metadataList != null)
             {
-                int currentVersion = _Metadata.GetProcessByName(processName).Count(); //Contagem do número de documentos existentes com o nome passado como argumento de input;
-                MetadataModel metadataModel = _Metadata.GetProcessByVersion(processName, currentVersion);
+                foreach (var model in metadataList)
+                {
+                    _Branch.ReadFromDatabase(model.Branch);
+                    resultBranch += (_Branch.GetBranches() + "|");
 
-                _Branch.ReadFromDatabase(metadataModel.Branch);
-                resultBranch += (_Branch.GetBranches() + "|");
-
-                _State.ReadFromDatabase(metadataModel.State);
-                resultState += (_State.GetStateDescription() + "|");
-
-                metadataList.Add(metadataModel);
+                    _State.ReadFromDatabase(model.State);
+                    resultState += (_State.GetStateDescription() + "|");
+                }
             }
-            //------------------------------------------
 
+            //------------------------------------------
             ViewBag.BranchesByProcess = resultBranch; //Armazena as descrições dos branches por processo;
             ViewBag.StatesByProcess = resultState; //Armazena as descrições dos estados por processo;
 
             //------------------------------------------
             //Add - Pagination to Page (Phase 2)
             //------------------------------------------
-            Dictionary<int, List<MetadataModel>> metadataToDisplay = _Pagination.SetModelsByPage(metadataList);
-            int NumberOfPages = metadataToDisplay.Count();
+            Dictionary<int, List<MetadataModel>> modelsToDisplay = _Pagination.SetModelsByPage(metadataList);
+            int NumberOfPages = modelsToDisplay.Count();
             ViewBag.NumberOfPages = NumberOfPages;
             //------------------------------------------
 
-            return await Task.Run(() => View("GetLastProcessVersions", metadataToDisplay[pageIndex]));
+            //Se a base de dados não tiver processos armazenados para mostrar na listagem de processos;
+            if (modelsToDisplay.Count() == 0)
+            {
+                List<MetadataModel> models = new List<MetadataModel>();
+                MetadataModel model = new MetadataModel()
+                {
+                    Id = string.Empty,
+                    Name = string.Empty,
+                    Version = 0,
+                    Date = DateTime.Now.ToLocalTime(),
+                    Branch = new List<string>(),
+                    Field = new List<string>(),
+                    State = string.Empty
+                };
+                models.Add(model);
+                return await Task.Run(() => View("GetLastProcessVersions", models));
+            }
+
+
+            return await Task.Run(() => View("GetLastProcessVersions", modelsToDisplay[pageIndex]));
         }
 
 

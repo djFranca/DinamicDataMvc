@@ -11,7 +11,7 @@
     var name = ViewBag.Name;
     var pageNumber = ViewBag.NumberOfPages;
 
-    string [] branchesByProcess = ViewBag.BranchesByProcess.Split("|");
+    string[] branchesByProcess = ViewBag.BranchesByProcess.Split("|");
     string[] statesByProcess = ViewBag.StatesByProcess.Split("|");
 
 }
@@ -74,35 +74,55 @@
                 <tbody>
                     @for (int i = 0; i < Model.Count(); i++)
                     {
-                    <tr id="tableBody">
-                        <td>
-                            @Html.ActionLink(@Html.DisplayTextFor(modelItem => Model.ElementAt(i).Name), "GetProcessFieldDataByVersions", "Data", new { Name = Model.ElementAt(i).Name, Version = Model.ElementAt(i).Version, Branch = Model.ElementAt(i).Branch }, new { @class = "processDetails" })
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => Model.ElementAt(i).Version)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => Model.ElementAt(i).Date)
-                        </td>
-                        <td>
-                            @branchesByProcess[i]
-                        </td>
-                        <td>
-                            @statesByProcess[i]
-                        </td>
-                        <td>
-                            @using (Html.BeginForm("WebFormGenerator", "Metadata", new { processId = Model.ElementAt(i).Id }, FormMethod.Post))
-                            {
-                                <button type="submit"><i class="fa fa-file-code-o"></i></button>
-                            }
-                        </td>
-                        <td>
-                            @using (Html.BeginForm("", "", new { processId = Model.ElementAt(i).Id }, FormMethod.Post))
-                            {
-                                <button type="submit"><i class="fa fa-save"></i></button>
-                            }
-                        </td>
-                    </tr>
+                        <tr id="tableBody">
+                            <td>
+                                @Html.ActionLink(@Html.DisplayTextFor(modelItem => Model.ElementAt(i).Name), "GetProcessFieldDataByVersions", "Data", new { Name = Model.ElementAt(i).Name, Version = Model.ElementAt(i).Version, Branch = Model.ElementAt(i).Branch }, new { @class = "processDetails" })
+                            </td>
+                            <td>
+                                @if (Model.ElementAt(i).Version != 0)
+                                {
+                                    @Html.DisplayFor(modelItem => Model.ElementAt(i).Version)
+                                }
+                                @if (Model.ElementAt(i).Version == 0)
+                                {
+                                    @Html.Display(string.Empty)
+                                }
+                            </td>
+                            <td>
+                                @if (Model.ElementAt(i).Version != 0)
+                                {
+                                    @Html.DisplayFor(modelItem => Model.ElementAt(i).Date)
+                                }
+                                @if (Model.ElementAt(i).Version == 0)
+                                {
+                                    @Html.Display(string.Empty)
+                                }
+                            </td>
+                            <td>
+                                @branchesByProcess[i]
+                            </td>
+                            <td>
+                                @statesByProcess[i]
+                            </td>
+                            <td>
+                                @if (Model.ElementAt(i).Version != 0)
+                                {
+                                    @using (Html.BeginForm("WebFormGenerator", "Metadata", new { processId = Model.ElementAt(i).Id }, FormMethod.Post))
+                                    {
+                                        <button type="submit"><i class="fa fa-file-code-o"></i></button>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @if (Model.ElementAt(i).Version != 0)
+                                {
+                                    @using (Html.BeginForm("", "", new { processId = Model.ElementAt(i).Id }, FormMethod.Post))
+                                    {
+                                        <button type="submit"><i class="fa fa-save"></i></button>
+                                    }
+                                }
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>

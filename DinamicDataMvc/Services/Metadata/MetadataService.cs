@@ -89,15 +89,35 @@ namespace DinamicDataMvc.Services.Metadata
                 //Obter as últimas versões dos processos
                 //------------------------------------------
                 List<MetadataModel> finalModels = new List<MetadataModel>();
-                List<string> distinctProcessNames = GetProcessNames(filteredData); //Ober os nomes dos processos;
+
+                List<string> distinctProcessNames = null;
+                if(_NameFilteringResult == null) distinctProcessNames = GetProcessNames(filteredData); //Ober os nomes dos processos;
+                if (_NameFilteringResult != null) distinctProcessNames = new List<string>() { _NameFilteringResult };
 
                 foreach (string processName in distinctProcessNames)
                 {
-                    int currentVersion = GetProcessByName(processName).Count(); //Obter a última versão para um determinado processo;
-                    MetadataModel metadataModel = GetProcessByVersion(processName, currentVersion);
+                    MetadataModel metadataModel = null;
 
-                    finalModels.Add(metadataModel);
+                    //Tratamento da versão do processo, só é obtida a última versão do processo se não existir uma versão especificada;
+                    int currentVersion = 0;
 
+                    if (_VerionFilteringResult == null) {
+                        currentVersion = GetProcessByName(processName).Count();
+                        metadataModel = GetProcessByVersion(processName, currentVersion);
+                    }
+
+                    if (_VerionFilteringResult != null) {
+                        int lastVersion = GetProcessByName(processName).Count();
+                        int filteredVersion = int.Parse(_VerionFilteringResult);
+
+                        if(filteredVersion == lastVersion)
+                        {
+                            currentVersion = filteredVersion;
+                            metadataModel = GetProcessByVersion(processName, currentVersion);
+                        }
+                    }
+
+                    if(metadataModel != null) finalModels.Add(metadataModel);
                 }
                 //------------------------------------------
 

@@ -88,23 +88,27 @@ namespace DinamicDataMvc.Controllers.Metadata
             List<MetadataModel> metadataList = _Metadata.GetProcessesMetadataList();
             List<ViewMetadataModel> viewModels = new List<ViewMetadataModel>();
 
-            foreach (var metadata in metadataList)
+            if(metadataList != null)
             {
-                _GetBranchById.ReadFromDatabase(metadata.Branch);
-                _GetStateById.ReadFromDatabase(metadata.State);
-
-                ViewMetadataModel viewModel = new ViewMetadataModel()
+                foreach (var metadata in metadataList)
                 {
-                    Id = metadata.Id,
-                    Name = metadata.Name,
-                    Version = metadata.Version.ToString(),
-                    Date = metadata.Date.ToString(), 
-                    Branch = _GetBranchById.GetBranches(),
-                    State = _GetStateById.GetStateDescription()
-                };
+                    _GetBranchById.ReadFromDatabase(metadata.Branch);
+                    _GetStateById.ReadFromDatabase(metadata.State);
 
-                viewModels.Add(viewModel);
+                    ViewMetadataModel viewModel = new ViewMetadataModel()
+                    {
+                        Id = metadata.Id,
+                        Name = metadata.Name,
+                        Version = metadata.Version.ToString(),
+                        Date = metadata.Date.ToString(),
+                        Branch = _GetBranchById.GetBranches(),
+                        State = _GetStateById.GetStateDescription()
+                    };
+
+                    viewModels.Add(viewModel);
+                }
             }
+
             Dictionary<int, List<ViewMetadataModel>> modelsToDisplay = _SetPagination.SetModelsByPage(viewModels);
 
             int NumberOfPages = modelsToDisplay.Count();
