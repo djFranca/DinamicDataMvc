@@ -21,7 +21,7 @@ namespace DinamicDataMvc.Models.Properties
 
         [BsonRequired]
         [BsonElement("Value")]
-        [Display(Name = "Value")]
+        [Display(Name = "Default Value")]
         public string Value { get; set; }
 
         [BsonRequired]

@@ -5,6 +5,10 @@
     var header = ViewBag.ProcessDetails;
 
     string[] headerFragments = header.Split(",");
+
+    string[] branches = headerFragments[2].Split(" ");
+
+    string versionHeader = "V" + @headerFragments[1];
 }
 
 <head>
@@ -19,7 +23,7 @@
 <body style="background-color:ghostwhite">
     <hr />
     <div class="container" id="subtitleDiv">
-        <h2 id="ProcessDescription">@headerFragments[0] V @headerFragments[1] @headerFragments[2]</h2>
+        <h2 id="ProcessDescription">@headerFragments[0] @versionHeader</h2>
     </div>
     <hr />
     <div class="container">
@@ -33,6 +37,9 @@
                             <th>
                                 Version
                             </th>
+                            <th>
+                                branch
+                            </th>
                             @for (int i = 0; i < Model.FieldTypesByVersion[version].Count; i++)
                             {
                                 <th>@Model.FieldTypesByVersion[version].ElementAt(i)</th>
@@ -43,21 +50,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr id="tableBody">
-                            <td>
-                                @version
-                            </td>
-                            @for (int j = 0; j < Model.DataByProcessField[version].Count; j++)
-                            {
-                                <td>@Model.DataByProcessField[version].ElementAt(j)</td>
-                            }
-                            <td>
-                                @using (Html.BeginForm("UpdateFieldData", "Data", new { Name = headerFragments[0], Version = @version }, FormMethod.Get))
+                        @for (int i = 0; i < branches.Length - 1; i++)
+                        {
+                            <tr id="tableBody">
+                                <td>
+                                    @version
+                                </td>
+                                <td>@branches[i]</td>
+                                @for (int j = 0; j < Model.DataByProcessField[version].Count; j++)
                                 {
-                                    <button type="submit"><i class="fa fa-pencil"></i></button>
+                                    <td>@Model.DataByProcessField[version].ElementAt(j)</td>
                                 }
-                            </td>
-                        </tr>
+                                <td>
+                                    @using (Html.BeginForm("UpdateFieldData", "Data", new { Name = headerFragments[0], Version = @version }, FormMethod.Get))
+                                    {
+                                        <button type="submit"><i class="fa fa-pencil"></i></button>
+                                    }
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

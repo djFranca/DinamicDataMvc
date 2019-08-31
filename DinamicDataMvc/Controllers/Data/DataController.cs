@@ -148,19 +148,21 @@ namespace DinamicDataMvc.Controllers.Data
             ViewBag.ProcessDetails = processDetails;
 
             //TODO: Obter as versões anteriores do processo
-            List<MetadataModel> allVersions = _Metadata.GetProcessByName(name);
+            //List<MetadataModel> allVersions = _Metadata.GetProcessByName(name);
 
-            List<string> versions = new List<string>();
+            MetadataModel processModel = _Metadata.GetProcessByVersion(name, int.Parse(version));
+
+            //List<string> versions = new List<string>();
             Dictionary<string, List<string>> fieldTypesByProcess = new Dictionary<string, List<string>>();
             Dictionary<string, List<string>> dataByProcessField = new Dictionary<string, List<string>>();
 
-            foreach (var model in allVersions)
-            {
+            //foreach (var model in allVersions)
+            //{
                 List<string> fields = new List<string>(); //Por cada modelo de metadados são armazenados os seus campos numa lista do tipo string;
                 List<string> propertiesId = new List<string>();
                 List<string> data = new List<string>();
 
-                foreach(string fieldId in model.Field)
+                foreach(string fieldId in processModel.Field)
                 {
                     var fieldModel = _Field.GetField(fieldId); //Obter o modelo de campos através do seu identificador;
                     fields.Add(fieldModel.Type); //adicionar o tipo à lista de campos de uma versão do processo;
@@ -171,16 +173,16 @@ namespace DinamicDataMvc.Controllers.Data
                     data.Add(propertiesModel.Value);
                 }
 
-                versions.Add(model.Version.ToString()); //Adiciona à lista de versões a versão do processo,
+                //versions.Add(model.Version.ToString()); //Adiciona à lista de versões a versão do processo,
                 
-                fieldTypesByProcess.Add(model.Version.ToString(), fields); //Adicionar ao dicionário a lista de campos por versão;
+                fieldTypesByProcess.Add(processModel.Version.ToString(), fields); //Adicionar ao dicionário a lista de campos por versão;
 
-                dataByProcessField.Add(model.Version.ToString(), data);
-            }
+                dataByProcessField.Add(processModel.Version.ToString(), data);
+            //}
 
             ViewDataModel modelToDisplay = new ViewDataModel()
             {
-                Versions = versions,
+                Versions = new List<string>() { version },
                 FieldTypesByVersion = fieldTypesByProcess,
                 DataByProcessField = dataByProcessField
             };

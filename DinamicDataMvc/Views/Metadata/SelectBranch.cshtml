@@ -1,0 +1,67 @@
+﻿@model DinamicDataMvc.Models.Metadata.ViewMetadataModel
+@{
+    ViewData["Title"] = "SelectBranch";
+
+    string isEditable = ViewBag.IsEditable;
+}
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <link rel="stylesheet" href="~/css/PageStyleFile.css" />
+</head>
+<body style="background-color:ghostwhite">
+    <hr />
+    <div class="container" id="subtitleDiv">
+        <h2 id="ProcessDescription"> Process @Model.Name Version @Model.Version</h2>
+    </div>
+    <hr />
+    <div class="container">
+        <h3>Selelect your work branch!</h3>
+    </div>
+    <hr />
+    <div class="container">
+        @using (Html.BeginForm("WebFormGenerator", "Metadata", Model, FormMethod.Post, false, new { @width = "60%" }))
+        {
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Id" class="form-control" name="Id" value="@Model.Id" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Name" class="form-control" name="Name" value="@Model.Name" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Version" class="form-control" name="Version" value="@Model.Version" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="State" class="form-control" name="State" value="@isEditable" />
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Date" class="form-control" name="Date" value="@Model.Date" />
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Branch" class="control-label" style="font-family:Arial, Helvetica, sans-serif; font-size:x-large"><strong>Process Branches</strong></label>
+                <br />
+                <select name="branchList" id="ddlBranches" style="width:250px; font-family:Arial, Helvetica, sans-serif; font-size:larger">
+                    @for (int i = 0; i < Model.Branch.Split(" ").Length - 1; i++)
+                    {
+                        <option value="@Model.Branch.Split(" ")[i]" style="font-family:Arial, Helvetica, sans-serif; font-size:large">@Model.Branch.Split(" ")[i]</option>
+                    }
+                </select>
+                <span asp-validation-for="Name" class="text-danger"></span>
+                <button type="submit"><i class="fa fa-check"> Select</i></button>
+            </div>
+        }
+    </div>
+    <br />
+    <div class="container" style="padding-top:50px">
+        <button type="button" onclick="GoBack();"><i class="fa fa-toggle-left"> Go Back </i></button>
+    </div>
+    <hr />
+</body>
+

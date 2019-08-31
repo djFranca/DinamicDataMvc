@@ -107,18 +107,18 @@
                             <td>
                                 @if (Model.ElementAt(i).Version != 0)
                                 {
-                                    @using (Html.BeginForm("WebFormGenerator", "Metadata", new { processId = Model.ElementAt(i).Id }, FormMethod.Post))
+                                    @using (Html.BeginForm("SelectBranch", "Metadata", new { processId = Model.ElementAt(i).Id, processName = Model.ElementAt(i).Name, processVersion = Model.ElementAt(i).Version, processDate = Model.ElementAt(i).Date, processBranches = @branchesByProcess[i], processState = Model.ElementAt(i).State, isEditable = "false"}, FormMethod.Post))
                                     {
-                                        <button type="submit"><i class="fa fa-file-code-o"></i></button>
+                                        <button type="submit"><i class="fa fa-eye"></i></button>
                                     }
                                 }
                             </td>
                             <td>
                                 @if (Model.ElementAt(i).Version != 0)
                                 {
-                                    @using (Html.BeginForm("", "", new { processId = Model.ElementAt(i).Id }, FormMethod.Post))
+                                    @using (Html.BeginForm("SelectBranch", "Metadata", new { processId = Model.ElementAt(i).Id, processName = Model.ElementAt(i).Name, processVersion = Model.ElementAt(i).Version, processDate = Model.ElementAt(i).Date, processBranches = @branchesByProcess[i], processState = Model.ElementAt(i).State, isEditable = "true" }, FormMethod.Post))
                                     {
-                                        <button type="submit"><i class="fa fa-save"></i></button>
+                                        <button type="submit"><i class="fa fa-toggle-right"></i></button>
                                     }
                                 }
                             </td>
@@ -135,9 +135,5 @@
                 <li class="page-item"><a class="page-link" style="color:#212529;" href="/Data/GetLastProcessVersions?Name=@name&Version=@version&Page=@i"><b>@i</b></a></li>
             }
         </ul>
-    </div>
-    <br />
-    <div class="container">
-        <button type="button" onclick="GoBack();"><i class="fa fa-toggle-left"> Go Back </i></button>
     </div>
 </body>

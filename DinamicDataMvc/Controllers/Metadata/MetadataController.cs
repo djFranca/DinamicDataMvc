@@ -534,9 +534,9 @@ namespace DinamicDataMvc.Controllers.Metadata
 
 
         [HttpPost("/Metadata/WebFormGenerator")]
-        public async Task<ActionResult> WebFormGenerator(string processId)
+        public async Task<ActionResult> WebFormGenerator(ViewMetadataModel model)
         {
-            if (string.IsNullOrEmpty(processId))
+            if (string.IsNullOrEmpty(model.Id))
             {
                 return BadRequest();
             }
@@ -544,7 +544,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             _Connection.DatabaseConnection();
             var database = _Connection.GetDatabase();
             _Metadata.SetDatabase(database);
-            List<string> fields = _Metadata.GetProcessFieldsID(processId);
+            List<string> fields = _Metadata.GetProcessFieldsID(model.Id);
 
             _Field.SetDatabase(database);
             _Properties.SetDatabase(database);
@@ -589,6 +589,28 @@ namespace DinamicDataMvc.Controllers.Metadata
             ViewBag.Template = template;
 
             return await Task.Run(() => View("WebFormGenerator"));
+        }
+
+
+        /*
+         * Selecionar o branch que se pretende operar;
+         */
+        [HttpPost("/Metadata/SelectBranch")]
+        public async Task<ActionResult> SelectBranch(string processId, string processName, string processVersion, string processDate, string processBranches, string processState, string isEditable)
+        {
+            ViewMetadataModel viewModel = new ViewMetadataModel()
+            {
+                Id = processId,
+                Name = processName,
+                Version = processVersion,
+                Date = processDate,
+                Branch = processBranches,
+                State = processState
+            };
+
+            ViewBag.IsEditable = isEditable;
+
+            return await Task.Run(() => View("SelectBranch", viewModel));
         }
     }
 }
