@@ -1,6 +1,10 @@
-﻿@{
+﻿@model DinamicDataMvc.Models.Data.DataModel
+@{
     ViewData["Title"] = "WebFormGenerator";
-    
+
+    string processId = ViewBag.ProcessId;
+    string processBranch = ViewBag.ProcessBranch;
+
     string template = ViewBag.Template;
 
     string[] htmlElements = template.Split("|");
@@ -20,15 +24,24 @@
         <h2> Generated Web Form </h2>
     </div>
     <hr />
-    <div class="container">
-        @using (Html.BeginForm("", "Data"))
-        {
-            @for (int i = 0; i < htmlElements.Length; i++)
+    <div class="row">
+        <div class="col-md-5" style="margin-left:15px;">
+            @using (Html.BeginForm("SaveWebform", "Data", FormMethod.Post, new { @width = "60%" }))
             {
-                @Html.Raw(htmlElements.ElementAt(i))
-                @Html.Raw("<br />")
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="ProcessId" value="@processId" name="ProcessId" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="ProcessBranch" value="@processBranch" name="ProcessBranch" class="form-control" />
+                </div>
+                @for (int i = 0; i < htmlElements.Length; i++)
+                {
+                    @Html.Raw(htmlElements.ElementAt(i))
+                    <span asp-validation-for="Data" class="text-danger"></span>
+                }
             }
-        }
+        </div>
     </div>
 </body>
 

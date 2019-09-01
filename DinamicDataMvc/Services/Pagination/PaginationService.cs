@@ -14,6 +14,11 @@ namespace DinamicDataMvc.Services.Pagination
             _totalModelsByPage = totalModelsByPage;
         }
 
+        public void SetNumberOfModelsByPage(int numberOfModels)
+        {
+            _totalModelsByPage = numberOfModels;
+        }
+
         public Dictionary<int, List<T>> SetModelsByPage<T>(List<T> models)
         {
             try

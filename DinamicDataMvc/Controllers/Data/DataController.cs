@@ -20,7 +20,7 @@ namespace DinamicDataMvc.Controllers.Data
         private readonly IPaginationService _Pagination;
         private readonly IBranchService _Branch;
         private readonly IFieldService _Field;
-        private readonly IPropertyService _Property;
+        private readonly IPropertyService _Properties;
         private readonly IStateService _State;
         private readonly IDataService _Data;
         private readonly IKeyGenerates _KeyGenerates;
@@ -32,7 +32,7 @@ namespace DinamicDataMvc.Controllers.Data
             _Pagination = Pagination;
             _Branch = Branch;
             _Field = Field;
-            _Property = Property;
+            _Properties = Property;
             _State = State;
             _Data = Data;
             _KeyGenerates = KeyGenerates;
@@ -145,7 +145,7 @@ namespace DinamicDataMvc.Controllers.Data
 
             _Branch.SetDatabase(database);
             _Field.SetDatabase(database);
-            _Property.SetDatabase(database);
+            _Properties.SetDatabase(database);
             _Data.SetDatabase(database);
             _Branch.ReadFromDatabase(branch);
 
@@ -179,7 +179,7 @@ namespace DinamicDataMvc.Controllers.Data
                     fields.Add(fieldModel.Type); //adicionar o tipo à lista de campos de uma versão do processo;
 
                     //Obter o valor associado a uma propriedade de um determinado campo: Implementar esta funcionalidade no serviço Properties;
-                    var propertiesModel = _Property.GetProperties(fieldModel.Properties);
+                    var propertiesModel = _Properties.GetProperties(fieldModel.Properties);
 
                     //Se o processo para o branch corrente tiver registo na colecção Data, obtem-se o valor Data associado ao campo
                     if(_Data.ExistRecordInData(processModel.Id, processBranch))
@@ -219,7 +219,7 @@ namespace DinamicDataMvc.Controllers.Data
             var database = _Connection.GetDatabase();
             _Metadata.SetDatabase(database);
             _Field.SetDatabase(database);
-            _Property.SetDatabase(database);
+            _Properties.SetDatabase(database);
             _Data.SetDatabase(database);
 
             MetadataModel metadataModel = _Metadata.GetProcessByVersion(Name, Convert.ToInt32(Version));
@@ -260,7 +260,7 @@ namespace DinamicDataMvc.Controllers.Data
                 {
                     FieldModel fieldModel = _Field.GetField(field);
                     fieldsType += fieldModel.Type + " ";
-                    DataValue.Add(_Property.GetPropertyValue(fieldModel.Properties));
+                    DataValue.Add(_Properties.GetProperties(fieldModel.Properties).Value);
                 }
 
                 DataModel model = new DataModel()
@@ -308,12 +308,16 @@ namespace DinamicDataMvc.Controllers.Data
                 return await Task.Run(() => Redirect("/Metadata/SelectBranch?processId="+model.Id+ "&&processName="+model.Name+"&&processVersion="+model.Version+"&&processDate="+model.Date+"&&processBranches="+model.Branch+"&&processState="+model.State+"&&isEditable=true"));
             }
 
+            //Valores para preenchimento de campos hidden no formulário gerado automaticamente;
+            ViewBag.ProcessId = model.Id;
+            ViewBag.ProcessBranch = model.Branch;
+
             _Connection.DatabaseConnection();
 
             //Chamadas aos serviços - Ligação à base de dados
             _Metadata.SetDatabase(_Connection.GetDatabase());
             _Field.SetDatabase(_Connection.GetDatabase());
-            _Property.SetDatabase(_Connection.GetDatabase());
+            _Properties.SetDatabase(_Connection.GetDatabase());
             _Data.SetDatabase(_Connection.GetDatabase());
 
             List<string> fields = _Metadata.GetProcessFieldsID(model.Id); //Obter os campos existentes no processo seleccionado;
@@ -330,7 +334,7 @@ namespace DinamicDataMvc.Controllers.Data
                 {
                     FieldModel fieldModel = _Field.GetField(fields.ElementAt(j));
 
-                    PropertiesModel propertiesModel = _Property.GetProperties(fieldModel.Properties);
+                    PropertiesModel propertiesModel = _Properties.GetProperties(fieldModel.Properties);
 
                     WebFormModel webFormElement = new WebFormModel()
                     {
@@ -352,7 +356,7 @@ namespace DinamicDataMvc.Controllers.Data
                 foreach (string field in fields)
                 {
                     FieldModel fieldModel = _Field.GetField(field);
-                    PropertiesModel propertiesModel = _Property.GetProperties(fieldModel.Properties);
+                    PropertiesModel propertiesModel = _Properties.GetProperties(fieldModel.Properties);
 
                     WebFormModel webFormElement = new WebFormModel()
                     {
@@ -389,6 +393,107 @@ namespace DinamicDataMvc.Controllers.Data
             ViewBag.Template = template;
 
             return await Task.Run(() => View("WebFormGenerator"));
+        }
+
+        [HttpPost("/Data/SaveWebform")]
+        public async Task<ActionResult> SaveWebform(DataModel model)
+        {
+            if(model == null)
+            {
+                return BadRequest(); //Pedido Inválido. Motivo: Modelo de dados vazio;
+            }
+
+            _Connection.DatabaseConnection(); //Ligação com o servidor de base de dados;
+            _Data.SetDatabase(_Connection.GetDatabase()); //Instanciar a ligação entre o serviço e o servidor de base de dados;
+
+            //Verificar se existe uma label embebida no formulário -> O seu valor não é armazenado na lista de valores, terá de adquirir um valor default;
+            //Verificar se existe um botão embebido no formulário -> O seu valor não é armazenado na lista de valores, terá de adquirir um valor default;
+            _Metadata.SetDatabase(_Connection.GetDatabase());
+            int numberOfFields = _Metadata.GetProcessFieldsID(model.ProcessId).Count;
+            bool existProcessRecord = _Data.ExistRecordInData(model.ProcessId, model.ProcessBranch);
+            //Se a condição for verdadeira, logo existe um botão de submissão e é necessário adicionar um valor default
+            if(numberOfFields > model.Data.Count)
+            {
+                _Field.SetDatabase(_Connection.GetDatabase());
+                _Properties.SetDatabase(_Connection.GetDatabase());
+                string label = string.Empty;
+                string button = string.Empty;
+
+                if(numberOfFields == model.Data.Count + 1)
+                {
+                    if (!existProcessRecord)
+                    {
+                        button = _Metadata.GetProcessFieldsID(model.ProcessId).ElementAt(numberOfFields - 1);
+                    }
+                    else
+                    {
+                        button = _Data.GetDataModel(model.ProcessId, model.ProcessBranch).Data.ElementAt(numberOfFields - 1);
+                    }
+
+                    model.Data.Add(_Properties.GetProperties(_Field.GetField(button).Properties).Value);
+                }
+                else if(numberOfFields == model.Data.Count + 2)
+                {
+                    List<string> updatedData = new List<string>();
+
+                    if (!existProcessRecord)
+                    {
+                        label = _Metadata.GetProcessFieldsID(model.ProcessId).ElementAt(0);
+
+                        button = _Metadata.GetProcessFieldsID(model.ProcessId).ElementAt(numberOfFields - 1);
+                    }
+                    else
+                    {
+                        label = _Data.GetDataModel(model.ProcessId, model.ProcessBranch).Data.ElementAt(0);
+
+                        button = _Data.GetDataModel(model.ProcessId, model.ProcessBranch).Data.ElementAt(numberOfFields - 1);
+                    }
+
+                    updatedData.Add(label);
+
+                    foreach(var data in model.Data)
+                    {
+                        updatedData.Add(data);
+                    }
+
+                    updatedData.Add(button);
+
+                    model.Data = updatedData;
+                }
+            }
+
+            DataModel dataModel = null; //Objeto do tipo dataModel;
+
+            //Tratamento de fluxo de dados:
+            //Se não existir um registo na base de dados é criado um novo, tendo de se gerar uma nova chave (ObjectId);
+            if (!_Data.ExistRecordInData(model.ProcessId, model.ProcessBranch))
+            {
+                _KeyGenerates.SetKey(); //Gerar um ObjectId, chave univoca, que identifica o modelo na colecção Data;
+
+                //Criar o objeto do tipo modelo Data;
+                dataModel = new DataModel()
+                {
+                    Id = _KeyGenerates.GetKey(),
+                    ProcessId = model.ProcessId,
+                    ProcessBranch = model.ProcessBranch,
+                    Data = model.Data
+                };
+            }
+            else
+            {
+                //Criar o objeto do tipo modelo Data;
+                dataModel = new DataModel()
+                {
+                    Id = _Data.GetObjectId(model.ProcessId, model.ProcessBranch),
+                    ProcessId = model.ProcessId,
+                    ProcessBranch = model.ProcessBranch,
+                    Data = model.Data
+                };
+            }
+
+            _Data.CreateDataModel(dataModel); //Registar o modelo de dados na colecção Data;
+
+            return await Task.Run(() => Redirect("/Data/GetLastProcessVersions/")); //Redireccionar para a pégina raíz;
         }
     }
 }

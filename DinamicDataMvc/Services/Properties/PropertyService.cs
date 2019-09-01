@@ -47,18 +47,6 @@ namespace DinamicDataMvc.Services.Properties
             };
         }
 
-        //TODO: Remover o serviço;
-        //public string UpdateProperties(string Id, PropertiesModel model)
-        //{
-        //    if (Id != null && model != null)
-        //    {
-        //        var collection = _Database.GetCollection<PropertiesModel>("Properties");
-        //        collection.ReplaceOneAsync(s => s.ID == Id, model);
-        //        return ((int)StatusCode.NoContent).ToString();
-        //    }
-        //    return ((int)StatusCode.BadRequest).ToString();
-        //}
-
         public string CreateProperties(PropertiesModel model)
         {
             if (model != null)
@@ -68,35 +56,6 @@ namespace DinamicDataMvc.Services.Properties
                 return ((int)StatusCode.Created).ToString();
             }
             return ((int)StatusCode.BadRequest).ToString();
-        }
-
-        public string GetPropertyValue(string propertyId)
-        {
-            if (!string.IsNullOrEmpty(propertyId))
-            {
-                var collection = _Database.GetCollection<PropertiesModel>("Properties");
-                PropertiesModel properties = collection.Find(s => s.ID == propertyId).Single();
-                return properties.Value;
-            }
-            return string.Empty;
-        }
-
-        //TODO: Remover o serviço;
-        public string UpdatePropertyValue(string propertyId, string newValue)
-        {
-            if (!string.IsNullOrEmpty(propertyId))
-            {
-                var collection = _Database.GetCollection<PropertiesModel>("Properties");
-                PropertiesModel properties = collection.Find(s => s.ID == propertyId).Single();
-
-                properties.Value = newValue; //Substitui o valor dos dados pelo novo valor definido pelo utilizador;
-
-                collection.FindOneAndReplace(s => s.ID == properties.ID, properties);
-
-                return ((int)StatusCode.NoContent).ToString();
-            }
-
-            return ((int)StatusCode.NotFound).ToString();
         }
     }
 }

@@ -106,7 +106,7 @@ namespace DinamicDataMvc.Controllers.Metadata
                     viewModels.Add(viewModel);
                 }
             }
-
+            _SetPagination.SetNumberOfModelsByPage(4);
             Dictionary<int, List<ViewMetadataModel>> modelsToDisplay = _SetPagination.SetModelsByPage(viewModels);
 
             int NumberOfPages = modelsToDisplay.Count();
@@ -183,6 +183,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             //------------------------------------------
             //Add - Pagination to Page (Phase 2)
             //------------------------------------------
+            _SetPagination.SetNumberOfModelsByPage(2);
             Dictionary<int, List<ViewMetadataModel>> modelsToDisplay = _SetPagination.SetModelsByPage(_ViewModelList);
             int NumberOfPages = modelsToDisplay.Count();
             ViewBag.NumberOfPages = NumberOfPages;
@@ -240,6 +241,7 @@ namespace DinamicDataMvc.Controllers.Metadata
             //------------------------------------------
             //Add - Pagination to Page (Phase 2)
             //------------------------------------------
+            _SetPagination.SetNumberOfModelsByPage(2);
             Dictionary<int, List<FieldModel>> fieldsToDisplay = _SetPagination.SetModelsByPage(fields);
             int NumberOfPages = fieldsToDisplay.Count();
             ViewBag.NumberOfPages = NumberOfPages;

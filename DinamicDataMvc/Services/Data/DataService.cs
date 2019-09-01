@@ -72,5 +72,15 @@ namespace DinamicDataMvc.Services.Data
 
             return ((int)StatusCode.BadRequest).ToString();
         }
+
+        public string GetObjectId(string processId, string processBranch)
+        {
+            if(!string.IsNullOrEmpty(processId) && !string.IsNullOrEmpty(processBranch))
+            {
+                var collection = _Database.GetCollection<DataModel>("Data");
+                return collection.Find(s => s.ProcessId == processId && s.ProcessBranch == processBranch).First().Id;
+            }
+            return null;
+        }
     }
 }

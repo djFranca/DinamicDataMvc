@@ -16,5 +16,7 @@ namespace DinamicDataMvc.Interfaces
         DataModel GetDataModel(string processId, string processBranch);
 
         string CreateDataModel(DataModel model);
+
+        string GetObjectId(string processId, string processBranch);
     }
 }

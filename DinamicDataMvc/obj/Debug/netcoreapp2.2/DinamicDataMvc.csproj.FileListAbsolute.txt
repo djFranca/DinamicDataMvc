@@ -47,3 +47,4 @@ C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataM
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.csproj.CopyComplete
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Metadata\SelectBranch.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Data\WebFormGenerator.g.cshtml.cs
+C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.csprojAssemblyReference.cache

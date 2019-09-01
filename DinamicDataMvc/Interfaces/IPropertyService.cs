@@ -11,12 +11,6 @@ namespace DinamicDataMvc.Interfaces
 
         PropertiesModel GetProperties(string id);
 
-        //string UpdateProperties(string Id, PropertiesModel model);
-
         string CreateProperties(PropertiesModel model);
-
-        string GetPropertyValue(string propertyId);
-
-        string UpdatePropertyValue(string propertyId, string newValue);
     }
 }

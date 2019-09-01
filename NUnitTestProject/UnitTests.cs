@@ -244,52 +244,6 @@ namespace Tests
             Assert.Fail();
         }
 
-
-        [Test]
-        public void TestGetPropertyValue()
-        {
-            //Arrange
-            manager.DatabaseConnection();
-            property.SetDatabase(manager.GetDatabase());
-            string propertyId = "18c8870a363bd02b32aa6677";
-
-            //Act
-            string result = property.GetPropertyValue(propertyId);
-
-            if(!string.IsNullOrEmpty(result))
-            {
-                Assert.Pass("Result: " + result + ", Status Code: " + ((int)StatusCode.Ok).ToString() + " - " + StatusCode.Ok.ToString());
-            }
-            else if (string.IsNullOrEmpty(result))
-            {
-                Assert.Pass("Result: Empty or null value, Status Code: " + ((int)StatusCode.Ok).ToString() + " - " + StatusCode.Ok.ToString());
-            }
-            Assert.Fail();
-        }
-
-        [Test]
-        public void TestUpdatePropertyValue()
-        {
-            //Arrange
-            manager.DatabaseConnection();
-            property.SetDatabase(manager.GetDatabase());
-            string propertiesId = "09a36f7f45683eba7e0e8dae";
-            string value = "daniel.franca@mail.pt";
-
-            //Act
-            string result = property.UpdatePropertyValue(propertiesId, value);
-
-            if(Convert.ToInt32(result) == 204)
-            {
-                Assert.Pass("Result: Properties Model with id = " + propertiesId + ", was updated with success");
-            }
-            else if(Convert.ToInt32(result) == 204)
-            {
-                Assert.Pass("Result: Properties Model with id = " + propertiesId + ", was not updated");
-            }
-            Assert.Fail();
-        }
-
         [Test]
         public void TestGetProperties()
         {
@@ -308,36 +262,6 @@ namespace Tests
             }
             Assert.Fail();
         }
-
-        //[Test]
-        //public void TestUpdateProperties()
-        //{
-        //    //Arrange
-        //    manager.DatabaseConnection();
-        //    property.SetDatabase(manager.GetDatabase());
-        //    string propertiesId = "18c8870a363bd02b32aa6677";
-        //    PropertiesModel model = new PropertiesModel()
-        //    {
-        //        ID = propertiesId,
-        //        Size = 60,
-        //        Value = "daniel.isel.email@email.pt",
-        //        Maxlength = 120,
-        //        Required = false
-        //    };
-
-        //    //Act
-        //    string result = property.UpdateProperties(propertiesId, model);
-
-        //    if(Convert.ToInt32(result) == 204)
-        //    {
-        //        Assert.Pass("Result: Properties with id = " + propertiesId + " was updated with success");
-        //    }
-        //    if(Convert.ToInt32(result) == 400)
-        //    {
-        //        Assert.Pass("Result: Properties with id = " + propertiesId + " was not updated");
-        //    }
-        //    Assert.Fail();
-        //}
 
         [Test]
         public void TestDeleteProperties()

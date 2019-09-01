@@ -29,7 +29,7 @@ namespace DinamicDataMvc.Utils
             {
                 if(webFormModels.ElementAt(i).Type.Equals("Text") || webFormModels.ElementAt(i).Type.Equals("Number") || webFormModels.ElementAt(i).Type.Equals("Password") || webFormModels.ElementAt(i).Type.Equals("Email"))
                 {
-                    string element = SetInputElement(webFormModels.ElementAt(i).Type, webFormModels.ElementAt(i).Name, webFormModels.ElementAt(i).Size, webFormModels.ElementAt(i).Maxlength, webFormModels.ElementAt(i).Value, webFormModels.ElementAt(i).Required, webFormModels.ElementAt(i).Readonly);
+                    string element = SetInputElement(webFormModels.ElementAt(i).Type, webFormModels.ElementAt(i).Size, webFormModels.ElementAt(i).Maxlength, webFormModels.ElementAt(i).Value, webFormModels.ElementAt(i).Required, webFormModels.ElementAt(i).Readonly);
                     htmlElements.Add(element);
                 }
 
@@ -51,21 +51,21 @@ namespace DinamicDataMvc.Utils
         /*
          * Cria um elemento do tipo input, considerando se é um elemento html reqired ou não;
          */
-        private string SetInputElement(string type, string name, string size, string maxlength, string value, string required, string isEditable)
+        private string SetInputElement(string type, string size, string maxlength, string value, string required, string isEditable)
         {
             if (Convert.ToBoolean(required) == true && Convert.ToBoolean(isEditable) == true)
             {
-                return "<div class='container'><label><b>" + type + "</b></label><br /><input type='" + type + "' name='" + name + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' required /></div>";
+                return "<div class='form-group'><label><b>" + type + "</b></label><br /><input asp-for='Data' name='Data' type='" + type + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' required class='form-control'/></div>";
             }
             if(Convert.ToBoolean(required) == true && Convert.ToBoolean(isEditable) == false)
             {
-                return "<div class='container'><label><b>" + type + "</b></label><br /><input type='" + type + "' name='" + name + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' required readonly /></div>";
+                return "<div class='form-group'><label><b>" + type + "</b></label><br /><input asp-for='Data' name='Data' type='" + type + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' required readonly class='form-control'/></div>";
             }
             if(Convert.ToBoolean(required) == false && Convert.ToBoolean(isEditable) == false)
             {
-                return "<div class='container'><label><b>" + type + "</b></label><br /><input type='" + type + "' name='" + name + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' readonly /></div>";
+                return "<div class='form-group'><label><b>" + type + "</b></label><br /><input asp-for='Data' name='Data' type='" + type + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' readonly class='form-control'/></div>";
             }
-            return "<div class='container'><label><b>" + type + "</b></label><br /><input type='" + type + "' name='" + name + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' /></div>";
+            return "<div class='form-group'><label><b>" + type + "</b></label><br /><input asp-for='Data' name='Data' type='" + type + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' class='form-control'/></div>";
         }
 
         /*
@@ -73,7 +73,7 @@ namespace DinamicDataMvc.Utils
          */
         private string SetLabelElement(string value)
         {
-            return "<div class='container'><label for='" + value + "'>" + value + "</label></div>";
+            return "<div class='form-group'><label for='" + value + "'>" + value + "</label></div>";
         }
 
         /*
@@ -83,9 +83,9 @@ namespace DinamicDataMvc.Utils
         {
             if(!Convert.ToBoolean(isEditable))
             {
-                return "<div class='container'><div class='btn-group'><button type='submit' name='" + name + "' disabled><i class='fa fa-check'></i>" + value + "</button></div></div>";
+                return "<div class='btn-group'><button type='submit' name='" + name + "' disabled><i class='fa fa-check'></i>" + value + "</button></div>";
             }
-            return "<div class='container'><div class='btn-group'><button type='submit' name='" + name + "'><i class='fa fa-check'></i>" + value + "</button></div></div>";
+            return "<div class='btn-group'><button type='submit' name='" + name + "'><i class='fa fa-check'></i>" + value + "</button></div>";
         }
     }
 }
