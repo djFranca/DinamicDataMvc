@@ -23,7 +23,7 @@
 <body style="background-color:ghostwhite">
     <hr />
     <div class="container" id="subtitleDiv">
-        <h2 id="ProcessDescription">@headerFragments[0] @versionHeader</h2>
+        <h2 id="ProcessDescription">Process @headerFragments[0] Version @versionHeader</h2>
     </div>
     <hr />
     <div class="container">
@@ -40,9 +40,9 @@
                             <th>
                                 branch
                             </th>
-                            @for (int i = 0; i < Model.FieldTypesByVersion[version].Count; i++)
+                            @for (int i = 0; i < Model.FieldTypesByVersion[version].ElementAt(0).Count; i++)
                             {
-                                <th>@Model.FieldTypesByVersion[version].ElementAt(i)</th>
+                                <th>@Model.FieldTypesByVersion[version].ElementAt(0).ElementAt(i)</th>
                             }
                             <th>
                                 Edit
@@ -50,19 +50,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @for (int i = 0; i < branches.Length - 1; i++)
+                        @for (int j = 0; j < Model.DataByProcessField[version].Count; j++)
                         {
                             <tr id="tableBody">
                                 <td>
                                     @version
                                 </td>
-                                <td>@branches[i]</td>
-                                @for (int j = 0; j < Model.DataByProcessField[version].Count; j++)
+                                <td>@branches[j]</td>
+
+                                @for (int n = 0; n < Model.DataByProcessField[version].ElementAt(j).Count; n++)
                                 {
-                                    <td>@Model.DataByProcessField[version].ElementAt(j)</td>
+                                    <td>@Model.DataByProcessField[version].ElementAt(j).ElementAt(n)</td>
                                 }
                                 <td>
-                                    @using (Html.BeginForm("UpdateFieldData", "Data", new { Name = headerFragments[0], Version = @version }, FormMethod.Get))
+                                    @using (Html.BeginForm("UpdateFieldData", "Data", new { Name = headerFragments[0], Version = @version, Branch = branches[j] }, FormMethod.Get))
                                     {
                                         <button type="submit"><i class="fa fa-pencil"></i></button>
                                     }

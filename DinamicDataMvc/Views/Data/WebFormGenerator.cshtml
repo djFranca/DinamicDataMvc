@@ -21,15 +21,14 @@
     </div>
     <hr />
     <div class="container">
-        @for (int i = 0; i < htmlElements.Length; i++)
+        @using (Html.BeginForm("", "Data"))
         {
-            @Html.Raw(htmlElements.ElementAt(i))
-            @Html.Raw("<br />")
+            @for (int i = 0; i < htmlElements.Length; i++)
+            {
+                @Html.Raw(htmlElements.ElementAt(i))
+                @Html.Raw("<br />")
+            }
         }
-    </div>
-    <hr />
-    <div class="container">
-        <button type="button" onclick="GoBack();"><i class="fa fa-toggle-left"> Go Back </i></button>
     </div>
 </body>
 

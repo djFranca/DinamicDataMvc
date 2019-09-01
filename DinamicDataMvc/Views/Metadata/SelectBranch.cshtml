@@ -3,6 +3,15 @@
     ViewData["Title"] = "SelectBranch";
 
     string isEditable = ViewBag.IsEditable;
+
+    string[] branches = Model.Branch.Split(" ");
+
+    List<SelectListItem> branchValues = new List<SelectListItem>();
+
+    for(int i = 0; i < branches.Length - 1; i++)
+    {
+        branchValues.Add(new SelectListItem() { Text = branches[i], Value = branches[i] });
+    }
 }
 
 <head>
@@ -25,7 +34,7 @@
     </div>
     <hr />
     <div class="container">
-        @using (Html.BeginForm("WebFormGenerator", "Metadata", Model, FormMethod.Post, false, new { @width = "60%" }))
+        @using (Html.BeginForm("WebFormGenerator", "Data", FormMethod.Post, new { @width = "60%" }))
         {
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -47,13 +56,8 @@
             <div class="form-group">
                 <label asp-for="Branch" class="control-label" style="font-family:Arial, Helvetica, sans-serif; font-size:x-large"><strong>Process Branches</strong></label>
                 <br />
-                <select name="branchList" id="ddlBranches" style="width:250px; font-family:Arial, Helvetica, sans-serif; font-size:larger">
-                    @for (int i = 0; i < Model.Branch.Split(" ").Length - 1; i++)
-                    {
-                        <option value="@Model.Branch.Split(" ")[i]" style="font-family:Arial, Helvetica, sans-serif; font-size:large">@Model.Branch.Split(" ")[i]</option>
-                    }
-                </select>
-                <span asp-validation-for="Name" class="text-danger"></span>
+                @Html.DropDownListFor(model => Model.Branch, branchValues, new { @fontfamily = "Arial, Helvetica, sans-serif", @fontsize = "large", @width = "250px" })
+                <span asp-validation-for="Branch" class="text-danger"></span>
                 <button type="submit"><i class="fa fa-check"> Select</i></button>
             </div>
         }

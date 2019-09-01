@@ -47,16 +47,17 @@ namespace DinamicDataMvc.Services.Properties
             };
         }
 
-        public string UpdateProperties(string Id, PropertiesModel model)
-        {
-            if (Id != null && model != null)
-            {
-                var collection = _Database.GetCollection<PropertiesModel>("Properties");
-                collection.ReplaceOneAsync(s => s.ID == Id, model);
-                return ((int)StatusCode.NoContent).ToString();
-            }
-            return ((int)StatusCode.BadRequest).ToString();
-        }
+        //TODO: Remover o serviço;
+        //public string UpdateProperties(string Id, PropertiesModel model)
+        //{
+        //    if (Id != null && model != null)
+        //    {
+        //        var collection = _Database.GetCollection<PropertiesModel>("Properties");
+        //        collection.ReplaceOneAsync(s => s.ID == Id, model);
+        //        return ((int)StatusCode.NoContent).ToString();
+        //    }
+        //    return ((int)StatusCode.BadRequest).ToString();
+        //}
 
         public string CreateProperties(PropertiesModel model)
         {
@@ -80,6 +81,7 @@ namespace DinamicDataMvc.Services.Properties
             return string.Empty;
         }
 
+        //TODO: Remover o serviço;
         public string UpdatePropertyValue(string propertyId, string newValue)
         {
             if (!string.IsNullOrEmpty(propertyId))

@@ -1,11 +1,14 @@
-﻿@model IEnumerable<DinamicDataMvc.Models.Properties.PropertiesModel>
-
+﻿@model DinamicDataMvc.Models.Data.DataModel
 @{
     ViewData["Title"] = "UpdateFieldData";
+
+    string ProcessId = ViewBag.ProcessId;
 
     string ProcessName = ViewBag.ProcessName;
 
     string ProcessVersion = ViewBag.ProcessVersion;
+
+    string ProcessBranch = ViewBag.ProcessBranch;
 
     string[] Fields = ViewBag.Fields.Split(" ");
 }
@@ -21,34 +24,41 @@
 <body>
     <hr />
     <div class="container" id="subtitleDiv">
-        <h2 id="ProcessDescription">@ProcessName  Version @ProcessVersion</h2>
+        <h2 id="ProcessDescription">Process @ProcessName  Version @ProcessVersion</h2>
     </div>
     <hr />
     <div class="row">
         <div class="col-md-5" style="margin-left:15px;">
-            @for (int i = 0; i < Model.Count(); i++)
+            @using (Html.BeginForm("ConfirmUpdateData", "Data", FormMethod.Post, new { @width = "60%" }))
             {
-                <form asp-action="ConfirmUpdateData" asp-route-name="@ProcessName" asp-route-version="@ProcessVersion">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <input type="hidden" asp-for="@Model.ElementAt(i).ID" value="@Model.ElementAt(i).ID" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label"><strong>@Fields.ElementAt(i)</strong></label>
-                        <input type="text" asp-for="@Model.ElementAt(i).Value" class="form-control" />
-                        <span asp-validation-for="@Model.ElementAt(i).Value" class="text-danger"></span>
-                    </div>
-                    <div class="btn-group">
-                        <button type="submit"><i class="fa fa-check"> Save </i></button>
-                    </div>
-                    <br />
-                </form>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="Id" value="@Model.Id" name="Id" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="ProcessId" value="@Model.ProcessId" name="ProcessId" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="ProcessBranch" value="@Model.ProcessBranch" name="ProcessBranch" class="form-control" />
+                </div>
+                <div class="form-group">
+                    @for (int i = 0; i < Model.Data.Count; i++)
+                    {
+                        <label class="control-label" asp-for="Data"><strong>@Fields[i]</strong></label>
+                        <input type="text" name="Data" asp-for="Data" value="@Model.Data.ElementAt(i)" class="form-control" />
+                        <span asp-validation-for="Data" class="text-danger"></span>
+                    }
+                </div>
+                <div class="btn-group">
+                    <button type="submit"><i class="fa fa-check"> Save </i></button>
+                </div>
+                <br />
             }
         </div>
     </div>
     <br />
     <div class="container">
-        @using (Html.BeginForm("HomePage", "Home", FormMethod.Get))
+        @using (Html.BeginForm("GetLastProcessVersions", "Data", FormMethod.Get))
         {
             <button type="submit"><i class="fa fa-close"></i> Close </button>
         }

@@ -309,35 +309,35 @@ namespace Tests
             Assert.Fail();
         }
 
-        [Test]
-        public void TestUpdateProperties()
-        {
-            //Arrange
-            manager.DatabaseConnection();
-            property.SetDatabase(manager.GetDatabase());
-            string propertiesId = "18c8870a363bd02b32aa6677";
-            PropertiesModel model = new PropertiesModel()
-            {
-                ID = propertiesId,
-                Size = 60,
-                Value = "daniel.isel.email@email.pt",
-                Maxlength = 120,
-                Required = false
-            };
+        //[Test]
+        //public void TestUpdateProperties()
+        //{
+        //    //Arrange
+        //    manager.DatabaseConnection();
+        //    property.SetDatabase(manager.GetDatabase());
+        //    string propertiesId = "18c8870a363bd02b32aa6677";
+        //    PropertiesModel model = new PropertiesModel()
+        //    {
+        //        ID = propertiesId,
+        //        Size = 60,
+        //        Value = "daniel.isel.email@email.pt",
+        //        Maxlength = 120,
+        //        Required = false
+        //    };
 
-            //Act
-            string result = property.UpdateProperties(propertiesId, model);
+        //    //Act
+        //    string result = property.UpdateProperties(propertiesId, model);
 
-            if(Convert.ToInt32(result) == 204)
-            {
-                Assert.Pass("Result: Properties with id = " + propertiesId + " was updated with success");
-            }
-            if(Convert.ToInt32(result) == 400)
-            {
-                Assert.Pass("Result: Properties with id = " + propertiesId + " was not updated");
-            }
-            Assert.Fail();
-        }
+        //    if(Convert.ToInt32(result) == 204)
+        //    {
+        //        Assert.Pass("Result: Properties with id = " + propertiesId + " was updated with success");
+        //    }
+        //    if(Convert.ToInt32(result) == 400)
+        //    {
+        //        Assert.Pass("Result: Properties with id = " + propertiesId + " was not updated");
+        //    }
+        //    Assert.Fail();
+        //}
 
         [Test]
         public void TestDeleteProperties()

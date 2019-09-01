@@ -62,7 +62,8 @@ namespace DinamicDataMvc.Controllers.Tools
                 { "Branch", await database.GetCollection<BranchModel>("Branch").Find(s => true).CountDocumentsAsync()},
                 { "State", await database.GetCollection<StateModel>("State").Find(s => true).CountDocumentsAsync()},
                 { "Properties", await database.GetCollection<PropertiesModel>("Properties").Find(s => true).CountDocumentsAsync()},
-                { "History", await database.GetCollection<ViewDataModel>("History").Find(s => true).CountDocumentsAsync()}
+                { "History", await database.GetCollection<ViewDataModel>("History").Find(s => true).CountDocumentsAsync()},
+                { "Data", await database.GetCollection<ViewDataModel>("Data").Find(s => true).CountDocumentsAsync()}
             };
 
             List<string> _CollectionNames = database.ListCollectionNames().ToList();
@@ -200,8 +201,7 @@ namespace DinamicDataMvc.Controllers.Tools
         {
             ViewBag.Fragment1 = "<div class='container'><h1>Login Page</h1></div>";
             ViewBag.Fragment2 = "<div class='container'><label><b>Username</b></label><br /><input type='email' value='123456@email.com' size='25' maxlength='20' name='email_22 /></div><br />";
-            ViewBag.Fragment3 = "<div class='container'><label><b>Password</b></label><br /><input type='password' value='123456' size='25' maxlength='50' name='password_22 /></div><br />";
-            ViewBag.Fragment4 = "<div class='container'><button type='submit'> Login </button></div>";
+            ViewBag.Fragment3 = "<div class='container'><button type='submit'> Login </button></div>";
             return await Task.Run(() => View("WebFormGenerator"));
         }
 

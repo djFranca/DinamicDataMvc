@@ -18,5 +18,7 @@ namespace DinamicDataMvc.Models.Tools
         public string Maxlength { get; set; }
 
         public string Required { get; set; }
+
+        public string Readonly { get; set; }
     }
 }

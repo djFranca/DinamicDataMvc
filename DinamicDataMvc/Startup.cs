@@ -14,6 +14,7 @@ using DinamicDataMvc.Services.Pagination;
 using DinamicDataMvc.Services.Validation;
 using DinamicDataMvc.Services.Config;
 using DinamicDataMvc.Services.Properties;
+using DinamicDataMvc.Services.Data;
 
 namespace DinamicDataMvc
 {
@@ -41,7 +42,7 @@ namespace DinamicDataMvc
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
+            //Registo de serviços - A interface sabe instanciar a classe correspondente ao serviço que engloba os micro serviços;
             services.AddSingleton<IMetadataService, MetadataService>(s => new MetadataService(nameFilteringResult, versionFilteringResult));
             services.AddSingleton<IBranchService, BranchService>(s => new BranchService());
             services.AddSingleton<IConnectionManagementService, ConnectionManagementService>(s => new ConnectionManagementService(ConnectionString, DatabaseName));
@@ -53,6 +54,7 @@ namespace DinamicDataMvc
             services.AddSingleton<IValidationService, ValidationService>(s => new ValidationService());
             services.AddSingleton<IMessage, Message>(s => new Message());
             services.AddSingleton<IProcessHistory, ProcessHistory>(s => new ProcessHistory());
+            services.AddSingleton<IDataService, DataService>(s => new DataService());
             services.AddSwaggerGen(doc =>
             {
                 doc.SwaggerDoc("v1", new Info

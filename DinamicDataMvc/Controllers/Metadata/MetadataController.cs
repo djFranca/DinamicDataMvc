@@ -6,8 +6,6 @@ using DinamicDataMvc.Interfaces;
 using DinamicDataMvc.Models.Metadata;
 using DinamicDataMvc.Models.Field;
 using DinamicDataMvc.Models.Process;
-using DinamicDataMvc.Models.Tools;
-using DinamicDataMvc.Utils;
 using Microsoft.AspNetCore.Mvc;
 using DinamicDataMvc.Models.Properties;
 
@@ -530,65 +528,6 @@ namespace DinamicDataMvc.Controllers.Metadata
             _Metadata.CreateMetadata(UpdatedMetadataModel); //armazena o processo na base de dados;
 
             return await Task.Run(() => RedirectToAction("Read", "Field", new { ProcessId = viewModel.Id }));
-        }
-
-
-        [HttpPost("/Metadata/WebFormGenerator")]
-        public async Task<ActionResult> WebFormGenerator(ViewMetadataModel model)
-        {
-            if (string.IsNullOrEmpty(model.Id))
-            {
-                return BadRequest();
-            }
-
-            _Connection.DatabaseConnection();
-            var database = _Connection.GetDatabase();
-            _Metadata.SetDatabase(database);
-            List<string> fields = _Metadata.GetProcessFieldsID(model.Id);
-
-            _Field.SetDatabase(database);
-            _Properties.SetDatabase(database);
-
-            List<WebFormModel> webFormElements = new List<WebFormModel>();
-
-            foreach (string field in fields)
-            {
-                FieldModel fieldModel = _Field.GetField(field);
-                PropertiesModel propertiesModel = _Properties.GetProperties(fieldModel.Properties);
-
-                WebFormModel webFormElement = new WebFormModel()
-                {
-                    Type = fieldModel.Type,
-                    Name = fieldModel.Name,
-                    Size = propertiesModel.Size.ToString(),
-                    Value = propertiesModel.Value,
-                    Maxlength = propertiesModel.Maxlength.ToString(),
-                    Required = propertiesModel.Required.ToString()
-                };
-
-                webFormElements.Add(webFormElement);
-            }
-
-            //Passar a lista de webform elements a uma classe que vai criar uma array com as linhas a serem renderizadas;
-            WebFormTemplate webFormTemplate = new WebFormTemplate(webFormElements);
-            List<string> fragments = webFormTemplate.Template();
-
-            string template = string.Empty;
-            for (int j = 0; j < fragments.Count; j++)
-            {
-                if (j == fragments.Count - 1)
-                {
-                    template += fragments[j];
-                }
-                else
-                {
-                    template += (fragments[j] + "|");
-                }
-            }
-
-            ViewBag.Template = template;
-
-            return await Task.Run(() => View("WebFormGenerator"));
         }
 
 
