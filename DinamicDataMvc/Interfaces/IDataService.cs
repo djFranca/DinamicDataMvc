@@ -11,8 +11,6 @@ namespace DinamicDataMvc.Interfaces
     {
         void SetDatabase(IMongoDatabase database);
 
-        bool ExistRecordInData(string processId, string processBranch);
-
         DataModel GetDataModel(string objectId, string processId, int processVersion, string processBranch);
 
         string CreateDataModel(DataModel model);
@@ -20,5 +18,7 @@ namespace DinamicDataMvc.Interfaces
         string GetObjectId(string processId, int processVersion, string processBranch, List<string> Data);
 
         List<DataModel> GetDataModelByProcessId(string processId);
+
+        string UpdateDataModel(DataModel model);
     }
 }

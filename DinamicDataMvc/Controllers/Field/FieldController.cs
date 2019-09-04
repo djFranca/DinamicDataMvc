@@ -37,12 +37,6 @@ namespace DinamicDataMvc.Controllers.Field
         public async Task<ActionResult> Read()
         {
             string processId = Request.Query["ProcessId"];
-            string pageNumber = Request.Query["Page"];
-
-            if(pageNumber == null)
-            {
-                pageNumber = 1.ToString();
-            }
 
             _Connection.DatabaseConnection();
             _Field.SetDatabase(_Connection.GetDatabase());
@@ -72,14 +66,8 @@ namespace DinamicDataMvc.Controllers.Field
             _State.ReadFromDatabase(metadata.State);
             ViewBag.ProcessState = _State.GetStateDescription();
 
-            Dictionary<int, List<FieldModel>> modelsToDisplay = _SetPagination.SetModelsByPage(fields);
-
-            int NumberOfPages = modelsToDisplay.Count();
-            ViewBag.NumberOfPages = NumberOfPages;
-
-            if (modelsToDisplay.Count == 0) //Se não existirem campos para mostrar na listagem
+            if(fields.Count == 0)
             {
-                List<FieldModel> auxModels = new List<FieldModel>();
                 FieldModel defaultModel = new FieldModel()
                 {
                     Id = string.Empty,
@@ -88,11 +76,10 @@ namespace DinamicDataMvc.Controllers.Field
                     Date = DateTime.Now.ToLocalTime(),
                     Properties = string.Empty
                 };
-                auxModels.Add(defaultModel);
-                modelsToDisplay.Add(Convert.ToInt32(pageNumber), auxModels);
-                return await Task.Run(() => View("Read", auxModels));
+                fields.Add(defaultModel);
             }
-            return await Task.Run(() => View("Read", modelsToDisplay[Convert.ToInt32(pageNumber)]));
+
+            return await Task.Run(() => View("Read", fields));
         }
 
 
@@ -161,7 +148,6 @@ namespace DinamicDataMvc.Controllers.Field
             };
 
             _Connection.DatabaseConnection();
-            
             _Properties.SetDatabase(_Connection.GetDatabase());
             _Properties.CreateProperties(properties);
 
@@ -171,9 +157,7 @@ namespace DinamicDataMvc.Controllers.Field
             _Metadata.SetProcessVersion(model.ProcessID);
             _Metadata.AddFieldToProcess(model.ProcessID, fieldId);
 
-            //_Field.ReadFromDatabase();
-
-            return await Task.Run(() => RedirectToAction("Read", "Field", new { ProcessId = model.ProcessID })); //Antes no action estava display;
+            return await Task.Run(() => RedirectToAction("Read", "Field", new { ProcessId = model.ProcessID }));
         }
 
 

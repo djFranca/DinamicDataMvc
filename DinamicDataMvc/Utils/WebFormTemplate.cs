@@ -33,16 +33,11 @@ namespace DinamicDataMvc.Utils
                     htmlElements.Add(element);
                 }
 
-                //if(webFormModels.ElementAt(i).Type.Equals("Label"))
-                //{
-                //    string element = SetLabelElement(webFormModels.ElementAt(i).Value);
-                //    htmlElements.Add(element);
-                //}
-                //if (webFormModels.ElementAt(i).Type.Equals("Button"))
-                //{
-                //    string element = SetButtonElement(webFormModels.ElementAt(i).Name, webFormModels.ElementAt(i).Value, webFormModels.ElementAt(i).Readonly);
-                //    htmlElements.Add(element);
-                //}
+                if (webFormModels.ElementAt(i).Type.Equals("TextArea"))
+                {
+                    string element = SetTextAreaElement(webFormModels.ElementAt(i).Size, webFormModels.ElementAt(i).Maxlength, webFormModels.ElementAt(i).Value, webFormModels.ElementAt(i).Readonly);
+                    htmlElements.Add(element);
+                }
             }
 
             return htmlElements;
@@ -69,23 +64,15 @@ namespace DinamicDataMvc.Utils
         }
 
         /*
-         * Cria um elemento html do tipo label;
+         * Cria um elemento html do tipo Text Area;
          */
-        //private string SetLabelElement(string value)
-        //{
-        //    return "<div class='form-group'><label for='" + value + "'>" + value + "</label></div>";
-        //}
-
-        /*
-         * Cria um elemento html do tipo button;
-         */
-        //private string SetButtonElement(string name, string value, string isEditable)
-        //{
-        //    if(!Convert.ToBoolean(isEditable))
-        //    {
-        //        return "<div class='btn-group'><button type='submit' name='" + name + "' disabled><i class='fa fa-check'></i>" + value + "</button></div>";
-        //    }
-        //    return "<div class='btn-group'><button type='submit' name='" + name + "'><i class='fa fa-check'></i>" + value + "</button></div>";
-        //}
+        private string SetTextAreaElement(string size, string maxlength, string value, bool isReadonly)
+        {
+            if (!isReadonly)
+            {
+                return "<div class='form-group'><textarea name='Data' rows='" + size + "' cols='" + maxlength + "' asp-for='Data' class='form-control'>" + value + "</textarea></div>";
+            }
+            return "<div class='form-group'><textarea name='Data' rows='" + size + "' cols='" + maxlength + "' asp-for='Data' class='form-control' readonly>" + value + "</textarea></div>";
+        }
     }
 }

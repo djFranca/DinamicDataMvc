@@ -19,23 +19,6 @@ namespace DinamicDataMvc.Services.Data
             }
         }
 
-        public bool ExistRecordInData(string processId, string processBranch)
-        {
-            if (!string.IsNullOrEmpty(processId))
-            {
-                var collection = _Database.GetCollection<DataModel>("Data");
-
-                //Verifica na colecção Data o número de registos existentes para um processo alocado num determinado branch, 
-                //ambos recebidos como argumentos de input do micro serviço;
-                int numberOfModels = (collection.Find(s => s.ProcessId == processId && s.ProcessBranch == processBranch).ToList()).Count;
-
-                if (numberOfModels == 0) return false;
-
-                return true;
-            }
-
-            return false;
-        }
 
         public DataModel GetDataModel(string objectId, string processId, int processVersion, string processBranch)
         {
@@ -76,6 +59,7 @@ namespace DinamicDataMvc.Services.Data
             return null;
         }
 
+
         public List<DataModel> GetDataModelByProcessId(string processId)
         {
             if(processId != null)
@@ -84,6 +68,20 @@ namespace DinamicDataMvc.Services.Data
                 return collection.Find(s => s.ProcessId == processId).ToList();
             }
             return null;
+        }
+
+
+        public string UpdateDataModel(DataModel model)
+        {
+            if(model != null)
+            {
+                var collection = _Database.GetCollection<DataModel>("Data");
+                collection.FindOneAndReplace(s => s.Id == model.Id, model);
+
+                return ((int)StatusCode.NoContent).ToString();
+            }
+
+            return ((int)StatusCode.BadRequest).ToString();
         }
     }
 }

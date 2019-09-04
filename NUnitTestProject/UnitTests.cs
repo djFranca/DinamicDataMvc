@@ -674,24 +674,31 @@ namespace Tests
 
         //------------------------------------------------------------
         [Test]
-        public void TestExistRecordInData()
+        public void TestUpdateDataModel()
         {
             //Arrange
             manager.DatabaseConnection();
             data.SetDatabase(manager.GetDatabase());
-            string processId = "692118365ea4314d34d7d4d5";
-            string processBranch = "Development";
+
+            DataModel model = new DataModel()
+            {
+                Id = "16bb801918a79de6069e28fa",
+                ProcessId = "2dcd6c6314c2512408de7a58",
+                ProcessVersion = 1,
+                ProcessBranch = "Development",
+                Data = new List<string>() { "Ermelinda.Maria@mail.pt", "4567890"}
+            };
 
             //Act
-            bool result = data.ExistRecordInData(processId, processBranch);
+            string result = data.UpdateDataModel(model);
 
-            if (result)
+            if (result.Equals("204"))
             {
-                Assert.Pass("Result: Metadata process with id = " + processId + ", exists in Data collection.");
+                Assert.Pass("Result: Data Model with { ProcessId = " + model.ProcessId + ", ProcessVersion = " + model.ProcessVersion + ", ProcessBranch = " + model.ProcessBranch + ", Data = ['Ermelinda.Maria@mail.pt', '4567890'], was updated with succes, with the status code = " + result);
             }
-            else if (!result)
+            else
             {
-                Assert.Pass("Result: Metadata process with id = " + processId + ", not exists in Data collection.");
+                Assert.Pass("Result: Occurred an error on process updating Data Model with the status code = " + result);
             }
             Assert.Fail();
         }

@@ -2,6 +2,8 @@
 @{
     ViewData["Title"] = "GetProcessFieldDataByVersions";
     string ProcessName = ViewBag.ProcessName;
+    string ProcessVersion = ViewBag.ProcessVersion;
+    var pageNumber = ViewBag.NumberOfPages;
 }
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -18,6 +20,10 @@
         <h2 id="ProcessDescription">Process @ProcessName</h2>
     </div>
     <hr />
+    <div class="container">
+        <button type="button" onclick="GoBack();" style="float:right"><i class="fa fa-toggle-left"> Go Back </i></button>
+    </div>
+    <br />
     <div class="container">
         <br />
         <div class="table-responsive table-striped">
@@ -49,18 +55,39 @@
                                 @Html.DisplayFor(modelItem => model.ProcessId)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => model.ProcessVersion)
+                                @if (model.ProcessVersion > 0)
+                                {
+                                    @Html.DisplayFor(modelItem => model.ProcessVersion)
+                                }
+                                @if (model.ProcessVersion <= 0)
+                                {
+                                    @Html.DisplayName(string.Empty)
+                                }
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => model.ProcessBranch)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => model.CreationDate)
+                                @if (model.ProcessVersion > 0)
+                                {
+                                    @Html.DisplayFor(modelItem => model.CreationDate)
+                                }
+                                @if (model.ProcessVersion <= 0)
+                                {
+                                    @Html.DisplayName(string.Empty)
+                                }
                             </td>
                             <td>
                                 @using (Html.BeginForm("GetStoredWebForm", "Data", new { ObjectId = model.ObjectId, ProcessId = model.ProcessId, ProcessVersion = model.ProcessVersion, ProcessBranch = model.ProcessBranch }, FormMethod.Post))
                                 {
-                                    <button type="submit"><i class="fa fa-pencil"></i></button>
+                                    @if (model.ProcessVersion <= 0)
+                                    {
+                                        <button type="submit" disabled><i class="fa fa-pencil"></i></button>
+                                    }
+                                    @if (model.ProcessVersion > 0)
+                                    {
+                                        <button type="submit"><i class="fa fa-pencil"></i></button>
+                                    }
                                 }
                             </td>
                         </tr>
@@ -70,9 +97,13 @@
         </div>
         <br />
     </div>
-    <br />
     <div class="container">
-        <button type="button" onclick="GoBack();"><i class="fa fa-toggle-left"> Go Back </i></button>
+        <ul class="pagination pagination-sm">
+            @for (int i = 1; i <= Convert.ToInt32(pageNumber); i++)
+            {
+                <li class="page-item"><a class="page-link" style="color:#212529;" href="/Data/GetProcessFieldDataByVersions?Name=@ProcessName&Version=@ProcessVersion&Page=@i"><b>@i</b></a></li>
+            }
+        </ul>
     </div>
 </body>
 

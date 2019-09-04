@@ -24,8 +24,9 @@ namespace DinamicDataMvc.Controllers.Data
         private readonly IStateService _State;
         private readonly IDataService _Data;
         private readonly IKeyGenerates _KeyGenerates;
+        private readonly IPaginationService _SetPagination;
 
-        public DataController(IConnectionManagementService Connection, IMetadataService Metadata, IPaginationService Pagination, IBranchService Branch, IFieldService Field, IPropertyService Property, IStateService State, IDataService Data, IKeyGenerates KeyGenerates)
+        public DataController(IConnectionManagementService Connection, IMetadataService Metadata, IPaginationService Pagination, IBranchService Branch, IFieldService Field, IPropertyService Property, IStateService State, IDataService Data, IKeyGenerates KeyGenerates, IPaginationService SetPagination)
         {
             _Connection = Connection;
             _Metadata = Metadata;
@@ -36,6 +37,7 @@ namespace DinamicDataMvc.Controllers.Data
             _State = State;
             _Data = Data;
             _KeyGenerates = KeyGenerates;
+            _SetPagination = SetPagination;
         }
 
         [HttpGet("/Data/GetLastProcessVersions/")]
@@ -143,7 +145,21 @@ namespace DinamicDataMvc.Controllers.Data
             _Metadata.SetDatabase(database);
             _Data.SetDatabase(database);
 
+            /*
+             * Paginação - Fase de obtenção do nº de página;
+             */
+            string pageNumber = Request.Query["Page"];
+
+            if (string.IsNullOrEmpty(pageNumber))
+            {
+                pageNumber = 1.ToString();
+            }
+
+            int pageIndex = Convert.ToInt32(pageNumber);
+
             ViewBag.ProcessName = name;
+            ViewBag.ProcessVersion = version;
+            ViewBag.PageNumber = pageNumber;
 
             List<string> processIdList = new List<string>(); //Armazena a lista de id´s do processo nas diferentes versões;
             List<int> processVersionList = new List<int>(); //Armazena as versões correspondentes ao id do processo;
@@ -180,7 +196,29 @@ namespace DinamicDataMvc.Controllers.Data
                     viewDataModelList.Add(modelToDisplay); //Adiciona-se à lista de ViewDataModel o modelo criado;
                 }
             }
-            return await Task.Run(() => View("GetProcessFieldDataByVersions", viewDataModelList));
+            _SetPagination.SetNumberOfModelsByPage(4);
+            Dictionary<int, List<ViewDataModel>> modelsToDisplay = _SetPagination.SetModelsByPage(viewDataModelList);
+
+            int NumberOfPages = modelsToDisplay.Count();
+            ViewBag.NumberOfPages = NumberOfPages;
+
+            if(modelsToDisplay.Count == 0)
+            {
+                List<ViewDataModel> auxViewDataModelList = new List<ViewDataModel>();
+                ViewDataModel emptyModel = new ViewDataModel()
+                {
+                    ObjectId = null,
+                    ProcessId = null,
+                    ProcessVersion = 0,
+                    ProcessBranch = null,
+                    CreationDate = DateTime.UtcNow.Date,
+                    Data = null
+                };
+                auxViewDataModelList.Add(emptyModel);
+                return await Task.Run(() => View("GetProcessFieldDataByVersions", auxViewDataModelList));
+            }
+
+            return await Task.Run(() => View("GetProcessFieldDataByVersions", modelsToDisplay[pageIndex]));
         }
 
 
@@ -210,7 +248,9 @@ namespace DinamicDataMvc.Controllers.Data
             //Valores para preenchimento de campos hidden no formulário gerado automaticamente;
             ViewBag.ObjectId = ObjectId;
             ViewBag.ProcessId = ProcessId;
+            ViewBag.ProcessVersion = ProcessVersion;
             ViewBag.ProcessBranch = ProcessBranch;
+
             string ProcessFields = string.Empty;
 
             for (int j = 0; j < processFields.Count; j++)
@@ -239,7 +279,7 @@ namespace DinamicDataMvc.Controllers.Data
                     Readonly = false
                 };
 
-                ViewBag.Readonly = "false";
+                ViewBag.Readonly = "false"; //Vraiavel para controlo da visibilidade do submit button;
 
                 webFormElements.Add(webFormElement);
             }
@@ -267,7 +307,7 @@ namespace DinamicDataMvc.Controllers.Data
         }
 
 
-        //Done
+        //Ação para criar um novo webform;
         [HttpPost("/Data/WebFormGenerator")]
         public async Task<ActionResult> WebFormGenerator(ViewMetadataModel model)
         {
@@ -281,13 +321,15 @@ namespace DinamicDataMvc.Controllers.Data
 
             if (model.Branch == null)
             {
-                return await Task.Run(() => Redirect("/Metadata/SelectBranch?processId="+model.Id+ "&&processName="+model.Name+"&&processVersion="+model.Version+"&&processDate="+model.Date+"&&processBranches="+model.Branch+"&&processState="+model.State+"&&isEditable=true"));
+                return await Task.Run(() => Redirect("/Metadata/SelectBranch?processId="+model.Id+"&processName="+model.Name+"&processVersion="+model.Version+"&processDate="+model.Date+"&processBranches="+model.Branch+"&processState="+model.State+"&isReadonly='true'"));
             }
 
             //Valores para preenchimento de campos hidden no formulário gerado automaticamente;
+            ViewBag.ObjectId = null;
             ViewBag.ProcessId = model.Id;
             ViewBag.ProcessVersion = model.Version;
             ViewBag.ProcessBranch = model.Branch;
+
             string ProcessFields = string.Empty;
 
             _Connection.DatabaseConnection();
@@ -324,7 +366,7 @@ namespace DinamicDataMvc.Controllers.Data
                     Maxlength = propertiesModel.Maxlength.ToString(),
                     Required = propertiesModel.Required.ToString(),
                     Readonly = model.State.Equals("true") ? true : false
-            };
+                };
 
                 webFormElements.Add(webFormElement);
             }
@@ -353,7 +395,7 @@ namespace DinamicDataMvc.Controllers.Data
             return await Task.Run(() => View("WebFormGenerator"));
         }
 
-        //Done
+
         [HttpPost("/Data/SaveWebform")]
         public async Task<ActionResult> SaveWebform(DataModel model)
         {
@@ -368,16 +410,28 @@ namespace DinamicDataMvc.Controllers.Data
 
 
             DataModel dataModel = null; //Objeto do tipo dataModel;
-
-            _KeyGenerates.SetKey(); //Gerar um ObjectId, chave univoca, que identifica o modelo na colecção Data;
+            string id = string.Empty; //Armazena o valor correspondente ao ObjectID do modelo de dados;
 
             /*
-             * Criar o objeto do tipo modelo DataModel para combinação ProcessId, ProcessVersion e ProcessBranch,
-             * Se a combinação não existir armazenada na coleção Data.
+             * Verifica o valor do Id do modelo de dados do tipo DataModel, se for null é um novo registo,
+             * se já tiver um valor associado é relativo a um registo já existente na base de dados;
+             */
+            if (string.IsNullOrEmpty(model.Id))
+            {
+                _KeyGenerates.SetKey(); //Gerar um ObjectId, chave univoca, que identifica o modelo na colecção Data;
+                id = _KeyGenerates.GetKey();
+            }
+            else
+            {
+                id = model.Id;
+            }
+            
+            /*
+             * Criar o objeto do tipo modelo DataModel para combinação ObjectId, ProcessId, ProcessVersion e ProcessBranch.
              */
             dataModel = new DataModel()
             {
-                Id = _KeyGenerates.GetKey(),
+                Id = id,
                 ProcessId = model.ProcessId,
                 ProcessVersion = Convert.ToInt32(model.ProcessVersion),
                 ProcessBranch = model.ProcessBranch,
@@ -385,8 +439,18 @@ namespace DinamicDataMvc.Controllers.Data
                 Date = DateTime.Now.ToLocalTime()
             };
 
-            _Data.CreateDataModel(dataModel); //Registar o modelo de dados na colecção Data;
-
+            /*
+             *Processo de criação / atualização do modelo de dados do tipo DataModel; 
+             */
+            if (string.IsNullOrEmpty(model.Id))
+            {
+                _Data.CreateDataModel(dataModel); //Registar o novo modelo de dados na colecção Data;
+            }
+            else
+            {
+                _Data.UpdateDataModel(dataModel); //Atualizar o modelo de dados na colecção Data;
+            }
+            
             return await Task.Run(() => Redirect("/Data/GetLastProcessVersions/")); //Redireccionar para a pégina raíz;
         }
     }
