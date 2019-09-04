@@ -146,3 +146,4 @@ C:\Users\Utilizador.ACER-E15-PC\source\repos\A41867_Projeto_Versao_Final\03_Impl
 C:\Users\Utilizador.ACER-E15-PC\source\repos\A41867_Projeto_Versao_Final\03_Implementacao\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.dll
 C:\Users\Utilizador.ACER-E15-PC\source\repos\A41867_Projeto_Versao_Final\03_Implementacao\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.pdb
 C:\Users\Utilizador.ACER-E15-PC\source\repos\A41867_Projeto_Versao_Final\03_Implementacao\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.csproj.CopyComplete
+C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.csprojAssemblyReference.cache

@@ -705,25 +705,26 @@ namespace Tests
             //Arrange
             manager.DatabaseConnection();
             data.SetDatabase(manager.GetDatabase());
-            string processId = "692118365ea4314d34d7d4d5";
+            string objectId = "7173cab226aeffb975ab9cb2";
+            string processId = "2dcd6c6314c2512408de7a58";
             int processVersion = 1;
-            string processBranch = "Development";
+            string processBranch = "Quality";
 
             //Act
-            DataModel result = data.GetDataModel(processId, processVersion, processBranch);
+            DataModel result = data.GetDataModel(objectId, processId, processVersion, processBranch);
 
             if (result != null)
             {
                 string data = "[";
-                for (int i = 0; i < result.ProcessData.Count; i++)
+                for (int i = 0; i < result.Data.Count; i++)
                 {
-                    if(i == result.ProcessData.Count - 1)
+                    if(i == result.Data.Count - 1)
                     {
-                        data += result.ProcessData.ElementAt(i);
+                        data += result.Data.ElementAt(i);
                     }
                     else
                     {
-                        data += (result.ProcessData.ElementAt(i) + ", ");
+                        data += (result.Data.ElementAt(i) + ", ");
                     }
                 }
                 data += "]";
@@ -756,7 +757,7 @@ namespace Tests
                 ProcessId = processId,
                 ProcessVersion = processVersion,
                 ProcessBranch = processBranch,
-                ProcessData = new List<string>() { "7654", "Submit" }
+                Data = new List<string>() { "7654", "Submit" }
             };
 
             //Act
@@ -782,11 +783,13 @@ namespace Tests
             //Arrange
             manager.DatabaseConnection();
             data.SetDatabase(manager.GetDatabase());
-            string processId = "692118365ea4314d34d7d4d5";
-            string processBranch = "Development";
+            string processId = "2dcd6c6314c2512408de7a58";
+            int processVersion = 1;
+            string processBranch = "Quality";
+            List<string> processData = new List<string>() { "email_teste@testMail.com", "yu8ikfe3" };
 
             //Act
-            string result = data.GetObjectId(processId, processBranch);
+            string result = data.GetObjectId(processId, processVersion, processBranch, processData);
 
             if (!string.IsNullOrEmpty(result))
             {

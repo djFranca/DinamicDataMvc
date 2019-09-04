@@ -13,11 +13,11 @@ namespace DinamicDataMvc.Interfaces
 
         bool ExistRecordInData(string processId, string processBranch);
 
-        DataModel GetDataModel(string processId, int processVersion, string processBranch);
+        DataModel GetDataModel(string objectId, string processId, int processVersion, string processBranch);
 
         string CreateDataModel(DataModel model);
 
-        string GetObjectId(string processId, string processBranch);
+        string GetObjectId(string processId, int processVersion, string processBranch, List<string> Data);
 
         List<DataModel> GetDataModelByProcessId(string processId);
     }

@@ -8,6 +8,10 @@ namespace DinamicDataMvc.Models.Data
     public class ViewDataModel
     {
         [BindProperty]
+        [Display(Name = "Object Id")]
+        public string ObjectId { get; set; }
+
+        [BindProperty]
         [Display(Name = "Process Id")]
         public string ProcessId { get; set; }
 

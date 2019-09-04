@@ -170,6 +170,7 @@ namespace DinamicDataMvc.Controllers.Data
                     //É criado o modelo de dados do tipo ViewDataModel;
                     ViewDataModel modelToDisplay = new ViewDataModel()
                     {
+                        ObjectId = _Data.GetObjectId(processIdList.ElementAt(i), processVersionList.ElementAt(i), dataModel.ProcessBranch, dataModel.Data),
                         ProcessId = processIdList.ElementAt(i),
                         ProcessVersion = processVersionList.ElementAt(i),
                         ProcessBranch = dataModel.ProcessBranch,
@@ -184,7 +185,7 @@ namespace DinamicDataMvc.Controllers.Data
 
 
         [HttpPost("/Data/GetStoredWebForm/")]
-        public async Task<ActionResult> GetStoredWebForm(string ProcessId, string ProcessVersion, string ProcessBranch)
+        public async Task<ActionResult> GetStoredWebForm(string ObjectId, string ProcessId, string ProcessVersion, string ProcessBranch)
         {
             List<WebFormModel> webFormElements = new List<WebFormModel>();
 
@@ -204,9 +205,10 @@ namespace DinamicDataMvc.Controllers.Data
 
             //Obter a lista de camposde um processo;
             List<string> processFields = _Metadata.GetProcessFieldsID(ProcessId);
-            DataModel dataModel = _Data.GetDataModel(ProcessId, Convert.ToInt32(ProcessVersion), ProcessBranch);
+            DataModel dataModel = _Data.GetDataModel(ObjectId, ProcessId, Convert.ToInt32(ProcessVersion), ProcessBranch);
 
             //Valores para preenchimento de campos hidden no formulário gerado automaticamente;
+            ViewBag.ObjectId = ObjectId;
             ViewBag.ProcessId = ProcessId;
             ViewBag.ProcessBranch = ProcessBranch;
             string ProcessFields = string.Empty;
@@ -263,19 +265,6 @@ namespace DinamicDataMvc.Controllers.Data
 
             return await Task.Run(() => View("WebFormGenerator"));
         }
-
-
-        //[HttpPost("/data/ConfirmUpdateData/")]
-        //public async Task<ActionResult> ConfirmUpdateData(DataModel model)
-        //{
-        //    _Connection.DatabaseConnection();
-
-        //    _Data.SetDatabase(_Connection.GetDatabase());
-
-        //    _Data.CreateDataModel(model);
-
-        //    return await Task.Run(() => Redirect("/Data/GetLastProcessVersions/"));
-        //}
 
 
         //Done

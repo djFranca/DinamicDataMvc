@@ -37,7 +37,7 @@ namespace DinamicDataMvc.Services.Data
             return false;
         }
 
-        public DataModel GetDataModel(string processId, int processVersion, string processBranch)
+        public DataModel GetDataModel(string objectId, string processId, int processVersion, string processBranch)
         {
             if(string.IsNullOrEmpty(processId) && string.IsNullOrEmpty(processBranch))
             {
@@ -45,7 +45,7 @@ namespace DinamicDataMvc.Services.Data
             }
 
             var collection = _Database.GetCollection<DataModel>("Data");
-            DataModel model = collection.Find(s => s.ProcessId == processId && s.ProcessVersion == processVersion && s.ProcessBranch == processBranch).First();
+            DataModel model = collection.Find(s => s.Id == objectId && s.ProcessId == processId && s.ProcessVersion == processVersion && s.ProcessBranch == processBranch).First();
 
             return model;
         }
@@ -66,12 +66,12 @@ namespace DinamicDataMvc.Services.Data
             return ((int)StatusCode.BadRequest).ToString();
         }
 
-        public string GetObjectId(string processId, string processBranch)
+        public string GetObjectId(string processId, int processVersion, string processBranch, List<string> Data)
         {
             if(!string.IsNullOrEmpty(processId) && !string.IsNullOrEmpty(processBranch))
             {
                 var collection = _Database.GetCollection<DataModel>("Data");
-                return collection.Find(s => s.ProcessId == processId && s.ProcessBranch == processBranch).First().Id;
+                return collection.Find(s => s.ProcessId == processId && s.ProcessVersion == processVersion && s.ProcessBranch == processBranch && s.Data == Data).First().Id;
             }
             return null;
         }
