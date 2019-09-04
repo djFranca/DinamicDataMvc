@@ -3,7 +3,10 @@
     ViewData["Title"] = "WebFormGenerator";
 
     string processId = ViewBag.ProcessId;
+    string processVersion = ViewBag.ProcessVersion;
     string processBranch = ViewBag.ProcessBranch;
+
+    string btnDisabled = ViewBag.Readonly;
 
     string template = ViewBag.Template;
 
@@ -34,6 +37,9 @@
                     <input type="hidden" asp-for="ProcessId" value="@processId" name="ProcessId" class="form-control" />
                 </div>
                 <div class="form-group">
+                    <input type="hidden" asp-for="ProcessVersion" value="@processVersion" name="ProcessVersion" class="form-control" />
+                </div>
+                <div class="form-group">
                     <input type="hidden" asp-for="ProcessBranch" value="@processBranch" name="ProcessBranch" class="form-control" />
                 </div>
                 @for (int i = 0; i < htmlElements.Length; i++)
@@ -41,9 +47,18 @@
                     @Html.Raw(htmlElements.ElementAt(i))
                     <span asp-validation-for="Data" class="text-danger"></span>
                 }
-                <div class="btn-group">
-                    <button type="submit"><i class="fa fa-check"> Submit </i></button>
-                </div>
+                @if (btnDisabled.Equals("true"))
+                {
+                    <div class="btn-group">
+                        <button type="submit" disabled><i class="fa fa-check"> Submit </i></button>
+                    </div>
+                }
+                @if (btnDisabled.Equals("false"))
+                {
+                    <div class="btn-group">
+                        <button type="submit"><i class="fa fa-check"> Submit </i></button>
+                    </div>
+                }
             }
         </div>
         <br />

@@ -13,7 +13,7 @@ namespace DinamicDataMvc.Interfaces
 
         bool ExistRecordInData(string processId, string processBranch);
 
-        DataModel GetDataModel(string processId, string processBranch);
+        DataModel GetDataModel(string processId, int processVersion, string processBranch);
 
         string CreateDataModel(DataModel model);
 

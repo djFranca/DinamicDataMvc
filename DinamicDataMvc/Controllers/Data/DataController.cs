@@ -184,7 +184,7 @@ namespace DinamicDataMvc.Controllers.Data
 
 
         [HttpPost("/Data/GetStoredWebForm/")]
-        public async Task<ActionResult> GetStoredWebForm(string ProcessId, string ProcessBranch)
+        public async Task<ActionResult> GetStoredWebForm(string ProcessId, string ProcessVersion, string ProcessBranch)
         {
             List<WebFormModel> webFormElements = new List<WebFormModel>();
 
@@ -204,7 +204,7 @@ namespace DinamicDataMvc.Controllers.Data
 
             //Obter a lista de camposde um processo;
             List<string> processFields = _Metadata.GetProcessFieldsID(ProcessId);
-            DataModel dataModel = _Data.GetDataModel(ProcessId, ProcessBranch);
+            DataModel dataModel = _Data.GetDataModel(ProcessId, Convert.ToInt32(ProcessVersion), ProcessBranch);
 
             //Valores para preenchimento de campos hidden no formulário gerado automaticamente;
             ViewBag.ProcessId = ProcessId;
@@ -236,6 +236,8 @@ namespace DinamicDataMvc.Controllers.Data
                     Required = propertiesModel.Required.ToString(),
                     Readonly = false
                 };
+
+                ViewBag.Readonly = "false";
 
                 webFormElements.Add(webFormElement);
             }
@@ -295,6 +297,7 @@ namespace DinamicDataMvc.Controllers.Data
 
             //Valores para preenchimento de campos hidden no formulário gerado automaticamente;
             ViewBag.ProcessId = model.Id;
+            ViewBag.ProcessVersion = model.Version;
             ViewBag.ProcessBranch = model.Branch;
             string ProcessFields = string.Empty;
 
@@ -336,7 +339,9 @@ namespace DinamicDataMvc.Controllers.Data
 
                 webFormElements.Add(webFormElement);
             }
-            
+
+            ViewBag.Readonly = model.State.Equals("true") ? "true" : "false";
+
             //Passar a lista de webform elements a uma classe que vai criar uma array com as linhas a serem renderizadas;
             WebFormTemplate webFormTemplate = new WebFormTemplate(webFormElements);
             List<string> fragments = webFormTemplate.Template();
@@ -377,12 +382,15 @@ namespace DinamicDataMvc.Controllers.Data
 
             _KeyGenerates.SetKey(); //Gerar um ObjectId, chave univoca, que identifica o modelo na colecção Data;
 
-            //Criar o objeto do tipo modelo DataModel para combinação ProcessId, ProcessVersion e ProcessBranch;
-
+            /*
+             * Criar o objeto do tipo modelo DataModel para combinação ProcessId, ProcessVersion e ProcessBranch,
+             * Se a combinação não existir armazenada na coleção Data.
+             */
             dataModel = new DataModel()
             {
                 Id = _KeyGenerates.GetKey(),
                 ProcessId = model.ProcessId,
+                ProcessVersion = Convert.ToInt32(model.ProcessVersion),
                 ProcessBranch = model.ProcessBranch,
                 Data = model.Data,
                 Date = DateTime.Now.ToLocalTime()

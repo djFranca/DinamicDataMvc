@@ -37,7 +37,7 @@ namespace DinamicDataMvc.Services.Data
             return false;
         }
 
-        public DataModel GetDataModel(string processId, string processBranch)
+        public DataModel GetDataModel(string processId, int processVersion, string processBranch)
         {
             if(string.IsNullOrEmpty(processId) && string.IsNullOrEmpty(processBranch))
             {
@@ -45,7 +45,7 @@ namespace DinamicDataMvc.Services.Data
             }
 
             var collection = _Database.GetCollection<DataModel>("Data");
-            DataModel model = collection.Find(s => s.ProcessId == processId && s.ProcessBranch == processBranch).First();
+            DataModel model = collection.Find(s => s.ProcessId == processId && s.ProcessVersion == processVersion && s.ProcessBranch == processBranch).First();
 
             return model;
         }

@@ -706,23 +706,24 @@ namespace Tests
             manager.DatabaseConnection();
             data.SetDatabase(manager.GetDatabase());
             string processId = "692118365ea4314d34d7d4d5";
+            int processVersion = 1;
             string processBranch = "Development";
 
             //Act
-            DataModel result = data.GetDataModel(processId, processBranch);
+            DataModel result = data.GetDataModel(processId, processVersion, processBranch);
 
             if (result != null)
             {
                 string data = "[";
-                for (int i = 0; i < result.Data.Count; i++)
+                for (int i = 0; i < result.ProcessData.Count; i++)
                 {
-                    if(i == result.Data.Count - 1)
+                    if(i == result.ProcessData.Count - 1)
                     {
-                        data += result.Data.ElementAt(i);
+                        data += result.ProcessData.ElementAt(i);
                     }
                     else
                     {
-                        data += (result.Data.ElementAt(i) + ", ");
+                        data += (result.ProcessData.ElementAt(i) + ", ");
                     }
                 }
                 data += "]";
@@ -745,6 +746,7 @@ namespace Tests
             manager.DatabaseConnection();
             data.SetDatabase(manager.GetDatabase());
             string processId = "692118365ea4314d34d7d4d5";
+            int processVersion = 1;
             string processBranch = "Production";
             KeyId.SetKey();
 
@@ -752,8 +754,9 @@ namespace Tests
             {
                 Id = KeyId.GetKey(),
                 ProcessId = processId,
+                ProcessVersion = processVersion,
                 ProcessBranch = processBranch,
-                Data = new List<string>() { "7654", "Submit" }
+                ProcessData = new List<string>() { "7654", "Submit" }
             };
 
             //Act

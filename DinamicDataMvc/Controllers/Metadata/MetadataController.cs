@@ -537,7 +537,7 @@ namespace DinamicDataMvc.Controllers.Metadata
          * Selecionar o branch que se pretende operar;
          */
         [HttpPost("/Metadata/SelectBranch")]
-        public async Task<ActionResult> SelectBranch(string processId, string processName, string processVersion, string processDate, string processBranches, string processState, string isEditable)
+        public async Task<ActionResult> SelectBranch(string processId, string processName, string processVersion, string processDate, string processBranches, string processState, string isReadonly)
         {
             ViewMetadataModel viewModel = new ViewMetadataModel()
             {
@@ -549,7 +549,7 @@ namespace DinamicDataMvc.Controllers.Metadata
                 State = processState
             };
 
-            ViewBag.IsEditable = isEditable;
+            ViewBag.IsReadonly = isReadonly;
 
             return await Task.Run(() => View("SelectBranch", viewModel));
         }

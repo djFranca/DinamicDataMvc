@@ -15,7 +15,6 @@ C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataM
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.RazorCoreGenerate.cache
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Data\GetLastProcessVersions.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Data\GetProcessFieldDataByVersions.g.cshtml.cs
-C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Data\UpdateFieldData.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\Create.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\Display.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Field\Read.g.cshtml.cs
@@ -47,7 +46,6 @@ C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataM
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.csproj.CopyComplete
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Metadata\SelectBranch.g.cshtml.cs
 C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\Razor\Views\Data\WebFormGenerator.g.cshtml.cs
-C:\Projeto\localRepos\source\DinamicDataMvc\obj\Debug\netcoreapp2.2\DinamicDataMvc.csprojAssemblyReference.cache
 C:\Users\Utilizador.ACER-E15-PC\source\repos\EntregaFinal\Code\DinamicDataMvc\bin\Debug\netcoreapp2.2\DinamicDataMvc.deps.json
 C:\Users\Utilizador.ACER-E15-PC\source\repos\EntregaFinal\Code\DinamicDataMvc\bin\Debug\netcoreapp2.2\DinamicDataMvc.runtimeconfig.json
 C:\Users\Utilizador.ACER-E15-PC\source\repos\EntregaFinal\Code\DinamicDataMvc\bin\Debug\netcoreapp2.2\DinamicDataMvc.runtimeconfig.dev.json
