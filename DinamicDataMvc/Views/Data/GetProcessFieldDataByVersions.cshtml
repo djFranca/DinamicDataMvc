@@ -58,7 +58,7 @@
                                 @Html.DisplayFor(modelItem => model.CreationDate)
                             </td>
                             <td>
-                                @using (Html.BeginForm("UpdateFieldData", "Data", new { Id = model.ProcessId, Version = model.ProcessVersion, Branch = model.ProcessBranch, Data = model.Data }, FormMethod.Get))
+                                @using (Html.BeginForm("GetStoredWebForm", "Data", new { ProcessId = model.ProcessId, ProcessBranch = model.ProcessBranch }, FormMethod.Post))
                                 {
                                     <button type="submit"><i class="fa fa-pencil"></i></button>
                                 }

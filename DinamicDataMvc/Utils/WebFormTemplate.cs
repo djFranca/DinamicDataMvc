@@ -51,21 +51,21 @@ namespace DinamicDataMvc.Utils
         /*
          * Cria um elemento do tipo input, considerando se é um elemento html reqired ou não;
          */
-        private string SetInputElement(string type, string size, string maxlength, string value, string required, string isEditable)
+        private string SetInputElement(string type, string size, string maxlength, string value, string required, bool readonlyValue)
         {
-            if (Convert.ToBoolean(required) == true && Convert.ToBoolean(isEditable) == true)
-            {
-                return "<div class='form-group'><label><b>" + type + "</b></label><br /><input asp-for='Data' name='Data' type='" + type + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' required class='form-control'/></div>";
-            }
-            if(Convert.ToBoolean(required) == true && Convert.ToBoolean(isEditable) == false)
+            if (Convert.ToBoolean(required) == true && readonlyValue)
             {
                 return "<div class='form-group'><label><b>" + type + "</b></label><br /><input asp-for='Data' name='Data' type='" + type + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' required readonly class='form-control'/></div>";
             }
-            if(Convert.ToBoolean(required) == false && Convert.ToBoolean(isEditable) == false)
+            if(Convert.ToBoolean(required) == true && !readonlyValue)
             {
-                return "<div class='form-group'><label><b>" + type + "</b></label><br /><input asp-for='Data' name='Data' type='" + type + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' readonly class='form-control'/></div>";
+                return "<div class='form-group'><label><b>" + type + "</b></label><br /><input asp-for='Data' name='Data' type='" + type + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' required class='form-control'/></div>";
             }
-            return "<div class='form-group'><label><b>" + type + "</b></label><br /><input asp-for='Data' name='Data' type='" + type + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' class='form-control'/></div>";
+            if(Convert.ToBoolean(required) == false && !readonlyValue)
+            {
+                return "<div class='form-group'><label><b>" + type + "</b></label><br /><input asp-for='Data' name='Data' type='" + type + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' class='form-control'/></div>";
+            }
+            return "<div class='form-group'><label><b>" + type + "</b></label><br /><input asp-for='Data' name='Data' type='" + type + "' size='" + size + "' maxlength='" + maxlength + "' value='" + value + "' readonly class='form-control'/></div>";
         }
 
         /*

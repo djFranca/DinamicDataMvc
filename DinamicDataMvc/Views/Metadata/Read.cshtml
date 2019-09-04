@@ -102,7 +102,7 @@
                             <td>
                                 @if (data.State.Length > 0)
                                 {
-                                    @using (Html.BeginForm("SelectBranch", "Metadata", new { processId = data.Id, processName = data.Name, processVersion = data.Version, processDate = data.Date, processBranches = data.Branch, processState = data.State, isEditable = "false" }, FormMethod.Post))
+                                    @using (Html.BeginForm("SelectBranch", "Metadata", new { processId = data.Id, processName = data.Name, processVersion = data.Version, processDate = data.Date, processBranches = data.Branch, processState = data.State, isEditable = "true" }, FormMethod.Post))
                                     {
                                         <button type="submit"><i class="fa fa-eye"></i></button>
                                     }

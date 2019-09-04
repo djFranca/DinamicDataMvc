@@ -19,6 +19,6 @@ namespace DinamicDataMvc.Models.Tools
 
         public string Required { get; set; }
 
-        public string Readonly { get; set; }
+        public bool Readonly { get; set; }
     }
 }

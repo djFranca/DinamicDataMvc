@@ -183,86 +183,100 @@ namespace DinamicDataMvc.Controllers.Data
         }
 
 
-        [HttpGet("/Data/UpdateFieldData/{Name}/{Version}/{Branch}")]
-        public async Task<ActionResult> UpdateFieldData(string Name, string Version, string Branch)
+        [HttpPost("/Data/GetStoredWebForm/")]
+        public async Task<ActionResult> GetStoredWebForm(string ProcessId, string ProcessBranch)
         {
-            _Connection.DatabaseConnection();
-            var database = _Connection.GetDatabase();
-            _Metadata.SetDatabase(database);
-            _Field.SetDatabase(database);
-            _Properties.SetDatabase(database);
-            _Data.SetDatabase(database);
+            List<WebFormModel> webFormElements = new List<WebFormModel>();
 
-            MetadataModel metadataModel = _Metadata.GetProcessByVersion(Name, Convert.ToInt32(Version));
-
-            ViewBag.ProcessId = metadataModel.Id;
-            ViewBag.ProcessName = Name;
-            ViewBag.ProcessVersion = Version;
-            ViewBag.ProcessBranch = Branch;
-
-            string fieldsType = string.Empty;
-
-            DataModel dataModel = null;
-
-            if(_Data.ExistRecordInData(metadataModel.Id, Branch))
+            //Se o modelo de dados for nulo, logo estamos perante um caso de pedido inválido (Bad Request)
+            if (string.IsNullOrEmpty(ProcessId))
             {
-                for (int i = 0; i < metadataModel.Field.Count; i++)
-                {
-                    FieldModel fieldModel = _Field.GetField(metadataModel.Field.ElementAt(i));
-                    fieldsType += fieldModel.Type + " ";
-                }
-                DataModel filteredModel = _Data.GetDataModel(metadataModel.Id, Branch);
-
-                DataModel model = new DataModel()
-                {
-                    Id = filteredModel.Id,
-                    ProcessId = metadataModel.Id,
-                    ProcessBranch = Branch,
-                    Data = filteredModel.Data
-                };
-                dataModel = model;
-            }
-            else
-            {
-                List<string> DataValue = new List<string>();
-                _KeyGenerates.SetKey(); //Gera um ObjectId, ou seja, uma chave para identificar o valor armazenado;
-
-                foreach (var field in metadataModel.Field)
-                {
-                    FieldModel fieldModel = _Field.GetField(field);
-                    fieldsType += fieldModel.Type + " ";
-                    DataValue.Add(_Properties.GetProperties(fieldModel.Properties).Value);
-                }
-
-                DataModel model = new DataModel()
-                {
-                    Id = _KeyGenerates.GetKey(),
-                    ProcessId = metadataModel.Id,
-                    ProcessBranch = Branch,
-                    Data = DataValue
-                };
-                dataModel = model;
+                return BadRequest();
             }
 
-            ViewBag.Fields = fieldsType;
-
-            return await Task.Run(() => View("UpdateFieldData", dataModel));
-        }
-
-
-        [HttpPost("/data/ConfirmUpdateData/")]
-        public async Task<ActionResult> ConfirmUpdateData(DataModel model)
-        {
             _Connection.DatabaseConnection();
 
+            //Chamadas aos serviços - Ligação à base de dados
+            _Metadata.SetDatabase(_Connection.GetDatabase());
+            _Field.SetDatabase(_Connection.GetDatabase());
+            _Properties.SetDatabase(_Connection.GetDatabase());
             _Data.SetDatabase(_Connection.GetDatabase());
 
-            _Data.CreateDataModel(model);
+            //Obter a lista de camposde um processo;
+            List<string> processFields = _Metadata.GetProcessFieldsID(ProcessId);
+            DataModel dataModel = _Data.GetDataModel(ProcessId, ProcessBranch);
 
-            return await Task.Run(() => Redirect("/Data/GetLastProcessVersions/"));
+            //Valores para preenchimento de campos hidden no formulário gerado automaticamente;
+            ViewBag.ProcessId = ProcessId;
+            ViewBag.ProcessBranch = ProcessBranch;
+            string ProcessFields = string.Empty;
+
+            for (int j = 0; j < processFields.Count; j++)
+            {
+                FieldModel fieldModel = _Field.GetField(processFields.ElementAt(j));
+
+                if (j == processFields.Count - 1)
+                {
+                    ProcessFields += fieldModel.Type;
+                }
+                else
+                {
+                    ProcessFields += fieldModel.Type + " ";
+                }
+
+                PropertiesModel propertiesModel = _Properties.GetProperties(fieldModel.Properties);
+
+                WebFormModel webFormElement = new WebFormModel()
+                {
+                    Type = fieldModel.Type,
+                    Name = fieldModel.Name,
+                    Size = propertiesModel.Size.ToString(),
+                    Value = dataModel.Data.ElementAt(j),
+                    Maxlength = propertiesModel.Maxlength.ToString(),
+                    Required = propertiesModel.Required.ToString(),
+                    Readonly = false
+                };
+
+                webFormElements.Add(webFormElement);
+            }
+
+            //Passar a lista de webform elements a uma classe que vai criar uma array com as linhas a serem renderizadas;
+            WebFormTemplate webFormTemplate = new WebFormTemplate(webFormElements);
+            List<string> fragments = webFormTemplate.Template();
+
+            string template = string.Empty;
+            for (int j = 0; j < fragments.Count; j++)
+            {
+                if (j == fragments.Count - 1)
+                {
+                    template += fragments[j];
+                }
+                else
+                {
+                    template += (fragments[j] + "|");
+                }
+            }
+
+            ViewBag.Template = template;
+
+            return await Task.Run(() => View("WebFormGenerator"));
         }
 
 
+        //[HttpPost("/data/ConfirmUpdateData/")]
+        //public async Task<ActionResult> ConfirmUpdateData(DataModel model)
+        //{
+        //    _Connection.DatabaseConnection();
+
+        //    _Data.SetDatabase(_Connection.GetDatabase());
+
+        //    _Data.CreateDataModel(model);
+
+        //    return await Task.Run(() => Redirect("/Data/GetLastProcessVersions/"));
+        //}
+
+
+        //Done
         [HttpPost("/Data/WebFormGenerator")]
         public async Task<ActionResult> WebFormGenerator(ViewMetadataModel model)
         {
@@ -306,8 +320,7 @@ namespace DinamicDataMvc.Controllers.Data
                 {
                     ProcessFields += fieldModel.Type + " ";
                 }
-                
-                    
+                 
                 PropertiesModel propertiesModel = _Properties.GetProperties(fieldModel.Properties);
 
                 WebFormModel webFormElement = new WebFormModel()
@@ -318,8 +331,8 @@ namespace DinamicDataMvc.Controllers.Data
                     Value = string.Empty,
                     Maxlength = propertiesModel.Maxlength.ToString(),
                     Required = propertiesModel.Required.ToString(),
-                    Readonly = model.State
-                };
+                    Readonly = model.State.Equals("true") ? true : false
+            };
 
                 webFormElements.Add(webFormElement);
             }
@@ -346,7 +359,7 @@ namespace DinamicDataMvc.Controllers.Data
             return await Task.Run(() => View("WebFormGenerator"));
         }
 
-
+        //Done
         [HttpPost("/Data/SaveWebform")]
         public async Task<ActionResult> SaveWebform(DataModel model)
         {
@@ -364,7 +377,8 @@ namespace DinamicDataMvc.Controllers.Data
 
             _KeyGenerates.SetKey(); //Gerar um ObjectId, chave univoca, que identifica o modelo na colecção Data;
 
-            //Criar o objeto do tipo modelo Data;
+            //Criar o objeto do tipo modelo DataModel para combinação ProcessId, ProcessVersion e ProcessBranch;
+
             dataModel = new DataModel()
             {
                 Id = _KeyGenerates.GetKey(),
