@@ -33,16 +33,16 @@ namespace DinamicDataMvc.Utils
                     htmlElements.Add(element);
                 }
 
-                if(webFormModels.ElementAt(i).Type.Equals("Label"))
-                {
-                    string element = SetLabelElement(webFormModels.ElementAt(i).Value);
-                    htmlElements.Add(element);
-                }
-                if (webFormModels.ElementAt(i).Type.Equals("Button"))
-                {
-                    string element = SetButtonElement(webFormModels.ElementAt(i).Name, webFormModels.ElementAt(i).Value, webFormModels.ElementAt(i).Readonly);
-                    htmlElements.Add(element);
-                }
+                //if(webFormModels.ElementAt(i).Type.Equals("Label"))
+                //{
+                //    string element = SetLabelElement(webFormModels.ElementAt(i).Value);
+                //    htmlElements.Add(element);
+                //}
+                //if (webFormModels.ElementAt(i).Type.Equals("Button"))
+                //{
+                //    string element = SetButtonElement(webFormModels.ElementAt(i).Name, webFormModels.ElementAt(i).Value, webFormModels.ElementAt(i).Readonly);
+                //    htmlElements.Add(element);
+                //}
             }
 
             return htmlElements;
@@ -71,21 +71,21 @@ namespace DinamicDataMvc.Utils
         /*
          * Cria um elemento html do tipo label;
          */
-        private string SetLabelElement(string value)
-        {
-            return "<div class='form-group'><label for='" + value + "'>" + value + "</label></div>";
-        }
+        //private string SetLabelElement(string value)
+        //{
+        //    return "<div class='form-group'><label for='" + value + "'>" + value + "</label></div>";
+        //}
 
         /*
          * Cria um elemento html do tipo button;
          */
-        private string SetButtonElement(string name, string value, string isEditable)
-        {
-            if(!Convert.ToBoolean(isEditable))
-            {
-                return "<div class='btn-group'><button type='submit' name='" + name + "' disabled><i class='fa fa-check'></i>" + value + "</button></div>";
-            }
-            return "<div class='btn-group'><button type='submit' name='" + name + "'><i class='fa fa-check'></i>" + value + "</button></div>";
-        }
+        //private string SetButtonElement(string name, string value, string isEditable)
+        //{
+        //    if(!Convert.ToBoolean(isEditable))
+        //    {
+        //        return "<div class='btn-group'><button type='submit' name='" + name + "' disabled><i class='fa fa-check'></i>" + value + "</button></div>";
+        //    }
+        //    return "<div class='btn-group'><button type='submit' name='" + name + "'><i class='fa fa-check'></i>" + value + "</button></div>";
+        //}
     }
 }

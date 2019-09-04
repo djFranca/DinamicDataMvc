@@ -63,8 +63,8 @@ namespace DinamicDataMvc.Services.Config
 
 
         /*
-         * Metodo que permite obter o identivicador de um branch de um determinado processo, recebendo como argumento de entrada
-         * o código correspondente ao branch do qual se pretende obter o moedelo de dados. A lista de códigos é constituida por
+         * Metodo que permite obter o identificador de um branch de um determinado processo, recebendo como argumento de entrada
+         * o código correspondente ao branch do qual se pretende obter o modelo de dados. A lista de códigos é constituida por
          * { Dev : Desenvolvimento, Qa : Qualidade, Prod : Produção }
          */
         public string GetBranchID(string code)

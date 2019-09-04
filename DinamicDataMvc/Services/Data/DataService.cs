@@ -2,6 +2,7 @@
 using DinamicDataMvc.Models.Data;
 using DinamicDataMvc.Utils;
 using MongoDB.Driver;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DinamicDataMvc.Services.Data
@@ -57,15 +58,7 @@ namespace DinamicDataMvc.Services.Data
             if(model != null)
             {
                 var collection = _Database.GetCollection<DataModel>("Data");
-
-                if (ExistRecordInData(model.ProcessId, model.ProcessBranch))
-                {
-                    collection.ReplaceOneAsync(s => s.ProcessId == model.ProcessId, model);
-                }
-                else
-                {
-                    collection.InsertOneAsync(model);
-                }
+                collection.InsertOneAsync(model);
 
                 return ((int)StatusCode.Created).ToString();
             }
@@ -79,6 +72,16 @@ namespace DinamicDataMvc.Services.Data
             {
                 var collection = _Database.GetCollection<DataModel>("Data");
                 return collection.Find(s => s.ProcessId == processId && s.ProcessBranch == processBranch).First().Id;
+            }
+            return null;
+        }
+
+        public List<DataModel> GetDataModelByProcessId(string processId)
+        {
+            if(processId != null)
+            {
+                var collection = _Database.GetCollection<DataModel>("Data");
+                return collection.Find(s => s.ProcessId == processId).ToList();
             }
             return null;
         }

@@ -1,16 +1,8 @@
-﻿@model DinamicDataMvc.Models.Data.ViewDataModel
+﻿@model IEnumerable<DinamicDataMvc.Models.Data.ViewDataModel>
 @{
     ViewData["Title"] = "GetProcessFieldDataByVersions";
-
-    var header = ViewBag.ProcessDetails;
-
-    string[] headerFragments = header.Split(",");
-
-    string[] branches = headerFragments[2].Split(" ");
-
-    string versionHeader = "V" + @headerFragments[1];
+    string ProcessName = ViewBag.ProcessName;
 }
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,58 +15,60 @@
 <body style="background-color:ghostwhite">
     <hr />
     <div class="container" id="subtitleDiv">
-        <h2 id="ProcessDescription">Process @headerFragments[0] Version @versionHeader</h2>
+        <h2 id="ProcessDescription">Process @ProcessName</h2>
     </div>
     <hr />
     <div class="container">
-        @foreach (string version in Model.Versions)
-        {
-            <br />
-            <div class="table-responsive table-striped">
-                <table class="table table-bordered" border="1" id="processResultTable">
-                    <thead>
-                        <tr id="tableHeader">
-                            <th>
-                                Version
-                            </th>
-                            <th>
-                                branch
-                            </th>
-                            @for (int i = 0; i < Model.FieldTypesByVersion[version].ElementAt(0).Count; i++)
-                            {
-                                <th>@Model.FieldTypesByVersion[version].ElementAt(0).ElementAt(i)</th>
-                            }
-                            <th>
-                                Edit
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int j = 0; j < Model.DataByProcessField[version].Count; j++)
-                        {
-                            <tr id="tableBody">
-                                <td>
-                                    @version
-                                </td>
-                                <td>@branches[j]</td>
-
-                                @for (int n = 0; n < Model.DataByProcessField[version].ElementAt(j).Count; n++)
+        <br />
+        <div class="table-responsive table-striped">
+            <table class="table table-bordered" border="1" id="processResultTable">
+                <thead>
+                    <tr id="tableHeader">
+                        <th>
+                            @Html.DisplayNameFor(modelItem => Model.ElementAt(0).ProcessId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => Model.ElementAt(0).ProcessVersion)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => Model.ElementAt(0).ProcessBranch)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(modelItem => Model.ElementAt(0).CreationDate)
+                        </th>
+                        <th>
+                            @Html.DisplayName("Edit Webform")
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var model in Model)
+                    {
+                        <tr id="tableBody">
+                            <td>
+                                @Html.DisplayFor(modelItem => model.ProcessId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => model.ProcessVersion)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => model.ProcessBranch)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => model.CreationDate)
+                            </td>
+                            <td>
+                                @using (Html.BeginForm("UpdateFieldData", "Data", new { Id = model.ProcessId, Version = model.ProcessVersion, Branch = model.ProcessBranch, Data = model.Data }, FormMethod.Get))
                                 {
-                                    <td>@Model.DataByProcessField[version].ElementAt(j).ElementAt(n)</td>
+                                    <button type="submit"><i class="fa fa-pencil"></i></button>
                                 }
-                                <td>
-                                    @using (Html.BeginForm("UpdateFieldData", "Data", new { Name = headerFragments[0], Version = @version, Branch = branches[j] }, FormMethod.Get))
-                                    {
-                                        <button type="submit"><i class="fa fa-pencil"></i></button>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <br />
-        }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <br />
     </div>
     <br />
     <div class="container">

@@ -21,11 +21,12 @@
 <body style="background-color:ghostwhite">
     <hr />
     <div class="container" id="subtitleDiv">
-        <h2> Generated Web Form </h2>
+        <h2 id="FieldDescription"> Generated Web Form </h2>
     </div>
     <hr />
-    <div class="row">
-        <div class="col-md-5" style="margin-left:15px;">
+    <div class="row" style="background-color:gainsboro; height:350px;">
+        <br />
+        <div class="col-md-5" style="margin-left:20px;">
             @using (Html.BeginForm("SaveWebform", "Data", FormMethod.Post, new { @width = "60%" }))
             {
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -40,8 +41,12 @@
                     @Html.Raw(htmlElements.ElementAt(i))
                     <span asp-validation-for="Data" class="text-danger"></span>
                 }
+                <div class="btn-group">
+                    <button type="submit"><i class="fa fa-check"> Submit </i></button>
+                </div>
             }
         </div>
+        <br />
     </div>
 </body>
 

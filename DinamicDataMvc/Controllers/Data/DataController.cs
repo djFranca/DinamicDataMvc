@@ -132,83 +132,54 @@ namespace DinamicDataMvc.Controllers.Data
                 return await Task.Run(() => View("GetLastProcessVersions", models));
             }
 
-
             return await Task.Run(() => View("GetLastProcessVersions", modelsToDisplay[pageIndex]));
         }
 
-
         [HttpGet("/Data/GetProcessFieldDataByVersions/")]
-        public async Task<ActionResult> GetProcessFieldDataByVersions(string name, string version, List<string> branch)
+        public async Task<ActionResult> GetProcessFieldDataByVersions(string name, string version)
         {
             _Connection.DatabaseConnection(); //Estabeleçer a ligação com a base de dados;
             var database = _Connection.GetDatabase(); //Obter a ligação com a base de dados;
-
-            _Branch.SetDatabase(database);
-            _Field.SetDatabase(database);
-            _Properties.SetDatabase(database);
+            _Metadata.SetDatabase(database);
             _Data.SetDatabase(database);
-            _Branch.ReadFromDatabase(branch);
 
-            string _branches = _Branch.GetBranches();
-            List<string> splitedBranches = new List<string>();
+            ViewBag.ProcessName = name;
 
-            for(int i = 0; i < _branches.Split(" ").Length - 1; i++)
+            List<string> processIdList = new List<string>(); //Armazena a lista de id´s do processo nas diferentes versões;
+            List<int> processVersionList = new List<int>(); //Armazena as versões correspondentes ao id do processo;
+
+            //Recupera versões anteriores do processo se as mesmas existirem;
+            if (int.Parse(version) >= 1)
             {
-                splitedBranches.Add(_branches.Split(" ")[i]);
-            }
-
-            string processDetails = name + "," + version + "," + _branches;
-            ViewBag.ProcessDetails = processDetails;
-
-            MetadataModel processModel = _Metadata.GetProcessByVersion(name, int.Parse(version));
-
-            Dictionary<string, List<List<string>>> fieldTypesByProcess = new Dictionary<string, List<List<string>>>();
-            Dictionary<string, List<List<string>>> dataByProcessField = new Dictionary<string, List<List<string>>>();
-
-            List<List<string>> fieldList = new List<List<string>>();
-            List<List<string>> dataList = new List<List<string>>();
-
-            foreach (string processBranch in splitedBranches)
-            {
-                List<string> fields = new List<string>(); //Por cada modelo de metadados são armazenados os seus campos numa lista do tipo string;
-                List<string> data = new List<string>(); //Por cada modelo de metadados são armazenados os valores dos seus campos numa lista do tipo string;
-
-                for (int j = 0; j < processModel.Field.Count; j++)
+                for(int j = int.Parse(version); j >= 1; j--)
                 {
-                    var fieldModel = _Field.GetField(processModel.Field[j]); //Obter o modelo de campos através do seu identificador;
-                    fields.Add(fieldModel.Type); //adicionar o tipo à lista de campos de uma versão do processo;
-
-                    //Obter o valor associado a uma propriedade de um determinado campo: Implementar esta funcionalidade no serviço Properties;
-                    var propertiesModel = _Properties.GetProperties(fieldModel.Properties);
-
-                    //Se o processo para o branch corrente tiver registo na colecção Data, obtem-se o valor Data associado ao campo
-                    if(_Data.ExistRecordInData(processModel.Id, processBranch))
-                    {
-                        DataModel dataModel = _Data.GetDataModel(processModel.Id, processBranch);
-
-                        data.Add(dataModel.Data.ElementAt(j));
-                    }
-                    else
-                    {
-                        data.Add(propertiesModel.Value); //Default value added;
-                    }
+                    processIdList.Add(_Metadata.GetProcessByVersion(name, j).Id);
+                    processVersionList.Add(j);
                 }
-                fieldList.Add(fields);
-                dataList.Add(data);
             }
 
-            //Adicionar ao dicionário as listas de campos por branch;
-            fieldTypesByProcess.Add(processModel.Version.ToString(), fieldList); 
-            dataByProcessField.Add(processModel.Version.ToString(), dataList);
-           
-            ViewDataModel modelToDisplay = new ViewDataModel()
-            {
-                Versions = new List<string>() { version },
-                FieldTypesByVersion = fieldTypesByProcess,
-                DataByProcessField = dataByProcessField
-            };
+            List<ViewDataModel> viewDataModelList = new List<ViewDataModel>(); //Lista de ViewDataModels, para display da dados;
 
-            return await Task.Run(() => View("GetProcessFieldDataByVersions", modelToDisplay));
+            //Ciclo que percorre as diferentes combinações de {Process Id - Version - Branch}
+            for (int i = 0; i < processIdList.Count; i++)
+            {
+                List<DataModel> dataModelList = _Data.GetDataModelByProcessId(processIdList.ElementAt(i));
+
+                foreach(var dataModel in dataModelList)
+                {
+                    //É criado o modelo de dados do tipo ViewDataModel;
+                    ViewDataModel modelToDisplay = new ViewDataModel()
+                    {
+                        ProcessId = processIdList.ElementAt(i),
+                        ProcessVersion = processVersionList.ElementAt(i),
+                        ProcessBranch = dataModel.ProcessBranch,
+                        CreationDate = dataModel.Date,
+                        Data = dataModel.Data
+                    };
+                    viewDataModelList.Add(modelToDisplay); //Adiciona-se à lista de ViewDataModel o modelo criado;
+                }
+            }
+            return await Task.Run(() => View("GetProcessFieldDataByVersions", viewDataModelList));
         }
 
 
@@ -311,6 +282,7 @@ namespace DinamicDataMvc.Controllers.Data
             //Valores para preenchimento de campos hidden no formulário gerado automaticamente;
             ViewBag.ProcessId = model.Id;
             ViewBag.ProcessBranch = model.Branch;
+            string ProcessFields = string.Empty;
 
             _Connection.DatabaseConnection();
 
@@ -322,57 +294,36 @@ namespace DinamicDataMvc.Controllers.Data
 
             List<string> fields = _Metadata.GetProcessFieldsID(model.Id); //Obter os campos existentes no processo seleccionado;
 
-            //TODO:
-            //Validação: Se o processo Id existe na colecção, se existir armazena-se na lista Data os valores correspondentes aos campos do processo;
-            if (_Data.ExistRecordInData(model.Id, model.Branch))
+            for (int j = 0; j < fields.Count; j++)
             {
-                //Chamar o serviço para obter os valores armazenados na colecção Data por branch
-                DataModel dataModel = _Data.GetDataModel(model.Id, model.Branch);
-                List<string> Data = dataModel.Data;
+                FieldModel fieldModel = _Field.GetField(fields.ElementAt(j));
 
-                for (int j = 0; j < fields.Count; j++)
+                if(j == fields.Count - 1)
                 {
-                    FieldModel fieldModel = _Field.GetField(fields.ElementAt(j));
-
-                    PropertiesModel propertiesModel = _Properties.GetProperties(fieldModel.Properties);
-
-                    WebFormModel webFormElement = new WebFormModel()
-                    {
-                        Type = fieldModel.Type,
-                        Name = fieldModel.Name,
-                        Size = propertiesModel.Size.ToString(),
-                        Value = Data.ElementAt(j),
-                        Maxlength = propertiesModel.Maxlength.ToString(),
-                        Required = propertiesModel.Required.ToString(),
-                        Readonly = model.State
-                    };
-
-                    webFormElements.Add(webFormElement);
+                    ProcessFields += fieldModel.Type;
                 }
-            }
-            else
-            {
-                //Se não existirem registos na colecção Data para o branch selecionado é apresentado a versão do web form com os valores por default
-                foreach (string field in fields)
+                else
                 {
-                    FieldModel fieldModel = _Field.GetField(field);
-                    PropertiesModel propertiesModel = _Properties.GetProperties(fieldModel.Properties);
-
-                    WebFormModel webFormElement = new WebFormModel()
-                    {
-                        Type = fieldModel.Type,
-                        Name = fieldModel.Name,
-                        Size = propertiesModel.Size.ToString(),
-                        Value = propertiesModel.Value,
-                        Maxlength = propertiesModel.Maxlength.ToString(),
-                        Required = propertiesModel.Required.ToString(),
-                        Readonly = model.State
-                    };
-
-                    webFormElements.Add(webFormElement);
+                    ProcessFields += fieldModel.Type + " ";
                 }
-            }
+                
+                    
+                PropertiesModel propertiesModel = _Properties.GetProperties(fieldModel.Properties);
 
+                WebFormModel webFormElement = new WebFormModel()
+                {
+                    Type = fieldModel.Type,
+                    Name = fieldModel.Name,
+                    Size = propertiesModel.Size.ToString(),
+                    Value = string.Empty,
+                    Maxlength = propertiesModel.Maxlength.ToString(),
+                    Required = propertiesModel.Required.ToString(),
+                    Readonly = model.State
+                };
+
+                webFormElements.Add(webFormElement);
+            }
+            
             //Passar a lista de webform elements a uma classe que vai criar uma array com as linhas a serem renderizadas;
             WebFormTemplate webFormTemplate = new WebFormTemplate(webFormElements);
             List<string> fragments = webFormTemplate.Template();
@@ -395,6 +346,7 @@ namespace DinamicDataMvc.Controllers.Data
             return await Task.Run(() => View("WebFormGenerator"));
         }
 
+
         [HttpPost("/Data/SaveWebform")]
         public async Task<ActionResult> SaveWebform(DataModel model)
         {
@@ -404,92 +356,23 @@ namespace DinamicDataMvc.Controllers.Data
             }
 
             _Connection.DatabaseConnection(); //Ligação com o servidor de base de dados;
+            _Metadata.SetDatabase(_Connection.GetDatabase());
             _Data.SetDatabase(_Connection.GetDatabase()); //Instanciar a ligação entre o serviço e o servidor de base de dados;
 
-            //Verificar se existe uma label embebida no formulário -> O seu valor não é armazenado na lista de valores, terá de adquirir um valor default;
-            //Verificar se existe um botão embebido no formulário -> O seu valor não é armazenado na lista de valores, terá de adquirir um valor default;
-            _Metadata.SetDatabase(_Connection.GetDatabase());
-            int numberOfFields = _Metadata.GetProcessFieldsID(model.ProcessId).Count;
-            bool existProcessRecord = _Data.ExistRecordInData(model.ProcessId, model.ProcessBranch);
-            //Se a condição for verdadeira, logo existe um botão de submissão e é necessário adicionar um valor default
-            if(numberOfFields > model.Data.Count)
-            {
-                _Field.SetDatabase(_Connection.GetDatabase());
-                _Properties.SetDatabase(_Connection.GetDatabase());
-                string label = string.Empty;
-                string button = string.Empty;
-
-                if(numberOfFields == model.Data.Count + 1)
-                {
-                    if (!existProcessRecord)
-                    {
-                        button = _Metadata.GetProcessFieldsID(model.ProcessId).ElementAt(numberOfFields - 1);
-                    }
-                    else
-                    {
-                        button = _Data.GetDataModel(model.ProcessId, model.ProcessBranch).Data.ElementAt(numberOfFields - 1);
-                    }
-
-                    model.Data.Add(_Properties.GetProperties(_Field.GetField(button).Properties).Value);
-                }
-                else if(numberOfFields == model.Data.Count + 2)
-                {
-                    List<string> updatedData = new List<string>();
-
-                    if (!existProcessRecord)
-                    {
-                        label = _Metadata.GetProcessFieldsID(model.ProcessId).ElementAt(0);
-
-                        button = _Metadata.GetProcessFieldsID(model.ProcessId).ElementAt(numberOfFields - 1);
-                    }
-                    else
-                    {
-                        label = _Data.GetDataModel(model.ProcessId, model.ProcessBranch).Data.ElementAt(0);
-
-                        button = _Data.GetDataModel(model.ProcessId, model.ProcessBranch).Data.ElementAt(numberOfFields - 1);
-                    }
-
-                    updatedData.Add(label);
-
-                    foreach(var data in model.Data)
-                    {
-                        updatedData.Add(data);
-                    }
-
-                    updatedData.Add(button);
-
-                    model.Data = updatedData;
-                }
-            }
 
             DataModel dataModel = null; //Objeto do tipo dataModel;
 
-            //Tratamento de fluxo de dados:
-            //Se não existir um registo na base de dados é criado um novo, tendo de se gerar uma nova chave (ObjectId);
-            if (!_Data.ExistRecordInData(model.ProcessId, model.ProcessBranch))
-            {
-                _KeyGenerates.SetKey(); //Gerar um ObjectId, chave univoca, que identifica o modelo na colecção Data;
+            _KeyGenerates.SetKey(); //Gerar um ObjectId, chave univoca, que identifica o modelo na colecção Data;
 
-                //Criar o objeto do tipo modelo Data;
-                dataModel = new DataModel()
-                {
-                    Id = _KeyGenerates.GetKey(),
-                    ProcessId = model.ProcessId,
-                    ProcessBranch = model.ProcessBranch,
-                    Data = model.Data
-                };
-            }
-            else
+            //Criar o objeto do tipo modelo Data;
+            dataModel = new DataModel()
             {
-                //Criar o objeto do tipo modelo Data;
-                dataModel = new DataModel()
-                {
-                    Id = _Data.GetObjectId(model.ProcessId, model.ProcessBranch),
-                    ProcessId = model.ProcessId,
-                    ProcessBranch = model.ProcessBranch,
-                    Data = model.Data
-                };
-            }
+                Id = _KeyGenerates.GetKey(),
+                ProcessId = model.ProcessId,
+                ProcessBranch = model.ProcessBranch,
+                Data = model.Data,
+                Date = DateTime.Now.ToLocalTime()
+            };
 
             _Data.CreateDataModel(dataModel); //Registar o modelo de dados na colecção Data;
 

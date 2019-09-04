@@ -76,7 +76,7 @@
                     {
                         <tr id="tableBody">
                             <td>
-                                @Html.ActionLink(@Html.DisplayTextFor(modelItem => Model.ElementAt(i).Name), "GetProcessFieldDataByVersions", "Data", new { Name = Model.ElementAt(i).Name, Version = Model.ElementAt(i).Version, Branch = Model.ElementAt(i).Branch }, new { @class = "processDetails" })
+                                @Html.ActionLink(@Html.DisplayTextFor(modelItem => Model.ElementAt(i).Name), "GetProcessFieldDataByVersions", "Data", new { Name = Model.ElementAt(i).Name, Version = Model.ElementAt(i).Version}, new { @class = "processDetails" })
                             </td>
                             <td>
                                 @if (Model.ElementAt(i).Version != 0)

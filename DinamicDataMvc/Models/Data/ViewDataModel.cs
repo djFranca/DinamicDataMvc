@@ -1,15 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DinamicDataMvc.Models.Data
 {
     public class ViewDataModel
     {
+        [BindProperty]
+        [Display(Name = "Process Id")]
+        public string ProcessId { get; set; }
+
+        [BindProperty]
         [Display(Name = "Version")]
-        public List<string> Versions { get; set; } //última(s) versão(s) do processo;
+        public int ProcessVersion { get; set; }
 
-        public Dictionary<string, List<List<string>>> FieldTypesByVersion { get; set; } //tipos de elementos html (campos);
+        [BindProperty]
+        [Display(Name = "Branch")]
+        public string ProcessBranch { get; set; }
 
-        public Dictionary<string, List<List<string>>> DataByProcessField { get; set; }  //Valores associados a Data;
+        [BindProperty]
+        [Display(Name = "Creation Date")]
+        public DateTime CreationDate { get; set; }
+
+        [BindProperty]
+        [Display(Name = "Data")]
+        public List<string> Data { get; set; }
     }
 }
