@@ -22,7 +22,7 @@
 <body style="background-color:ghostwhite">
     <hr />
     <div class="container" id="subtitleDiv">
-        <h2 id="ProcessDescription">Create New Process</h2>
+        <h2 id="ProcessDescription">Create New Form</h2>
     </div>
     <hr />
     <div class="row justify-content-lg-center" style="border:none; margin-left:15px; margin-right:15px;">
@@ -30,12 +30,12 @@
         {
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"><b>Process Name</b></label>
+                <label asp-for="Name" class="control-label"><b>Form Name</b></label>
                 <input asp-for="Name" class="form-control" type="text" required />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Version" class="control-label"><b>Process Version</b></label>
+                <label asp-for="Version" class="control-label"><b>Form Version</b></label>
                 <input asp-for="Version" class="form-control" type="text" readonly value="0" />
                 <span asp-validation-for="Version" class="text-danger"></span>
             </div>

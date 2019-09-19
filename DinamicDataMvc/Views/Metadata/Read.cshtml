@@ -23,11 +23,11 @@
 <body>
     <hr />
     <div class="container" id="subtitleDiv">
-        <h2 id="ProcessDescription">Process Metadata</h2>
+        <h2 id="ProcessDescription">Form Metadata</h2>
     </div>
     <hr />
     <div class="container" id="linkDiv">
-        <a id="CreateLink" href="/Metadata/Create/"><i class="fa fa-database"></i> Create New Process </a>
+        <a id="CreateLink" href="/Metadata/Create/"><i class="fa fa-database"></i> Create New Form </a>
     </div>
     <hr />
     <div class="container" id="searchDiv">
@@ -64,7 +64,7 @@
                             @Html.DisplayNameFor(model => Model.ElementAt(0).State)
                         </th>
                         <th>
-                            @Html.DisplayName("Delete Process")
+                            @Html.DisplayName("Delete Form")
                         </th>
                         <th>
                             @Html.DisplayName("Preview Form")
@@ -95,7 +95,7 @@
                                 {
                                     @using (Html.BeginForm("Delete", "Metadata", new { ID = data.Id }, FormMethod.Post))
                                     {
-                                        <button type="submit"><i class="fa fa-trash"></i></button>
+                                        <button type="submit" disabled><i class="fa fa-trash"></i></button>
                                     }
                                 }
                             </td>
